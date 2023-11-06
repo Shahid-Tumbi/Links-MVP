@@ -23,10 +23,11 @@ import { Colors } from "./Variables";
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 10,
     },
     titleSub: {
       alignSelf: "flex-start",
       marginTop: "3%",
+      color:Colors.dimGray,
+      fontSize:16
     },
   });

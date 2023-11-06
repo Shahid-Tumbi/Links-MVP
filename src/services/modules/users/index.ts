@@ -7,6 +7,7 @@ export type User = {
   email: string;
   phoneNumber : number;
   referrer: string;
+  otp:number
 };
 export const userApi = api.injectEndpoints({
   endpoints: build => ({
@@ -15,6 +16,37 @@ export const userApi = api.injectEndpoints({
         url: `/users/register`,
         method: 'POST',
         body:newUser,
+        headers:{
+          Authorization: 'Basic bGlua3M6YmFja2VuZA=='
+        }
+      }),
+    }),
+    verifyOtp: build.mutation<User, Partial<User>>({
+      query: ({ body,token }:any) => ({
+        url: `/users/verify-otp`,
+        method: 'POST',
+        body:body,
+        headers:{
+          Authorization: token ? `Bearer ${token}` : '',
+        }
+      }),
+    }),
+    resendOtp: build.mutation({
+      query: ({token}:any) => {
+        return {
+          url:`/users/resend-otp`,
+          method:'POST',
+          headers:{
+            Authorization: token ? `Bearer ${token}` : '',
+          }
+        }
+      },      
+    }),
+    loginUser: build.mutation<User, Partial<User>>({
+      query: (userData) => ({
+        url: `/users/login`,
+        method: 'POST',
+        body:userData,
         headers:{
           Authorization: 'Basic bGlua3M6YmFja2VuZA=='
         }
@@ -47,4 +79,4 @@ export const userApi = api.injectEndpoints({
     overrideExisting: true,
   });
 
-export const { useRegisterUserMutation,useUpdateUserMutation, usePostListMutation } = userApi;
+export const { useRegisterUserMutation,useVerifyOtpMutation,useResendOtpMutation,useLoginUserMutation,useUpdateUserMutation, usePostListMutation } = userApi;

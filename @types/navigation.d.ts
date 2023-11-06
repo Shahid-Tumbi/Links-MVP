@@ -6,7 +6,9 @@ export type MainParamsList = {
 };
 
 export type AuthParamsList = {
-  StartScreen: undefined;
+  Login: undefined;
+  Signup: undefined;
+  OtpScreen: undefined;
 };
 
 export type ApplicationStackParamList = {

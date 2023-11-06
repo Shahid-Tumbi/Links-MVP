@@ -6,6 +6,7 @@
 import { StyleSheet } from 'react-native';
 import buttonStyles from './components/Buttons';
 import { CommonParams } from '../../@types/theme';
+import { clearToken } from '@/store/User';
 
 export default function <C>({ Colors, ...args }: CommonParams<C>) {
   return {
@@ -46,3 +47,15 @@ export const validatePassword = (text:string) => {
     return true;
   }
 };
+export const validateUserName = (text:string) => {
+  let reg = /^[A-Za-z][A-Za-z0-9_\-\.]{7,29}$/;
+  if (reg.test(text) === false) {
+    return false;
+  } else {
+    return true;
+  }
+};
+export function onTokenExpired(dispatch:any){
+      return  dispatch(clearToken())
+}
+

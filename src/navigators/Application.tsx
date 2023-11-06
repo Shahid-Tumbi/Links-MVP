@@ -31,9 +31,9 @@ const ApplicationNavigator = () => {
         <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="Startup" component={Startup} /> */}
-          {/* { !isVerified ?   */}
-            <Stack.Screen name="Auth" component={AuthNavigator} /> 
-            {/* <Stack.Screen name="Main" component={MainNavigator} />  */}
+          { !isVerified ?  
+            <Stack.Screen name="Auth" component={AuthNavigator} /> : 
+          <Stack.Screen name="Main" component={MainNavigator} />  }
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

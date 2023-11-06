@@ -14,6 +14,7 @@ module.exports = {
       },
     ],
     'inline-dotenv',
+    'react-native-paper/babel',
     'react-native-reanimated/plugin', // needs to be last
   ],
 };
