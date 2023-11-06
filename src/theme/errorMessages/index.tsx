@@ -1,7 +1,12 @@
 const ErrorMessages = {
+  name: {
+    empty: 'Please enter Full name',
+    valid: 'Please enter valid Full name',
+  },
   userName: {
-    empty: 'Please enter full name',
-    valid: 'Please enter valid full name',
+    empty: 'Please enter username',
+    valid: 'Please enter valid username',
+    pattern: 'Username must be 7 to 30 characters long and start with a letter. It can only contain letters, digits, underscores, hyphens, or periods'
   },
   lastName: {
     empty: 'Please enter last name',

@@ -12,6 +12,8 @@ const authSlice = createSlice({
           },
         clearToken: (state) => {
             state.token = null;
+            state.authData = {};
+            state.isVerified = false
         },
         verifiedUser: (state, action) => {
             state.isVerified = action.payload

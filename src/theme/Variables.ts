@@ -22,7 +22,7 @@ export const Colors = {
   blue:'#3252E8',
   //Typography
   textGray800: '#000000',
-  textGray400: "#525866",
+  textGray400: "rgba(255, 255, 255, 0.6)",
   textGray200: "#1c1c22",
   primary: "#000",
   success: '#28a745',
@@ -52,7 +52,8 @@ export const FontSize = {
   tiny: 12,
   small: 14,
   regular: 16,
-  large: 32,
+  large: 20,
+  veryLarge: 30
 };
 
 /**

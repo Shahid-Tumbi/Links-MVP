@@ -26,6 +26,10 @@ export default function ({ FontSize, Colors }: ThemeVariables) {
       fontSize: FontSize.large,
       color: Colors.textGray400,
     },
+    textVeryLarge: {
+      fontSize: FontSize.veryLarge,
+      color: Colors.textGray400,
+    },
     textBold: {
       fontWeight: 'bold',
     },
