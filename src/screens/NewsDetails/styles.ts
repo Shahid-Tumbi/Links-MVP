@@ -55,4 +55,6 @@ export default StyleSheet.create({
     textDecorationStyle: 'solid',
     textDecorationColor: '#00beff',
   },
+  webViewContainer: {
+    
 });

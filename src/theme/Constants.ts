@@ -33,3 +33,17 @@ export const Constants = {
     today:'Today',
     sectionView:'Tap on a section to view'
 }
+
+interface NewsCategoryTypes {
+    [key: string]: string;
+  }
+  
+  export const NewsCategory: NewsCategoryTypes = {
+    business: 'business',
+    entertainment: 'entertainment',
+    general: 'general',
+    health: 'health',
+    science: 'science',
+    sports: 'sports',
+    technology: 'technology',
+  };

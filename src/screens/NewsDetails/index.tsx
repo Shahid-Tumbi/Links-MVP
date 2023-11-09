@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Image,
   Linking,
@@ -10,7 +10,9 @@ import {
   View,
 } from 'react-native';
 import {SharedElement} from 'react-navigation-shared-element';
+import { WebView } from 'react-native-webview';
 import {Back} from '../../../assets';
+import {WebViewScreen} from '../webview';
 import styles from './styles';
 
 interface Route {
@@ -29,6 +31,7 @@ interface Route {
 export const NewsDetails: React.FC<{route: Route}> = ({route}) => {
   const {article, articleIndex} = route?.params;
   const navigation = useNavigation();
+  const [isVisible, setIsVisible] = useState(false);
   const goBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
@@ -37,8 +40,8 @@ export const NewsDetails: React.FC<{route: Route}> = ({route}) => {
   const contentColor = useColorScheme() === 'dark' ? '#bbb' : '#444';
   const readMoreBgColor = useColorScheme() === 'dark' ? '#222' : '#ddd';
   const handleURLPress = useCallback(() => {
-    Linking.openURL(article?.url);
-  }, [article]);
+    setIsVisible(true);
+  }, []);
 
   return (
     <>
@@ -61,6 +64,9 @@ export const NewsDetails: React.FC<{route: Route}> = ({route}) => {
         <Text style={[styles.content, {color: contentColor}]}>
           {article?.content}
         </Text>
+        <View style={styles.webViewContainer}>
+            <WebView source={{uri: article?.url }} />
+          </View>
       </ScrollView>
       <View
         style={[styles.readMoreContainer, {backgroundColor: readMoreBgColor}]}>
@@ -71,6 +77,13 @@ export const NewsDetails: React.FC<{route: Route}> = ({route}) => {
           </Text>
         </Text>
       </View>
+      <WebViewScreen
+        {...{
+          isVisible,
+          url: article?.url ?? 'https://google.com/',
+          setIsVisible,
+        }}
+      />
     </>
   );
 };
