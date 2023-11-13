@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://dev-api.linksbynk.com/v1",
+  baseUrl: process.env.API_URL,
 });
 
 const baseQueryWithInterceptor: BaseQueryFn<
