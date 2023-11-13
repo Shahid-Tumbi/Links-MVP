@@ -3,10 +3,12 @@
  *
  * Use it to define generic component styles (e.g. the default text styles, default button styles...).
  */
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import buttonStyles from './components/Buttons';
 import { CommonParams } from '../../@types/theme';
 import { clearToken } from '@/store/User';
+import auth from '@react-native-firebase/auth';
+
 
 export default function <C>({ Colors, ...args }: CommonParams<C>) {
   return {
@@ -59,3 +61,19 @@ export function onTokenExpired(dispatch:any){
       return  dispatch(clearToken())
 }
 
+export const firebaseOtpSent = (countryCode: string,phoneNumber: string ): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    let phoneWithCount = countryCode + `${phoneNumber}`;
+    auth()
+      .signInWithPhoneNumber(phoneWithCount)
+      .then((res: any) => {
+        console.log('Res', res);
+        resolve(res);
+      })
+      .catch((error: any) => {
+        console.log('errror', error);
+        Alert.alert(error.message == '[auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later.' ? 'Too many request!Try after some time!' : error.message);
+        reject(error);
+      });
+  });
+};

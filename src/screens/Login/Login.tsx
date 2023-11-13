@@ -1,17 +1,28 @@
 import { CommonTextInput, Loader, PasswordInput } from "@/components";
 import { useTheme } from "@/hooks";
-import { useLoginUserMutation } from "@/services/modules/users";
-import { setAuthData, setToken, verifiedUser } from "@/store/User";
+import { useAppConfigMutation, useLoginUserMutation } from "@/services/modules/users";
+import { setAppConfig, setAuthData, setToken, verifiedUser } from "@/store/User";
 import { onTokenExpired, validateEmailId, validatePassword } from "@/theme/Common";
 import { Constants } from "@/theme/Constants";
 import { globalStyles } from "@/theme/GlobalStyles";
 import ErrorMessages from "@/theme/errorMessages";
 import { Apple, Facebook, Google, Logo, RightArrow, Twitter } from "@/theme/svg";
-import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, PermissionsAndroid, Platform, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
 import { ApplicationScreenProps } from "types/navigation";
+import messaging from "@react-native-firebase/messaging";
+
+const getFCMToken = (async () => {
+  try {
+    const token = await messaging().getToken();
+    console.log(token);
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
 
 const Login = ({ navigation }: ApplicationScreenProps) => {
     const {
@@ -26,21 +37,52 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
     const [errorUserPassword, setErrorUserPassword] = useState('')
     const [passVisible, setPassVisible] = useState(false)
     const [loginUser, { isLoading }] = useLoginUserMutation()
+    const [appConfig] = useAppConfigMutation()
+    const [buttonError, setButtonError] = useState(false)
     const dispatch = useDispatch();
 
+    useEffect(() => {
+       
+        checkApplicationPermission()
+        getAppConfig()
+    }, [])
+    const checkApplicationPermission = async () => {
+        if (Platform.OS === 'android') {
+          try {
+            await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+            );
+          } catch (error) {
+          }
+        }
+      };
+    const getAppConfig = async () => {
+        const result: any = await appConfig({})
+        if (result?.data?.statusCode === 200) {
+            dispatch(setAppConfig(result?.data?.result))
+        } else {
+            if (result?.error?.data) {
+                console.log('Error in app conifg', result?.error?.data?.message);
+            }
+            if (result?.error?.error) {
+                console.log('app conifg error', result?.error?.error);
+            }
+        }
+    }
     const makeVisible = () => {
         setPassVisible(!passVisible);
     };
     const onLogin = async () => {
         try {
+            setButtonError(false)
             setErrorUserEmail('')
             setErrorUserPassword('')
             if (email == '') {
                 setErrorUserEmail(ErrorMessages.emailId.empty);
-            } else if (!validateEmailId(email.trim())) {
-                setErrorUserEmail(ErrorMessages.emailId.valid);
+                setButtonError(true)
             } else if (password == '') {
                 setErrorUserPassword(ErrorMessages.password.empty)
+                setButtonError(true)
             } else {
                 const userData: any = {
                     deviceToken: 'asd',
@@ -50,18 +92,24 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                 const result: any = await loginUser(userData);
 
                 if (result?.data?.statusCode === 200) {
-                    dispatch(verifiedUser(true))
                     dispatch(setToken(result?.data?.result?.token))
                     dispatch(setAuthData(result?.data?.result?.profile))
+                    if (result?.data?.result?.profile.isPhoneVerified === false) {
+                        navigation.navigate('OtpScreen', { pageFrom: 'Login' })
+                    } else {
+                        dispatch(verifiedUser(true))
+                    }
                 } else {
                     if (result?.error?.data) {
                         if (result?.error?.data?.message === 'Oops! This Email ID isn’t registered with Us') {
                             setErrorUserEmail(result?.error?.data?.message)
-                        }
-                        if (result?.error?.data?.message === 'Oops! This doesn’t seem like a correct password') {
+                            setButtonError(true)
+                        } else if (result?.error?.data?.message === 'Oops! This doesn’t seem like a correct password') {
                             setErrorUserPassword(result?.error?.data?.message)
+                            setButtonError(true)
                         } else {
                             Alert.alert(result?.error?.data?.message)
+                            setButtonError(true)
                         }
                     }
                     if (result?.error?.error) {
@@ -99,11 +147,6 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                             setEmail(value);
                             if (value == '') {
                                 setErrorUserEmail(ErrorMessages.emailId.empty);
-                            } else if (
-
-                                !validateEmailId(value.trim())
-                            ) {
-                                setErrorUserEmail(ErrorMessages.emailId.valid)
                             } else {
                                 setErrorUserEmail('')
                             }
@@ -156,7 +199,7 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                                 {Constants.signin}
                             </Text>
                             <TouchableOpacity onPress={() => onLogin()} >
-                                <RightArrow />
+                                <RightArrow error={buttonError} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -171,7 +214,7 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                         <Twitter />
                         <Apple />
                     </View>
-                    <Text style={[Fonts.textRegular, Fonts.textCenter, Gutters.regularTMargin]}>{'Don’t have an account? '}
+                    <Text style={[Fonts.textRegular, Fonts.textCenter, Gutters.regularTMargin]}>{Constants.dontHaveAcc}
                         <Text style={[Fonts.textLarge]} onPress={() => navigation.navigate('Signup')}>Sign up</Text>
                     </Text>
                 </View>
