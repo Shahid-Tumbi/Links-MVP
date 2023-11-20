@@ -105,7 +105,7 @@ const posts: Post[] = [
   }
 ];
 
-export default function PostFeed() {
+export default function HomeFeed() {
   return (
     <View style={styles.container}>
       <Carousel

@@ -37,7 +37,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Image, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import LinkPreview from '@flyerhq/react-native-link-preview';
 
-export default function App() {
+export default function ShareLink() {
   const [url, setUrl] = useState<string>('');
   const [linkPreview, setLinkPreview] = useState<any>();
 
