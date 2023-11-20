@@ -11,7 +11,7 @@ export const Constants = {
     },
     email:'Email',
     password:'Password',
-    emailAddress:'Email Address',
+    emailAddress:'Username/email ID',
     fullName:"Full Name",
     phoneNo:'Phone Number',
     signin:'SIGN IN',
@@ -31,5 +31,7 @@ export const Constants = {
     analyseProfile:'Let’s analyse your news interest profile',
     interestBased:'Your interests analysis based on your upvotes',
     today:'Today',
-    sectionView:'Tap on a section to view'
+    dontHaveAcc:'Don’t have an account? ',
+    sectionView:'Tap on a section to view',
+    byPassOtp:'123456'
 }
