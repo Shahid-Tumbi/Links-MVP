@@ -183,88 +183,88 @@
 // })
 
 
-import React from 'react';
-import { SafeAreaView, TextInput, View, Image, Text, StyleSheet } from 'react-native';
-import FollowButton from '../../components/FollowButton/FollowButton';
+// import React from 'react';
+// import { SafeAreaView, TextInput, View, Image, Text, StyleSheet } from 'react-native';
+// import FollowButton from '../../components/FollowButton/FollowButton';
 
-interface User {
-  name: string;
-  image: string;
-  id: string;
-}
+// interface User {
+//   name: string;
+//   image: string;
+//   id: string;
+// }
 
-const users: User[] = [
-  {
-    name: 'Jane Doe', 
-    image: 'avatar1.png',
-    id: '1'
-  },
-  {
-    name: 'John Smith',
-    image: 'avatar2.png', 
-    id: '2'
-  }
-];
+// const users: User[] = [
+//   {
+//     name: 'Jane Doe', 
+//     image: 'avatar1.png',
+//     id: '1'
+//   },
+//   {
+//     name: 'John Smith',
+//     image: 'avatar2.png', 
+//     id: '2'
+//   }
+// ];
 
-const DiscoverCurator = () => {
+// const DiscoverCurator = () => {
 
-  const [searchTerm, setSearchTerm] = React.useState<string>('');
+//   const [searchTerm, setSearchTerm] = React.useState<string>('');
 
-  const renderUser = ({item}: {item: User}) => {
-    return (
-      <View style={styles.user}>
-        <Image source={{uri: item.image}} style={styles.avatar} />
-        <View>
-          <Text style={styles.name}>{item.name}</Text>
-        </View>
-        <FollowButton /> 
-      </View>
-    )
-  }
+//   const renderUser = ({item}: {item: User}) => {
+//     return (
+//       <View style={styles.user}>
+//         <Image source={{uri: item.image}} style={styles.avatar} />
+//         <View>
+//           <Text style={styles.name}>{item.name}</Text>
+//         </View>
+//         <FollowButton /> 
+//       </View>
+//     )
+//   }
 
-  return (
-    <SafeAreaView>
-      <TextInput
-        style={styles.search}
-        placeholder="Search"
-        value={searchTerm}
-        onChangeText={setSearchTerm}  
-      />
+//   return (
+//     <SafeAreaView>
+//       <TextInput
+//         style={styles.search}
+//         placeholder="Search"
+//         value={searchTerm}
+//         onChangeText={setSearchTerm}  
+//       />
 
-      <View style={styles.list}>
-        {users.map(renderUser)}  
-      </View>
-    </SafeAreaView>
-  )
-}
+//       <View style={styles.list}>
+//         {users.map(renderUser)}  
+//       </View>
+//     </SafeAreaView>
+//   )
+// }
 
-const styles = StyleSheet.create({
-  search: {
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-  },
+// const styles = StyleSheet.create({
+//   search: {
+//     height: 40,
+//     borderWidth: 1,
+//     padding: 10,
+//     borderRadius: 5,
+//   },
 
-  list: {
-    marginTop: 16,
-  },
+//   list: {
+//     marginTop: 16,
+//   },
 
-  user: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8,
-  },
+//   user: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     padding: 8,
+//   },
 
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
+//   avatar: {
+//     width: 40,
+//     height: 40,
+//     borderRadius: 20,
+//   },
 
-  name: {
-    marginLeft: 8,
-  }
-});
+//   name: {
+//     marginLeft: 8,
+//   }
+// });
 
-export default DiscoverCurator;
+// export default DiscoverCurator;

@@ -6,9 +6,9 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors } from '@/theme/Variables';
 import { StyleSheet, Text, View } from 'react-native';
 import { EditProfile, ProfileScreen } from '@/screens';
-import HomeFeed from '@/screens/HomeFeed/HomeFeed';
-import ShareLink from '@/screens/ShareLink/ShareLink';
-import PostDetails from '@/screens/PostDetails/PostDetails';
+// import HomeFeed from '@/screens/HomeFeed/HomeFeed';
+// import ShareLink from '@/screens/ShareLink/ShareLink';
+// import PostDetails from '@/screens/PostDetails/PostDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,14 +39,14 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeFeed" component={HomeFeed} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false, tabBarShowLabel:false,
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
           }}}   />
-      <Tab.Screen name="ShareLink" component={ShareLink}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="SettingsScreen" component={SettingsScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <Octicons name={ 'search' } color={focused ? blueColor : color} lineBreakMode='middle' size={size} />
           }}}   />
-      <Tab.Screen name="Message" component={PostDetails}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="Message" component={MessageScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <MaterialCommunityIcons name={ 'comment-outline' } color={focused ? blueColor : color} size={size} />
           }}} />
       <Tab.Screen name="Profile" component={ProfileScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {

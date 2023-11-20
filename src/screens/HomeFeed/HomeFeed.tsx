@@ -80,63 +80,63 @@
 // }
 
 
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
-import SinglePostItem from './SinglePostItem';
+// import React from 'react';
+// import { View, Text, StyleSheet } from 'react-native';
+// import Carousel from 'react-native-snap-carousel';
+// // import SinglePostItem from './SinglePostItem';
 
-interface Post {
-  id: string;
-  content: string;
-}
+// interface Post {
+//   id: string;
+//   content: string;
+// }
 
-const posts: Post[] = [
-  {
-    id: '1', 
-    content: 'Post 1'
-  },
-  {
-    id: '2',
-    content: 'Post 2' 
-  },
-  {
-    id: '3',
-    content: 'Post 3'
-  }
-];
+// const posts: Post[] = [
+//   {
+//     id: '1', 
+//     content: 'Post 1'
+//   },
+//   {
+//     id: '2',
+//     content: 'Post 2' 
+//   },
+//   {
+//     id: '3',
+//     content: 'Post 3'
+//   }
+// ];
 
-export default function HomeFeed() {
-  return (
-    <View style={styles.container}>
-      <Carousel
-        layout={'default'}
-        layoutCardOffset={9}
-        removeClippedSubviews={false}
-        data={posts}
-        renderItem={({ item }) => (
-          <SinglePostItem post={item} />  
-        )}
-      />
+// export default function HomeFeed() {
+//   return (
+//     <View style={styles.container}>
+//       <Carousel
+//         layout={'default'}
+//         layoutCardOffset={9}
+//         removeClippedSubviews={false}
+//         data={posts}
+//         renderItem={({ item }) => (
+//           <SinglePostItem post={item} />  
+//         )}
+//       />
 
-      {posts.slice(1).map(post => (
-        <SinglePostItem key={post.id} post={post} />  
-      ))}
+//       {posts.slice(1).map(post => (
+//         <SinglePostItem key={post.id} post={post} />  
+//       ))}
 
-    </View>
-  );
-}
+//     </View>
+//   );
+// }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
 
-  // Carousel style
-  carousel: {
-    marginBottom: 20,
-    backgroundColor: '#fff' 
-  }
-});
+//   // Carousel style
+//   carousel: {
+//     marginBottom: 20,
+//     backgroundColor: '#fff' 
+//   }
+// });
 
 
 
