@@ -109,112 +109,213 @@
 
 
 
+// import React from 'react';
+// import {
+//   Image,
+//   SafeAreaView,
+//   ImageBackground,
+//   StyleSheet,
+//   Text,
+//   TextInput,
+//   View,
+//   TouchableOpacity
+// } from 'react-native';
+
+// const SinglePostItem = () => {
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+
+//       <ImageBackground 
+//         source={{uri: 'backgroundImageUrl'}} 
+//         style={styles.backgroundImage}
+//       >
+
+//         <Image 
+//           source={{uri: 'profilePicUrl'}}  
+//           style={styles.profilePic}
+//         />
+
+//         <Text style={styles.name}>John Doe</Text>
+
+//         <Text style={styles.bio}>
+//           Software Engineer living in Silicon Valley
+//         </Text>
+
+//       </ImageBackground>
+
+//       <TextInput
+//         style={styles.commentInput}
+//         placeholder="Write a comment..."
+//       />
+
+//       <View style={styles.actionIcons}>
+
+//         <TouchableOpacity>
+//           <Image source={require('./upvote.png')} />
+//         </TouchableOpacity>
+
+//         <TouchableOpacity>
+//           <Image source={require('./downvote.png')} />          
+//         </TouchableOpacity>
+
+//         <TouchableOpacity>
+//           <Image source={require('./share.png')} />
+//         </TouchableOpacity>
+
+//       </View>
+
+//     </SafeAreaView>
+//   );
+// }
+
+
+
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   backgroundImage: {
+//     width: '100%', 
+//     height: 200  
+//   },
+//   profilePic: {
+//     width: 100,
+//     height: 100,
+//     borderRadius: 50,
+//     position: 'absolute',
+//     top: 30, 
+//     left: 40
+//   },
+//   name: {
+//     position: 'absolute',
+//     top: 140,
+//     left: 40,
+//     color: 'white',
+//     fontSize: 20,
+//     fontWeight: 'bold'  
+//   },
+//   bio: {
+//     position: 'absolute',
+//     top: 170,
+//     left: 40,
+//     color: 'white'
+//   },
+//   commentInput: {
+//     height: 50,
+//     margin: 20,
+//     borderWidth: 1,
+//     padding: 10
+//   },
+//   actionIcons: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-around'
+//   }
+// });
+
+// export default SinglePostItem;
+
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity
-} from 'react-native';
+import { View, Image, Text, Button, StyleSheet, ImageSourcePropType } from 'react-native';
 
-const SinglePostItem = () => {
+interface ProfileViewProps {}
 
+const ProfileView: React.FC<ProfileViewProps> = () => {
   return (
-    <SafeAreaView style={styles.container}>
-
-      <ImageBackground 
-        source={{uri: 'backgroundImageUrl'}} 
+    <View style={styles.container}>
+      <Image
         style={styles.backgroundImage}
-      >
-
-        <Image 
-          source={{uri: 'profilePicUrl'}}  
-          style={styles.profilePic}
-        />
-
-        <Text style={styles.name}>John Doe</Text>
-
-        <Text style={styles.bio}>
-          Software Engineer living in Silicon Valley
-        </Text>
-
-      </ImageBackground>
-
-      <TextInput
-        style={styles.commentInput}
-        placeholder="Write a comment..."
+        source={{ uri: 'https://via.placeholder.com/500' }} // Replace with your actual image URL
       />
-
-      <View style={styles.actionIcons}>
-
-        <TouchableOpacity>
-          <Image source={require('./upvote.png')} />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image source={require('./downvote.png')} />          
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image source={require('./share.png')} />
-        </TouchableOpacity>
-
+      <View style={styles.header}>
+        <Image style={styles.avatar} source={{ uri: 'https://www.bootdey.com/img/Content/avatar/avatar6.png' }} />
+        <View style={styles.info}>
+          <Text style={styles.name}>John Doe</Text>
+          <Text style={styles.username}>@johndoe</Text>
+          <Button title="Edit Profile" onPress={() => {}} />
+        </View>
       </View>
-
-    </SafeAreaView>
+      <View style={styles.stats}>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Tweets</Text>
+          <Text style={styles.statValue}>1,234</Text>
+        </View>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Following</Text>
+          <Text style={styles.statValue}>123</Text>
+        </View>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Followers</Text>
+          <Text style={styles.statValue}>456</Text>
+        </View>
+      </View>
+      <Text style={styles.bio}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </Text>
+    </View>
   );
-}
-
-
-
-
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   backgroundImage: {
-    width: '100%', 
-    height: 200  
-  },
-  profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: 'cover', // or 'stretch' or 'contain'
     position: 'absolute',
-    top: 30, 
-    left: 40
+    width: '100%',
+    height: '100%',
+  },
+  header: {
+    marginTop: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  info: {
+    marginLeft: 20,
   },
   name: {
-    position: 'absolute',
-    top: 140,
-    left: 40,
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold'  
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  username: {
+    color: '#999',
+    fontSize: 18,
+  },
+  stats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+  },
+  stat: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statLabel: {
+    color: '#999',
+    fontSize: 14,
+  },
+  statValue: {
+    fontSize: 18,
   },
   bio: {
-    position: 'absolute',
-    top: 170,
-    left: 40,
-    color: 'white'
+    padding: 20,
+    fontSize: 16,
+    color: '#333',
   },
-  commentInput: {
-    height: 50,
-    margin: 20,
-    borderWidth: 1,
-    padding: 10
-  },
-  actionIcons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  }
 });
 
-export default SinglePostItem;
+export default ProfileView;
+
 
 

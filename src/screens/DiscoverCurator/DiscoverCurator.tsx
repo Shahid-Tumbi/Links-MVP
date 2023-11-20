@@ -268,3 +268,95 @@
 // });
 
 // export default DiscoverCurator;
+
+
+import React from 'react';
+import { FlatList, Image, Text, View, StyleSheet } from 'react-native';
+
+
+interface Person {
+  id: string;
+  name: string;
+  imageUrl: string;
+  posts: string;
+}
+
+const people: Person[] = [
+  {
+    id: '1',
+    name: 'John Doe', 
+    imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+    posts: '100 posts'
+  },
+  {  
+    id: '2', 
+    name: 'Jane Smith',
+    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+    posts: '75 posts'
+  },
+  {  
+    id: '3', 
+    name: 'Jane Smith',
+    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+    posts: '75 posts'
+  },
+  {  
+    id: '4', 
+    name: 'Jane Smith',
+    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+    posts: '75 posts'
+  },
+  {  
+    id: '5', 
+    name: 'Jane Smith',
+    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+    posts: '75 posts'
+  },
+ 
+];
+
+export default function DiscoverCurator() {
+  return (
+    <FlatList 
+      data={people}
+      renderItem={({item}) => (
+        <PersonItem person={item} />  
+      )}
+      keyExtractor={item => item.id}
+    />
+  );
+}
+
+function PersonItem({person}: {person: Person}) {
+  return (
+    <View style={styles.person}>
+      <Image source={{uri: person.imageUrl}} style={styles.image} />
+      <Text style={styles.name}>{person.name}</Text>
+      <Text style={styles.posts}>{person.posts}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  person: {
+    flexDirection: 'row',
+    margin: 10
+  },
+
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25
+  },
+
+  name: {
+    marginLeft: 10,
+    fontWeight: 'bold'
+  },
+
+  posts: {
+    marginLeft: 10, 
+    color: 'gray'
+  }
+});
+
