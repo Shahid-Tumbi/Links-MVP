@@ -20,7 +20,7 @@ const BS = () => {
       </BottomSheet>
     </View>
   )
-}
+}   
 
 const styles = StyleSheet.create({
     container: {

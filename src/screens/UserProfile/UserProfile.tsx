@@ -1,153 +1,273 @@
-import { useLocalSearchParams, useNavigation } from 'expo-router';
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
-import userJson from '../../../assets/data/user.json';
-import { useLayoutEffect, useState } from 'react';
-import { User } from '@/types';
-import ExperienceListItem from '@/components/ExperienceListItem';
-import { gql, useQuery } from '@apollo/client';
+import React from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
-const query = gql`
-  query MyQuery($id: ID!) {
-    profile(id: $id) {
-      id
-      name
-      image
-      position
-      about
-      experience {
-        id
-        companyname
-        companyimage
-        title
-        userid
-      }
-      backimage
-    }
-  }
-`;
-
-export default function UserProfile() {
-  const { id } = useLocalSearchParams();
-
-  const { loading, error, data } = useQuery(query, { variables: { id } });
-  const user = data?.profile;
-
-  const navigation = useNavigation();
-
-  const onConnect = () => {
-    console.warn('Connect Pressed');
-  };
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ title: user?.name || 'User' });
-  }, [user?.name]);
-
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-  if (error) {
-    console.log(error);
-    return <Text>Something went wrong...</Text>;
-  }
-
+export default UserProfile = () => {
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header */}
+    <View style={styles.container}>
       <View style={styles.header}>
-        {/* BG Image */}
-        <Image source={{ uri: user.backimage }} style={styles.backImage} />
-
         <View style={styles.headerContent}>
-          {/* Profile image */}
-          <Image source={{ uri: user.image }} style={styles.image} />
-
-          {/* Name and Position */}
-          <Text style={styles.name}>{user.name}</Text>
-          <Text>{user.position}</Text>
-
-          {/* Connect button */}
-          <Pressable onPress={onConnect} style={styles.button}>
-            <Text style={styles.buttonText}>Connect</Text>
-          </Pressable>
+          <Image
+            style={styles.avatar}
+            source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar2.png' }}
+          />
+          <Text style={styles.name}>John Doe</Text>
         </View>
       </View>
 
-      {/* About */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>About</Text>
-        <Text style={styles.paragraph}>{user.about}</Text>
+      <View style={styles.profileDetail}>
+        <View style={styles.detailContent}>
+          <Text style={styles.title}>Photos</Text>
+          <Text style={styles.count}>200</Text>
+        </View>
+        <View style={styles.detailContent}>
+          <Text style={styles.title}>Followers</Text>
+          <Text style={styles.count}>200</Text>
+        </View>
+        <View style={styles.detailContent}>
+          <Text style={styles.title}>Following</Text>
+          <Text style={styles.count}>200</Text>
+        </View>
       </View>
 
-      {/* Experience */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Experience</Text>
-        {user.experience?.map((experience) => (
-          <ExperienceListItem key={experience.id} experience={experience} />
-        ))}
+      <View style={styles.body}>
+        <View style={styles.bodyContent}>
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Text>Opcion 1</Text>
+          </TouchableOpacity>
+          <Text style={styles.description}>
+            Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis,
+            omittam deseruisse consequuntur ius an,
+          </Text>
+        </View>
       </View>
-    </ScrollView>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#00CED1',
+  },
+  headerContent: {
+    padding: 30,
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: 'white',
+    marginBottom: 10,
+  },
+  name: {
+    fontSize: 22,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  profileDetail: {
+    alignSelf: 'center',
+    marginTop: 200,
+    alignItems: 'center',
+    flexDirection: 'row',
+    position: 'absolute',
+    backgroundColor: '#ffffff',
+  },
+  detailContent: {
+    margin: 10,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20,
+    color: '#00CED1',
+  },
+  count: {
+    fontSize: 18,
+  },
+  bodyContent: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 30,
+    marginTop: 40,
+  },
+  textInfo: {
+    fontSize: 18,
+    marginTop: 20,
+    color: '#696969',
+  },
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: '#00CED1',
+  },
+  description: {
+    fontSize: 20,
+    color: '#00CED1',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+})
+
+
+/*
+ Here is the code with fixes:
+
+import React from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+
+interface UserProfileProps {
+  
+}
+
+const UserProfile: React.FC<UserProfileProps> = () => {
+  return (
+    <View style={styles.container}>
+
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Image 
+            style={styles.avatar}
+            source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar2.png' }} 
+          />
+          <Text style={styles.name}>John Doe</Text>
+        </View>
+      </View>
+
+      <View style={styles.profileDetail}>
+
+        <View style={styles.detailContent}>
+          <Text style={styles.title}>Photos</Text>  
+          <Text style={styles.count}>200</Text>
+        </View>
+
+        <View style={styles.detailContent}>    
+          <Text style={styles.title}>Followers</Text>
+          <Text style={styles.count}>200</Text>
+        </View>
+
+        <View style={styles.detailContent}>      
+          <Text style={styles.title}>Following</Text>
+          <Text style={styles.count}>200</Text>
+        </View>
+
+      </View>
+
+      <View style={styles.body}>
+
+        <View style={styles.bodyContent}>
+          
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Text>Option 1</Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.description}>
+            Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,
+          </Text>
+
+        </View>
+
+      </View>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
+
+  container: {
+    flex: 1,
+  },
+
   header: {
-    backgroundColor: 'white',
-    marginBottom: 5,
+    backgroundColor: '#00CED1',
   },
-  backImage: {
-    width: '100%',
-    aspectRatio: 5 / 2,
-    marginBottom: -60,
-  },
+
   headerContent: {
-    padding: 10,
-    paddingTop: 0,
+    padding: 30,
+    alignItems: 'center' 
   },
-  image: {
-    width: 120,
-    aspectRatio: 1,
-    borderRadius: 60,
-    borderWidth: 3,
+
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63, 
+    borderWidth: 4,
     borderColor: 'white',
+    marginBottom: 10
   },
+
   name: {
-    fontSize: 24,
-    fontWeight: '500',
+    fontSize: 22,
+    color: '#FFFFFF',
+    fontWeight: '600'
   },
 
-  // Button
-  button: {
-    backgroundColor: 'royalblue',
-    padding: 10,
+  profileDetail: {
+    alignSelf: 'center',
+    marginTop: 200,
     alignItems: 'center',
-    borderRadius: 50,
-    marginVertical: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '600',
+    flexDirection: 'row',
+    position: 'absolute',
+    backgroundColor: '#ffffff'
   },
 
-  section: {
-    backgroundColor: 'white',
-    padding: 10,
-    marginVertical: 5,
+  detailContent: {
+    margin: 10,
+    alignItems: 'center'
   },
-  sectionTitle: {
+
+  title: {
+    fontSize: 20,
+    color: '#00CED1'
+  },
+
+  count: {
+    fontSize: 18
+  },
+
+  body: {
+
+  },
+
+  bodyContent: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 30,
+    marginTop: 40
+  },
+
+  textInfo: {
     fontSize: 18,
-    fontWeight: '600',
-    marginVertical: 5,
+    marginTop: 20,
+    color: '#696969'
   },
-  paragraph: {
-    lineHeight: 20,
+
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: '#00CED1'
   },
+
+  description: {
+    fontSize: 20, 
+    color: '#00CED1',
+    marginTop: 10,
+    textAlign: 'center'
+  }
+
 });
+
+export default UserProfile;
+*/

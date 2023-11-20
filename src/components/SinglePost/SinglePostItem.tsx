@@ -105,3 +105,125 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
   },
 });
+
+/*
+ Here is the React Native code in TSX to generate a Twitter profile UI as described:
+
+```tsx
+import React from 'react';
+import {
+  Image,
+  SafeAreaView,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity
+} from 'react-native';
+
+const TwitterProfile = () => {
+
+  return (
+    <SafeAreaView style={styles.container}>
+
+      <ImageBackground 
+        source={{uri: 'backgroundImageUrl'}} 
+        style={styles.backgroundImage}
+      >
+
+        <Image 
+          source={{uri: 'profilePicUrl'}}  
+          style={styles.profilePic}
+        />
+
+        <Text style={styles.name}>John Doe</Text>
+
+        <Text style={styles.bio}>
+          Software Engineer living in Silicon Valley
+        </Text>
+
+      </ImageBackground>
+
+      <TextInput
+        style={styles.commentInput}
+        placeholder="Write a comment..."
+      />
+
+      <View style={styles.actionIcons}>
+
+        <TouchableOpacity>
+          <Image source={require('./upvote.png')} />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Image source={require('./downvote.png')} />          
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Image source={require('./share.png')} />
+        </TouchableOpacity>
+
+      </View>
+
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+
+  // styles 
+
+});
+
+export default TwitterProfile;
+```
+
+Here is the StyleSheet code to style the components:
+
+```ts
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  backgroundImage: {
+    width: '100%', 
+    height: 200  
+  },
+  profilePic: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    position: 'absolute',
+    top: 30, 
+    left: 40
+  },
+  name: {
+    position: 'absolute',
+    top: 140,
+    left: 40,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'  
+  },
+  bio: {
+    position: 'absolute',
+    top: 170,
+    left: 40,
+    color: 'white'
+  },
+  commentInput: {
+    height: 50,
+    margin: 20,
+    borderWidth: 1,
+    padding: 10
+  },
+  actionIcons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  }
+});
+```
+
+Let me know if you need any other changes to the implementation!
+*/

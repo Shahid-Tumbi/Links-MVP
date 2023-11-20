@@ -181,3 +181,96 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 })
+
+/* Here is the React Native code in TypeScript to generate a UI similar to Instagram search:
+
+```typescript
+import React from 'react';
+import { SafeAreaView, TextInput, View, Image, Text, StyleSheet } from 'react-native';
+import FollowButton from './FollowButton';
+
+interface User {
+  name: string;
+  image: string;
+  id: string;
+}
+
+const users: User[] = [
+  {
+    name: 'Jane Doe', 
+    image: 'avatar1.png',
+    id: '1'
+  },
+  {
+    name: 'John Smith',
+    image: 'avatar2.png', 
+    id: '2'
+  }
+];
+
+const App = () => {
+
+  const [searchTerm, setSearchTerm] = React.useState<string>('');
+
+  const renderUser = ({item}: {item: User}) => {
+    return (
+      <View style={styles.user}>
+        <Image source={{uri: item.image}} style={styles.avatar} />
+        <View>
+          <Text style={styles.name}>{item.name}</Text>
+        </View>
+        <FollowButton /> 
+      </View>
+    )
+  }
+
+  return (
+    <SafeAreaView>
+      <TextInput
+        style={styles.search}
+        placeholder="Search"
+        value={searchTerm}
+        onChangeText={setSearchTerm}  
+      />
+
+      <View style={styles.list}>
+        {users.map(renderUser)}  
+      </View>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+  search: {
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+  },
+
+  list: {
+    marginTop: 16,
+  },
+
+  user: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+  },
+
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+
+  name: {
+    marginLeft: 8,
+  }
+});
+
+export default App;
+```
+
+This generates the search bar on top with a list of users rendered below. Each user item has the profile picture, name and follow button laid out with the appropriate styles.
+*/
