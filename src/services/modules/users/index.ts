@@ -11,6 +11,12 @@ export type User = {
 };
 export const userApi = api.injectEndpoints({
   endpoints: build => ({
+    appConfig: build.mutation<User, Partial<User>>({
+      query: () => ({
+        url: `/config`,
+        method: 'GET',
+      }),
+    }),
     registerUser: build.mutation<User, Partial<User>>({
       query: (newUser) => ({
         url: `/users/register`,
@@ -79,4 +85,4 @@ export const userApi = api.injectEndpoints({
     overrideExisting: true,
   });
 
-export const { useRegisterUserMutation,useVerifyOtpMutation,useResendOtpMutation,useLoginUserMutation,useUpdateUserMutation, usePostListMutation } = userApi;
+export const { useAppConfigMutation,useRegisterUserMutation,useVerifyOtpMutation,useResendOtpMutation,useLoginUserMutation,useUpdateUserMutation, usePostListMutation } = userApi;

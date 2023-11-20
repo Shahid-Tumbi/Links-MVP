@@ -10,9 +10,9 @@ import { Loader } from "@/components";
 import { useDispatch, useSelector } from "react-redux";
 import { verifiedUser } from "@/store/User";
 import { useResendOtpMutation, useVerifyOtpMutation } from "@/services/modules/users";
-import { onTokenExpired } from "@/theme/Common";
+import { firebaseOtpSent, onTokenExpired } from "@/theme/Common";
 
-const OtpScreen = ({ navigation }: ApplicationScreenProps) => {
+const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const {
     Layout,
     Fonts,
@@ -32,10 +32,14 @@ const OtpScreen = ({ navigation }: ApplicationScreenProps) => {
   const authData = useSelector((state: any) => state.auth.authData);
   const dispatch = useDispatch()
   const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(20);
+  const [seconds, setSeconds] = useState(50);
   const [buttonError, setButtonError] = useState(false)
   const [otpTimer, setOtpTimer] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [apiLoader, setApiLoader] = useState(false);
+  const [confirmObj, setConfirmObj] = useState(route.params?.confirm)
+  const configData = useSelector((state: any) => state.auth.appConfigData);
+
   let timerInterval: any;
   useEffect(() => {
     timerInterval = setInterval(() => {
@@ -56,8 +60,21 @@ const OtpScreen = ({ navigation }: ApplicationScreenProps) => {
     return () => {
       clearInterval(timerInterval);
     };
-  }, [seconds,minutes]);
-
+  }, [seconds, minutes]);
+  useEffect(() => {
+    otpSend()
+  }, [])
+  const otpSend = () => {
+    if (configData.firebase) {
+      firebaseOtpSent(authData.countryCode, authData.phoneNumber).then((res: any) => {
+        setApiLoader(false)
+        setConfirmObj(res)
+      }).catch((err: any) => {
+        setApiLoader(false)
+        console.log('err', err);
+      })
+    }
+  }
   const onOtpChange = (index: number) => {
     return (value: string) => {
       const otpArrayCopy = otpArray.concat();
@@ -124,34 +141,54 @@ const OtpScreen = ({ navigation }: ApplicationScreenProps) => {
       setButtonError(true)
 
     } else {
-      const result:any = await verifyOtp({ body: { otp: otpArray.join('') }, token })
-      if (result?.data?.statusCode === 200) {
-        dispatch(verifiedUser(true))
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Main' }],
-        })
+      if (confirmObj) {
+        await confirmObj.confirm(otpArray.join('')).then(
+          (resp: any) => {
+            setApiLoader(false);
+            console.log('resp', resp);
+            verifyNumber()
+          }
+        ).catch((err: any) => {
+          setApiLoader(false);
+          Alert.alert("Invalid code entered.");
+          console.log("err", err)
+        });
       } else {
-        if (result?.error?.data) {
-          setButtonError(true)
-          setErrorMessage(result?.error?.data?.message)
-          // Alert.alert(result?.error?.data?.message)
-        }
-        if (result?.error?.error) {
-          Alert.alert('Something went wrong !!')
-        }
+        Alert.alert("OTP Expired! try to resend otp")
+      }
+    }
+  }
+  const verifyNumber = async () => {
+    const result: any = await verifyOtp({ body: { otp: Constants.byPassOtp }, token })
+    if (result?.data?.statusCode === 200) {
+      dispatch(verifiedUser(true))
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      })
+    } else {
+      if (result?.error?.data) {
+        setButtonError(true)
+        setErrorMessage(result?.error?.data?.message)
+        // Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        Alert.alert('Something went wrong !!')
       }
     }
   }
   const onResendOtp = async () => {
     setOtpArray([])
-    setSeconds(20)
+    setSeconds(50)
     setOtpTimer(false)
     setButtonError(false)
     setErrorMessage('')
     const result: any = await resendOtp({ token })
     if (result?.data?.statusCode === 200) {
       Alert.alert('Otp sent Successfully')
+      if (configData.firebase) {
+        otpSend()
+      }
     } else {
       if (result?.error?.data) {
         setButtonError(true)
@@ -167,7 +204,7 @@ const OtpScreen = ({ navigation }: ApplicationScreenProps) => {
   return (
     <KeyboardAvoidingView style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       <View style={[globalStyles.screenMargin]}>
-        {isLoading ? <Loader state={isLoading} /> : null}
+        {isLoading || apiLoader ? <Loader state={isLoading} /> : null}
 
         <View style={[Gutters.largeTMargin, Layout.flex08]}>
           <Logo />

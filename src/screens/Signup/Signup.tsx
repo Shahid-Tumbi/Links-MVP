@@ -10,9 +10,8 @@ import { ApplicationScreenProps } from "types/navigation";
 import { validateEmailId, validatePassword, validateUserName } from "@/theme/Common"
 import { useRegisterUserMutation } from "@/services/modules/users";
 import { setAuthData, setToken } from "@/store/User";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Logo, RightArrow } from "@/theme/svg";
-
 
 
 const Signup = ({ navigation }: ApplicationScreenProps) => {
@@ -22,6 +21,7 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
     const [userNameValid, setUserNameValid] = useState(false)
     const [password, setPassword] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
+    const [countryCode, setCountryCode] = useState('+91')
     const {
         Fonts,
         Layout,
@@ -38,6 +38,7 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
     const [passVisible, setPassVisible] = useState(false)
     const [userNameInvalid, setUserNameInvalid] = useState(false)
     const [buttonError, setButtonError] = useState(false)   
+    const [apiLoader, setApiLoader] = useState(false);
 
     const makeVisible = () => {
         setPassVisible(!passVisible);
@@ -50,7 +51,7 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
                 name,
                 email,
                 phoneNumber,
-                countryCode: "+91",
+                countryCode,
                 password,
                 userName
             };
@@ -58,19 +59,26 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
             if (result?.data?.statusCode === 200) {
                 dispatch(setToken(result?.data?.result?.token))
                 dispatch(setAuthData(result?.data?.result?.profile))
+                setApiLoader(true)
                 navigation.navigate('OtpScreen')
             } else {
-                if (result?.error?.data) {                    
-                    if(result?.error?.data?.message === 'Oops! This Email ID is already registered with Us'){
+                if (result?.error?.data) {
+                    if (result?.error?.data?.message === 'Oops! This Email ID is already registered with Us') {
                         setErrorUserEmail(result?.error?.data?.message)
-                    } else if(result?.error?.data?.message === 'Oops! Entered username is already taken'){
+                        setButtonError(true)
+
+                    } else if (result?.error?.data?.message === 'Oops! Entered username is already taken') {
                         setErrorUserName(result?.error?.data?.message)
                         setUserNameInvalid(true)
                         setUserNameValid(false)
-                    } else if(result?.error?.data?.message === 'Oops! This Phone no is already registered with Us'){
+                        setButtonError(true)
+
+                    } else if (result?.error?.data?.message === 'Oops! This Phone no is already registered with Us') {
                         setErrorUserPhone(result?.error?.data?.message)
-                    } else{
-                    Alert.alert(result?.error?.data?.message)
+                        setButtonError(true)
+
+                    } else {
+                        Alert.alert(result?.error?.data?.message)
                     }
                 }
                 if (result?.error?.error) {
@@ -84,6 +92,7 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
         }
     };
     const getStarted = () => {
+        setButtonError(false)
         let isValid = true;
         if (email == '') {
             setErrorUserEmail(ErrorMessages.emailId.empty);
@@ -127,7 +136,7 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
     return (
         <View
             style={[globalStyles.container]} >
-            {isLoading ? <Loader state={isLoading} /> : null}
+            {isLoading || apiLoader ? <Loader state={isLoading} /> : null}
             <View style={[globalStyles.screenMargin, Gutters.tinyBMargin]}>
                 <ScrollView style={[Layout.flex08]} keyboardShouldPersistTaps="always" >
                     <Logo style={[Gutters.tinyTMargin]} />
