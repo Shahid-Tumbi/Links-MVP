@@ -34,7 +34,7 @@
 
 
 import React, { useState } from 'react';
-import { View, TextInput, Image, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Image, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import LinkPreview from '@flyerhq/react-native-link-preview';
 
 export default function App() {
@@ -57,6 +57,7 @@ export default function App() {
   };
 
   return (
+    <KeyboardAvoidingView>
     <View style={styles.container}>
       <TextInput
         style={styles.input}
@@ -77,6 +78,7 @@ export default function App() {
         onPress={() => console.log('Link posted!')}
       />
     </View>
+    </KeyboardAvoidingView>
   );
 }
 
