@@ -10,7 +10,7 @@ import {
   FlatList,
 } from 'react-native'
 
-export default ListWithSearchView = () => {
+export default DiscoverCurator = () => {
   const data = [
     {
       id: 1,

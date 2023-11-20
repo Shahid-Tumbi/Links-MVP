@@ -1,7 +1,6 @@
-/*
-Here is the React Native code in TSX to implement the desired UI screen:
 
-```tsx
+
+
 import React, { useState } from 'react';
 import { 
   View, 
@@ -84,7 +83,3 @@ const styles = StyleSheet.create({
   }
 
 })
-```
-
-This generates the basic UI with a LinkPreview component to display the article title, a TextInput to add comments, and a BottomSheet to display existing comments. Let me know if you need any part implemented further.
-*/

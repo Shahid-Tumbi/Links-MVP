@@ -1,38 +1,38 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {LinkPreview} from '@flyerhq/react-native-link-preview';
+// import React from 'react';
+// import {View, StyleSheet} from 'react-native';
+// import {LinkPreview} from '@flyerhq/react-native-link-preview';
 
-const App = () => {
-  return (
-    <View style={styles.container}>
-      <LinkPreview
-        containerStyle={styles.previewContainer}
-        enableAnimation
-        text="https://pinterest.com"
-      />
-    </View>
-  );
-};
+// const App = () => {
+//   return (
+//     <View style={styles.container}>
+//       <LinkPreview
+//         containerStyle={styles.previewContainer}
+//         enableAnimation
+//         text="https://pinterest.com"
+//       />
+//     </View>
+//   );
+// };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  previewContainer: {
-    width: '80%',
-    backgroundColor: '#f7f7f8',
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   previewContainer: {
+//     width: '80%',
+//     backgroundColor: '#f7f7f8',
+//     borderRadius: 20,
+//     overflow: 'hidden',
+//   },
+// });
 
-export default App;
+// export default App;
 
-/*  Here is the React Native code in TSX to implement the described UI screen:
 
-```tsx
+
+
 import React, { useState } from 'react';
 import { View, TextInput, Image, Button, StyleSheet } from 'react-native';
 import LinkPreview from '@flyerhq/react-native-link-preview';
@@ -99,7 +99,3 @@ const styles = StyleSheet.create({
     width: '100%'
   }
 });
-```
-
-This implements the search box that generates a link preview image using the LinkPreview library. It also conditionally enables the "POST Link" button based on whether a valid link is entered. Let me know if any part needs more explanation!
-*/
