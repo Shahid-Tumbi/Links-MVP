@@ -121,7 +121,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-const TwitterProfile = () => {
+const SinglePostItem = () => {
 
   return (
     <SafeAreaView style={styles.container}>
@@ -169,13 +169,7 @@ const TwitterProfile = () => {
   );
 }
 
-const styles = StyleSheet.create({
 
-  // styles 
-
-});
-
-export default TwitterProfile;
 
 
 
@@ -220,5 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   }
 });
+
+export default SinglePostItem;
 
 
