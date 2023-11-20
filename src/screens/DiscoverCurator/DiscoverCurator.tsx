@@ -185,7 +185,7 @@
 
 import React from 'react';
 import { SafeAreaView, TextInput, View, Image, Text, StyleSheet } from 'react-native';
-import FollowButton from './FollowButton';
+import FollowButton from '../../components/FollowButton/FollowButton';
 
 interface User {
   name: string;

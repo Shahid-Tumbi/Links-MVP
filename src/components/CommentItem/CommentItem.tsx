@@ -1,44 +1,37 @@
-import { Experience } from '@/types';
-import { Text, View, Image, StyleSheet } from 'react-native';
 
-type ExperienceListItemProps = {
-  experience: Experience;
-};
+import React from 'react';
+import { Image, Text, View, StyleSheet } from 'react-native';
 
-export default function ExperienceListItem({
-  experience,
-}: ExperienceListItemProps) {
+
+
+interface Props {
+  avatar: string;
+  text: string;
+}
+
+export default function Comment({ avatar, text }: Props) {
   return (
     <View style={styles.container}>
-      <Image source={{ uri: experience.companyimage }} style={styles.image} />
-
-      <View>
-        <Text style={styles.title}>{experience.title}</Text>
-        <Text>{experience.companyname}</Text>
+      <Image source={{ uri: avatar }} style={styles.avatar} />
+      <View style={styles.comment}>
+        <Text>{text}</Text>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles =  StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-    marginBottom: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 0.5,
-    borderColor: 'lightgray',
-
-    backgroundColor: 'white',
+    marginVertical: 8
   },
-  image: {
-    width: 50,
-    aspectRatio: 1,
-    marginRight: 5,
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
+  comment: {
+    marginLeft: 8,
+    flex: 1
+  }
 });
