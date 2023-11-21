@@ -22,3 +22,11 @@ export type Post = {
     commentusername: string;
     commentimage?: string;
   };
+
+  export type PostFinal = {
+    postTitle: string;
+    usernames: string;
+    userBio: string;
+    backImage?: string;
+    image?: string;
+  }

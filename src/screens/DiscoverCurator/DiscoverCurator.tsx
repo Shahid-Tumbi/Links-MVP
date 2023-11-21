@@ -270,93 +270,168 @@
 // export default DiscoverCurator;
 
 
-import React from 'react';
-import { FlatList, Image, Text, View, StyleSheet } from 'react-native';
+// import React from 'react';
+// import { FlatList, Image, Text, View, StyleSheet } from 'react-native';
 
 
-interface Person {
-  id: string;
-  name: string;
-  imageUrl: string;
-  posts: string;
-}
+// interface Person {
+//   id: string;
+//   name: string;
+//   imageUrl: string;
+//   posts: string;
+// }
 
-const people: Person[] = [
-  {
-    id: '1',
-    name: 'John Doe', 
-    imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-    posts: '100 posts'
-  },
-  {  
-    id: '2', 
-    name: 'Jane Smith',
-    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-    posts: '75 posts'
-  },
-  {  
-    id: '3', 
-    name: 'Jane Smith',
-    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-    posts: '75 posts'
-  },
-  {  
-    id: '4', 
-    name: 'Jane Smith',
-    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-    posts: '75 posts'
-  },
-  {  
-    id: '5', 
-    name: 'Jane Smith',
-    imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-    posts: '75 posts'
-  },
+// const people: Person[] = [
+//   {
+//     id: '1',
+//     name: 'John Doe', 
+//     imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+//     posts: '100 posts'
+//   },
+//   {  
+//     id: '2', 
+//     name: 'Jane Smith',
+//     imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+//     posts: '75 posts'
+//   },
+//   {  
+//     id: '3', 
+//     name: 'Jane Smith',
+//     imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+//     posts: '75 posts'
+//   },
+//   {  
+//     id: '4', 
+//     name: 'Jane Smith',
+//     imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+//     posts: '75 posts'
+//   },
+//   {  
+//     id: '5', 
+//     name: 'Jane Smith',
+//     imageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+//     posts: '75 posts'
+//   },
  
-];
+// ];
 
-export default function DiscoverCurator() {
-  return (
-    <FlatList 
-      data={people}
-      renderItem={({item}) => (
-        <PersonItem person={item} />  
-      )}
-      keyExtractor={item => item.id}
-    />
+// export default function DiscoverCurator() {
+//   return (
+//     <FlatList 
+//       data={people}
+//       renderItem={({item}) => (
+//         <PersonItem person={item} />  
+//       )}
+//       keyExtractor={item => item.id}
+//     />
+//   );
+// }
+
+// function PersonItem({person}: {person: Person}) {
+//   return (
+//     <View style={styles.person}>
+//       <Image source={{uri: person.imageUrl}} style={styles.image} />
+//       <Text style={styles.name}>{person.name}</Text>
+//       <Text style={styles.posts}>{person.posts}</Text>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   person: {
+//     flexDirection: 'row',
+//     margin: 10
+//   },
+
+//   image: {
+//     width: 50,
+//     height: 50,
+//     borderRadius: 25
+//   },
+
+//   name: {
+//     marginLeft: 10,
+//     fontWeight: 'bold'
+//   },
+
+//   posts: {
+//     marginLeft: 10, 
+//     color: 'gray'
+//   }
+// });
+
+import React, { useLayoutEffect, useState } from 'react';
+import { FlatList, StyleSheet, TextInput, View } from 'react-native';
+import SingleCurator from '../../components/SingleCurator/SingleCurator';
+import { useNavigation } from '@react-navigation/native';
+
+const CuratorList = () => {
+  const [curators, setCurators] = useState([
+    { id: '1', userName: 'Tanmay Bhat', count: '0000' },
+    { id: '2', userName: 'Tanmay Bhat', count: '0000' },
+    { id: '3', userName: 'Tanmay Bhat', count: '0000' },
+    { id: '4', userName: 'Tanmay Bhat', count: '0000' },
+    { id: '5', userName: 'Tanmay Bhat', count: '0000' },
+    { id: '6', userName: 'Tanmay Bhat', count: '0000' },
+    // Add more curator data as needed
+  ]);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation();
+
+  const renderItem = ({ item }) => <SingleCurator {...item} />;
+
+  const ItemSeparator = () => <View style={styles.separator} />;
+
+  const filteredCurators = curators.filter((curator) =>
+    curator.userName.toLowerCase().includes(searchQuery.toLowerCase())
   );
-}
 
-function PersonItem({person}: {person: Person}) {
+
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     handleSearchBarOptions: {
+  //       placeholder: 'Search users',
+  //     },
+  //   });
+  // }, [navigation]);
+
   return (
-    <View style={styles.person}>
-      <Image source={{uri: person.imageUrl}} style={styles.image} />
-      <Text style={styles.name}>{person.name}</Text>
-      <Text style={styles.posts}>{person.posts}</Text>
+    <View style={styles.container}>
+      {<TextInput
+        style={styles.searchBar}
+        placeholder="Search Curators"
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+      /> }
+      <FlatList
+        contentContainerStyle={{ marginTop: 30 }}
+        data={filteredCurators}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  person: {
-    flexDirection: 'row',
-    margin: 10
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
   },
-
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25
+  searchBar: {
+    backgroundColor: 'gray',
+    padding: 10,
+    borderRadius: 10,
+    margin: 10,
+    color: 'white',
   },
-
-  name: {
-    marginLeft: 10,
-    fontWeight: 'bold'
-  },
-
-  posts: {
-    marginLeft: 10, 
-    color: 'gray'
+  separator: {
+    height: 16,
+    backgroundColor: 'transparent'
   }
 });
+
+export default CuratorList;
 

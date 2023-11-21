@@ -270,7 +270,7 @@ export const UpDownSelect  = (props: SvgProps) => (
     />
   </Svg>
 )
-export const followIcon = (props: SvgProps) => (
+export const FollowIcon = (props: SvgProps) => (
   <Svg
   width={27}
   height={25}
@@ -297,7 +297,7 @@ export const FollowedIcon = (props: SvgProps) => (
   </Svg>
 )
 
-export const downvoteButton = (props: SvgProps) => (
+export const DownvoteButton = (props: SvgProps) => (
   <Svg
     width={16}
     height={19}
@@ -312,7 +312,7 @@ export const downvoteButton = (props: SvgProps) => (
   </Svg>
 )
 
-export const upvoteButton = (props: SvgProps) => (
+export const UpvoteButton = (props: SvgProps) => (
   <Svg
     width={16}
     height={19}
@@ -326,7 +326,7 @@ export const upvoteButton = (props: SvgProps) => (
   </Svg>
 )
 
-export const shareButton = (props: SvgProps) => (
+export const ShareButton = (props: SvgProps) => (
   <Svg
     width={18}
     height={17}
