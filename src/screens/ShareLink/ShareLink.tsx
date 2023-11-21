@@ -1,111 +1,49 @@
+import React from 'react';
+import { View, TextInput, Text, StyleSheet } from 'react-native';
 
-
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, KeyboardAvoidingView, Button, Alert, Text } from 'react-native';
-import { LinkPreview } from '@flyerhq/react-native-link-preview';
-import { ApplicationScreenProps } from 'types/navigation';
-import useTheme from '@/hooks/useTheme';
-import { globalStyles } from '@/theme/GlobalStyles';
-
-const ShareLink = ({navigation}: ApplicationScreenProps) => {
-  const {
-    Layout,
-    Fonts,
-    Gutters,
-    darkMode: isDark,
-} = useTheme();
-  const [link, setLink] = useState('');
-  const [comment, setComment] = useState('');
-
-  const handleLinkChange = (text) => {
-    setLink(text);
-  };
-
-  const handleCommentChange = (text) => {
-    setComment(text);
-  };
-
-  const isUrlValid = (url) => {
-    // Basic URL validation using a regular expression
-    const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-    return urlRegex.test(url.trim());
-  };
-
-  const handlePostItem = () => {
-    if (isUrlValid(link)) {
-      // Perform actions for posting the item
-      Alert.alert('Item Posted', `Link: ${link}\nComment: ${comment}`);
-    } else {
-      Alert.alert('Invalid URL', 'Please enter a valid URL');
-    }
-  };
-
+const CommentInput = () => {
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-      <View>
-        <Text style={styles.textStyle}>Share a Link</Text>
-      </View>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Enter link here"
-        value={link}
-        onChangeText={handleLinkChange}
+        placeholder="Add a comment again"
+        placeholderTextColor="#A0A0A0"
       />
-      <View style={styles.previewContainer}>
-        <LinkPreview
-          containerStyle={styles.linkPreviewContainer}
-          enableAnimation
-          text={link}
-        />
+      <View style={styles.line} />
+      <View style={styles.characterCountContainer}>
+        <Text style={styles.characterCountText}>60 characters</Text>
       </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Add a comment..."
-        value={comment}
-        onChangeText={handleCommentChange}
-        multiline
-      />
-      <Button
-        title="Post Item"
-        onPress={handlePostItem}
-        disabled={!isUrlValid(link)}
-      />
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 8,
-    marginVertical: 5,
-    width: '80%',
-    color: 'white',
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+    paddingBottom: 5,
   },
-  previewContainer: {
-    width: '80%',
-    backgroundColor: '#f7f7f8',
-    borderRadius: 20,
-    overflow: 'hidden',
-    marginBottom: 10,
+  line: {
+    height: 1,
+    backgroundColor: 'white',
+    width: '100%',
+    marginTop: 15,
   },
-  linkPreviewContainer: {
-    flex: 1,
+  characterCountContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+   
   },
-  textStyle: {
-    color: 'white',
-    
-  }
+  characterCountText: {
+    color: 'black',
+    fontSize: 12,
+  },
 });
 
-export default ShareLink;
-
+export default CommentInput;

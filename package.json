@@ -68,6 +68,7 @@
     "metro-react-native-babel-preset": "0.76.5",
     "prettier": "^2.4.1",
     "react-native-flipper": "^0.202.0",
+    "react-native-link-preview": "^1.4.2",
     "react-native-snap-carousel": "^3.9.1",
     "react-test-renderer": "18.2.0",
     "redux-flipper": "^2.0.2",
