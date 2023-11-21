@@ -33,5 +33,8 @@ export const Constants = {
     today:'Today',
     dontHaveAcc:'Don’t have an account? ',
     sectionView:'Tap on a section to view',
-    byPassOtp:'123456'
+    byPassOtp:'123456',
+    top10Links: 'OUR TOP 10 LINKS',
+    shareLink: 'Share a link'
+
 }

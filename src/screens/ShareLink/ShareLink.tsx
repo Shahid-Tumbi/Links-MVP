@@ -1,112 +1,19 @@
-// import React from 'react';
-// import {View, StyleSheet} from 'react-native';
-// import {LinkPreview} from '@flyerhq/react-native-link-preview';
 
-// const ShareLink = () => {
-//   return (
-//     <View style={styles.container}>
-//       <LinkPreview
-//         containerStyle={styles.previewContainer}
-//         enableAnimation
-//         text="https://pinterest.com"
-//       />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   previewContainer: {
-//     width: '80%',
-//     backgroundColor: '#f7f7f8',
-//     borderRadius: 20,
-//     overflow: 'hidden',
-//   },
-// });
-
-// export default ShareLink;
-
-
-
-
-// import React, { useState } from 'react';
-// import { View, TextInput, Image, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
-// import LinkPreview from '@flyerhq/react-native-link-preview';
-
-// export default function ShareLink() {
-//   const [url, setUrl] = useState<string>('');
-//   const [linkPreview, setLinkPreview] = useState<any>();
-
-//   const handleUrlChange = (text: string) => {
-//     setUrl(text);
-//     if (text) {
-//       LinkPreview.onPreviewDataFetched(text)
-//         .then(preview => {
-//           setLinkPreview(preview);
-//         })
-//         .catch(() => {
-//           setLinkPreview(null);
-//         });
-//     } else {
-//       setLinkPreview(null);
-//     }
-//   };
-
-//   return (
-//     <KeyboardAvoidingView>
-//     <View style={styles.container}>
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Enter URL"
-//         value={url}
-//         onChangeText={handleUrlChange}
-//       />
-
-//       {linkPreview && (
-//         <View style={styles.preview}>
-//           <Image source={{ uri: linkPreview.image }} style={styles.image} />
-//         </View>  
-//       )}
-
-//       <Button
-//         title="POST Link"
-//         disabled={!linkPreview}
-//         onPress={() => console.log('Link posted!')}
-//       />
-//     </View>
-//     </KeyboardAvoidingView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16
-//   },
-//   input: {
-//     height: 40,
-//     borderColor: '#ddd',
-//     borderWidth: 1,
-//     marginBottom: 16
-//   },
-//   preview: {
-//     alignItems: 'center'
-//   },
-//   image: {
-//     height: 200,
-//     width: '100%'
-//   }
-// });
 
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, KeyboardAvoidingView, Button, Alert } from 'react-native';
+import { View, StyleSheet, TextInput, KeyboardAvoidingView, Button, Alert, Text } from 'react-native';
 import { LinkPreview } from '@flyerhq/react-native-link-preview';
+import { ApplicationScreenProps } from 'types/navigation';
+import useTheme from '@/hooks/useTheme';
+import { globalStyles } from '@/theme/GlobalStyles';
 
-const ShareLink = () => {
+const ShareLink = ({navigation}: ApplicationScreenProps) => {
+  const {
+    Layout,
+    Fonts,
+    Gutters,
+    darkMode: isDark,
+} = useTheme();
   const [link, setLink] = useState('');
   const [comment, setComment] = useState('');
 
@@ -135,6 +42,9 @@ const ShareLink = () => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <View>
+        <Text style={styles.textStyle}>Share a Link</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Enter link here"
@@ -169,6 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#000',
   },
   input: {
     height: 40,
@@ -178,6 +89,7 @@ const styles = StyleSheet.create({
     padding: 8,
     marginVertical: 5,
     width: '80%',
+    color: 'white',
   },
   previewContainer: {
     width: '80%',
@@ -189,6 +101,10 @@ const styles = StyleSheet.create({
   linkPreviewContainer: {
     flex: 1,
   },
+  textStyle: {
+    color: 'white',
+    
+  }
 });
 
 export default ShareLink;
