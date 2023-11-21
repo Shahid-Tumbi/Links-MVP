@@ -12,6 +12,7 @@ import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 import SinglePostItem from '@/components/SinglePost/SinglePostItem';
 import DiscoverCurator from '@/screens/DiscoverCurator/DiscoverCurator';
 import SingleCurator from '@/components/SingleCurator/SingleCurator';
+import Notifications from '@/screens/Notifications/Notifications';
 // import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 // import ShareLink from '@/screens/ShareLink/ShareLink';
 // import PostDetails from '@/screens/PostDetails/PostDetails';
@@ -45,7 +46,7 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={SinglePostItem} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={Notifications} options={{headerShown: false, tabBarShowLabel:false,
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
           }}}   />
