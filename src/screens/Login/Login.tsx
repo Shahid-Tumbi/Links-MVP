@@ -127,7 +127,7 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
     }
     return (
         <View style={[globalStyles.container]}>
-            <View style={[Layout.fill, Gutters.regularMargin]}>
+            <View style={[Layout.fill, Gutters.smallMargin]}>
                 {isLoading ? <Loader state={isLoading} /> : null}
 
                 <View style={[Gutters.largeTMargin]}>
@@ -191,7 +191,7 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                         </Text>
                     ) : null}
                     <View style={[Layout.row, Layout.alignItemsCenter, Gutters.largeTMargin]}>
-                        <Text style={[Fonts.textTiny]}>
+                        <Text style={[Fonts.textTiny]} onPress={() => navigation.navigate('ForgotPassword')}>
                             {Constants.forgotPassword}
                         </Text>
                         <View style={[Layout.fill, Layout.row, Layout.justifyContentEnd, Layout.alignItemsCenter]}>

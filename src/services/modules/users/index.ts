@@ -58,6 +58,26 @@ export const userApi = api.injectEndpoints({
         }
       }),
     }),
+    forgotPassword: build.mutation<User, Partial<User>>({
+      query: (userData) => ({
+        url: `/users/forgot-password`,
+        method: 'POST',
+        body:userData,
+        headers:{
+          Authorization: 'Basic bGlua3M6YmFja2VuZA=='
+        }
+      }),
+    }),
+    resetPassword: build.mutation<User, Partial<User>>({
+      query: (userData) => ({
+        url: `/users/reset-password`,
+        method: 'POST',
+        body:userData,
+        headers:{
+          Authorization: 'Basic bGlua3M6YmFja2VuZA=='
+        }
+      }),
+    }),
     updateUser: build.mutation<User, Partial<User>>({
       query: ({ id,body,token }:any) => {
         return {
@@ -85,4 +105,13 @@ export const userApi = api.injectEndpoints({
     overrideExisting: true,
   });
 
-export const { useAppConfigMutation,useRegisterUserMutation,useVerifyOtpMutation,useResendOtpMutation,useLoginUserMutation,useUpdateUserMutation, usePostListMutation } = userApi;
+export const { 
+  useAppConfigMutation,
+  useRegisterUserMutation,
+  useVerifyOtpMutation,
+  useResendOtpMutation,
+  useLoginUserMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useUpdateUserMutation, 
+  usePostListMutation } = userApi;

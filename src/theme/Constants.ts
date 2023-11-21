@@ -33,5 +33,11 @@ export const Constants = {
     today:'Today',
     dontHaveAcc:'Don’t have an account? ',
     sectionView:'Tap on a section to view',
-    byPassOtp:'123456'
+    byPassOtp:'123456',
+    newPassword:'Enter new password',
+    reenterPassword:'Re-enter new password',
+    confirm:'Confirm',
+    troubleLogin:'Trouble logging in?',
+    enterDetails:"Enter your email, phone, or unique ID and we'll send you a link to get back into your account.",
+    sendLoginLink:'Send Login Link'
 }
