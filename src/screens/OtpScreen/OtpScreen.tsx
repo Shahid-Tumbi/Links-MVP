@@ -62,11 +62,12 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     };
   }, [seconds, minutes]);
   useEffect(() => {
-    otpSend()
+    otpSend(false)
   }, [])
-  const otpSend = () => {
+  const otpSend = (resend:boolean) => {
     if (configData.firebase) {
       firebaseOtpSent(authData.countryCode, authData.phoneNumber).then((res: any) => {
+        if(resend){Alert.alert('Otp sent Successfully')}
         setApiLoader(false)
         setConfirmObj(res)
       }).catch((err: any) => {
@@ -185,9 +186,8 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     setErrorMessage('')
     const result: any = await resendOtp({ token })
     if (result?.data?.statusCode === 200) {
-      Alert.alert('Otp sent Successfully')
       if (configData.firebase) {
-        otpSend()
+        otpSend(true)
       }
     } else {
       if (result?.error?.data) {

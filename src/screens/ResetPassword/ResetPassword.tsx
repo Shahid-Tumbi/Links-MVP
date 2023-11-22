@@ -42,7 +42,9 @@ const ResetPassword = ({ navigation, route }: ApplicationScreenProps) => {
             dispatch(setToken(result?.data?.result?.token))
             dispatch(setAuthData(result?.data?.result?.profile))
             if (result?.data?.result?.profile.isPhoneVerified === false) {
-                navigation.navigate('OtpScreen', { pageFrom: 'Login' })
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'OtpScreen' }]})
             } else {
                 dispatch(verifiedUser(true))
             }

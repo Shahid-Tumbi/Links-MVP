@@ -51,6 +51,9 @@ const ApplicationNavigator = () => {
     }    
   };
   useEffect( () => {
+    Linking.getInitialURL().then((url) => {
+      if(url) handleDeepLink({url});
+    });
     Linking.addEventListener('url', handleDeepLink);
     return () => {
       Linking.removeAllListeners('url');
