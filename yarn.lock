@@ -6664,12 +6664,17 @@ react-is@^18.2.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-native-actions-sheet@^0.9.0-alpha.24:
+  version "0.9.0-alpha.24"
+  resolved "https://registry.npmjs.org/react-native-actions-sheet/-/react-native-actions-sheet-0.9.0-alpha.24.tgz"
+  integrity sha512-NF0oO0vf3DrFsqI+pbQ+HTG2q+VEotkVwhtFr8aLiUFJT876icVOSurCaeqD1t4zHtH2U5qa8vKQxbA/j5Mu8w==
+
 react-native-flipper@^0.202.0, react-native-flipper@>=0.100.0:
   version "0.202.0"
   resolved "https://registry.npmjs.org/react-native-flipper/-/react-native-flipper-0.202.0.tgz"
   integrity sha512-LlUmY6CvEBquWl6UmcEjXCOrVAdozGts6JBKGoGiKNk8Vl+tE9L5OkceDxDJjU9aeId071xifOO7B0eBTDH4gQ==
 
-react-native-gesture-handler@^2.12.0, "react-native-gesture-handler@>= 1.0.0", react-native-gesture-handler@>=1.10.1:
+react-native-gesture-handler@*, react-native-gesture-handler@^2.12.0, "react-native-gesture-handler@>= 1.0.0", react-native-gesture-handler@>=1.10.1:
   version "2.13.4"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.13.4.tgz"
   integrity sha512-smpYOVbvWABpq2H+lmDnfOLCTH934aUPO1w2/pQXvm1j+M/vmGQmvgRDJOpXcks17HLtNNKXD6tcODf3aPqDfA==
@@ -6679,6 +6684,11 @@ react-native-gesture-handler@^2.12.0, "react-native-gesture-handler@>= 1.0.0", r
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-native-linear-gradient@^2.8.3:
+  version "2.8.3"
+  resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
+  integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
 react-native-link-preview@^1.4.2:
   version "1.4.2"
@@ -6703,6 +6713,13 @@ react-native-paper@^5.11.1:
     "@callstack/react-theme-provider" "^3.0.9"
     color "^3.1.2"
     use-latest-callback "^0.1.5"
+
+react-native-progress@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npmjs.org/react-native-progress/-/react-native-progress-5.0.1.tgz"
+  integrity sha512-TYfJ4auAe5vubDma2yfFvt7ktSI+UCfysqJnkdHEcLXqAitRFOozgF/cLgN5VNi/iLdaf3ga1ETi2RF4jVZ/+g==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-native-reanimated@^3.3.0, react-native-reanimated@>=2.2.0:
   version "3.5.4"
@@ -6735,7 +6752,7 @@ react-native-snap-carousel@^3.9.1:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
 
-react-native-svg@^13.14.0:
+react-native-svg@*, react-native-svg@^13.14.0:
   version "13.14.0"
   resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-13.14.0.tgz"
   integrity sha512-27ZnxUkHgWICimhuj6MuqBkISN53lVvgWJB7pIypjXysAyM+nqgQBPh4vXg+7MbqLBoYvR4PiBgKfwwGAqVxHg==
