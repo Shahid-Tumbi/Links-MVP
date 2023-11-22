@@ -37,5 +37,10 @@ export const Constants = {
     top10Links: 'OUR TOP 10 LINKS',
     shareLink: 'Share a link',
     addComments: 'Add a comment',
-
+    newPassword:'Enter new password',
+    reenterPassword:'Re-enter new password',
+    confirm:'Confirm',
+    troubleLogin:'Trouble logging in?',
+    enterDetails:"Enter your email, phone, or unique ID and we'll send you a link to get back into your account.",
+    sendLoginLink:'Send Login Link'
 }

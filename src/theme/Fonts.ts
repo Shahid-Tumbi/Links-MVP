@@ -78,6 +78,9 @@ export default function ({ FontSize, Colors }: ThemeVariables) {
     textGray: {
       color: Colors.textGray400,
     },
+    textDimGray: {
+      color: Colors.dimGray,
+    },
     textLight: {
       color: Colors.textGray200,
     },

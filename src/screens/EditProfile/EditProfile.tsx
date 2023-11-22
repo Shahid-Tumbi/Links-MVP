@@ -10,9 +10,10 @@ import { Avatar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation } from "@/services/modules/users";
 import { setAuthData } from "@/store/User";
-import { onTokenExpired } from "@/theme/Common";
+import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 
 const EditProfile = ({ navigation }: ApplicationScreenProps) => {
+    logToCrashlytics('Edit profile screen')
     const {
         Layout,
         Fonts,
@@ -28,6 +29,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
     const [updateUser, { isLoading }] = useUpdateUserMutation()
     const dispatch = useDispatch()
     const onSubmit = async () => {
+        logToCrashlytics('On update profile api call')
         const userData = {
             name: fullName,
             bio: bio
@@ -35,6 +37,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
         const result: any = await updateUser({ id: authData._id, body: userData , token })
         
         if (result?.data?.statusCode === 200) {
+            logToCrashlytics('On update profile api success')
             dispatch(setAuthData(result?.data?.result))
             Alert.alert('Updated Successfully')
         } else {
@@ -42,6 +45,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                 Alert.alert(result?.error?.data?.message)
             }
             if (result?.error?.error) {
+                logToCrashlytics('On update profile api error',result?.error?.error)
                 Alert.alert('Something went wrong !!')
             }
             if (result.error && result.error.status === 401) {
