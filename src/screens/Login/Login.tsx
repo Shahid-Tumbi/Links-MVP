@@ -2,7 +2,7 @@ import { CommonTextInput, Loader, PasswordInput } from "@/components";
 import { useTheme } from "@/hooks";
 import { useAppConfigMutation, useLoginUserMutation } from "@/services/modules/users";
 import { setAppConfig, setAuthData, setToken, verifiedUser } from "@/store/User";
-import { onTokenExpired, validateEmailId, validatePassword } from "@/theme/Common";
+import { logToCrashlytics, validatePassword } from "@/theme/Common";
 import { Constants } from "@/theme/Constants";
 import { globalStyles } from "@/theme/GlobalStyles";
 import ErrorMessages from "@/theme/errorMessages";
@@ -13,6 +13,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
 import { ApplicationScreenProps } from "types/navigation";
 import messaging from "@react-native-firebase/messaging";
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const getFCMToken = (async () => {
   try {
@@ -42,21 +43,25 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-       
+        logToCrashlytics('Login Screen')
         checkApplicationPermission()
         getAppConfig()
     }, [])
     const checkApplicationPermission = async () => {
+        logToCrashlytics('Check Notification permission')
+
         if (Platform.OS === 'android') {
           try {
             await PermissionsAndroid.request(
               PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
             );
-          } catch (error) {
+          } catch (error:any) {
+            logToCrashlytics('Check Notification permission error',error)
           }
         }
       };
     const getAppConfig = async () => {
+        logToCrashlytics('App config on Login Screen')
         const result: any = await appConfig({})
         if (result?.data?.statusCode === 200) {
             dispatch(setAppConfig(result?.data?.result))
@@ -73,6 +78,7 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
         setPassVisible(!passVisible);
     };
     const onLogin = async () => {
+        logToCrashlytics('On User Login')
         try {
             setButtonError(false)
             setErrorUserEmail('')
@@ -90,8 +96,16 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                     password,
                 };
                 const result: any = await loginUser(userData);
-
+                logToCrashlytics('On User Login api call')
                 if (result?.data?.statusCode === 200) {
+                    logToCrashlytics('On User Login api call success')
+                    await Promise.all([
+                        crashlytics().setUserId(result?.data?.result?.profile?._id),
+                        crashlytics().setAttributes({
+                          email: result?.data?.result?.profile?.email,
+                          username: result?.data?.result?.profile?.userName,
+                        }),
+                      ]);
                     dispatch(setToken(result?.data?.result?.token))
                     dispatch(setAuthData(result?.data?.result?.profile))
                     if (result?.data?.result?.profile.isPhoneVerified === false) {
@@ -115,12 +129,14 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                         }
                     }
                     if (result?.error?.error) {
+                     logToCrashlytics('On User Login api call error',result?.error?.error)
                         Alert.alert('Something went wrong !!')
                     }
                     
                 }
             }
         } catch (error: any) {
+            logToCrashlytics('On User Login error',error)
             Alert.alert(error)
             console.log('error', error);
 

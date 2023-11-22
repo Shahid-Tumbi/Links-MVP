@@ -7,14 +7,15 @@ import ErrorMessages from "@/theme/errorMessages";
 import { Colors, FontSize } from "@/theme/Variables";
 import { useTheme } from '../../hooks';
 import { ApplicationScreenProps } from "types/navigation";
-import { validateEmailId, validatePassword, validateUserName } from "@/theme/Common"
+import { logToCrashlytics, validateEmailId, validatePassword, validateUserName } from "@/theme/Common"
 import { useRegisterUserMutation } from "@/services/modules/users";
 import { setAuthData, setToken } from "@/store/User";
 import { useDispatch } from "react-redux";
 import { Logo, RightArrow } from "@/theme/svg";
-
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Signup = ({ navigation }: ApplicationScreenProps) => {
+    logToCrashlytics('Signup Screen')
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
     const [userName, setUserName] = useState('')
@@ -46,6 +47,8 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
 
 
     const handleRegistration = async () => {
+        logToCrashlytics('On register api call')
+
         try {
             const newUser: any = {
                 name,
@@ -57,9 +60,17 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
             };
             const result: any = await registerUser(newUser);
             if (result?.data?.statusCode === 200) {
+                logToCrashlytics('On register api call success')
                 dispatch(setToken(result?.data?.result?.token))
                 dispatch(setAuthData(result?.data?.result?.profile))
                 setApiLoader(true)
+                await Promise.all([
+                    crashlytics().setUserId(result?.data?.result?.profile?._id),
+                    crashlytics().setAttributes({
+                      email: result?.data?.result?.profile?.email,
+                      username: result?.data?.result?.profile?.userName,
+                    }),
+                  ]);
                 navigation.navigate('OtpScreen')
             } else {
                 if (result?.error?.data) {
@@ -82,16 +93,19 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
                     }
                 }
                 if (result?.error?.error) {
+                    logToCrashlytics('On register api call error',result?.error?.error)
                     Alert.alert('Something went wrong !!')
                 }
             }
         } catch (error: any) {
+            logToCrashlytics('On register api error',error)            
             Alert.alert(error)
             console.log('error', error);
 
         }
     };
     const getStarted = () => {
+        logToCrashlytics('On register')
         setButtonError(false)
         let isValid = true;
         if (email == '') {

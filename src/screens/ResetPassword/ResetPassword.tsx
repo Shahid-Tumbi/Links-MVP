@@ -8,12 +8,13 @@ import { Constants } from '@/theme/Constants';
 import { Loader, PasswordInput } from '@/components';
 import { useDispatch } from 'react-redux';
 import ErrorMessages from '@/theme/errorMessages';
-import { validatePassword } from '@/theme/Common';
+import { logToCrashlytics, validatePassword } from '@/theme/Common';
 import { useResetPasswordMutation } from '@/services/modules/users';
 import { setAuthData, setToken, verifiedUser } from '@/store/User';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ResetPassword = ({ navigation, route }: ApplicationScreenProps) => {
-
+    logToCrashlytics('Reset Password Screen')
     const {
         Layout,
         Fonts,
@@ -33,33 +34,42 @@ const ResetPassword = ({ navigation, route }: ApplicationScreenProps) => {
         setPassVisible(!passVisible);
     };
     const doResetPassword = async () => {
+        logToCrashlytics('On reset password api call')
         const userData: any = {
             token: route.params.token,
             password: newPassword
         };
         const result: any = await resetPassword(userData);
         if (result?.data?.statusCode === 200) {
+            logToCrashlytics('reset password api call success')
             dispatch(setToken(result?.data?.result?.token))
             dispatch(setAuthData(result?.data?.result?.profile))
             if (result?.data?.result?.profile.isPhoneVerified === false) {
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'OtpScreen' }]})
+                } else {
+                    await Promise.all([
+                        crashlytics().setUserId(result?.data?.result?.profile?._id),
+                        crashlytics().setAttributes({
+                          email: result?.data?.result?.profile?.email,
+                          username: result?.data?.result?.profile?.userName,
+                        }),
+                      ]);
+                    dispatch(verifiedUser(true))
+                }
             } else {
-                dispatch(verifiedUser(true))
-            }
-        } else {
-            if (result?.error?.data) {
-                Alert.alert(result?.error?.data?.message)
-                setButtonError(true)
-            }
-            if (result?.error?.error) {
-                Alert.alert('Something went wrong !!')
-            }
-
-        }
+                if (result?.error?.data) {
+                    Alert.alert(result?.error?.data?.message)
+                    setButtonError(true)
+                }
+                if (result?.error?.error) {
+                    logToCrashlytics('reset password api call error',result?.error?.error)
+                    Alert.alert('Something went wrong !!')
+                }        }
     }
     const getConfirm = () => {
+        logToCrashlytics('on confirm reset password')
         setButtonError(false)
         let isValid = true;
         if (password == '') {
