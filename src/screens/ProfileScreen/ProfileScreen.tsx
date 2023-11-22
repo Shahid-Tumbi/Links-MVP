@@ -10,8 +10,10 @@ import { Avatar } from "react-native-paper";
 import ThreeDotLoader from "@/components/ThreeDotLoader/ThreeDotLoader";
 import { Path, Svg } from "react-native-svg";
 import { useSelector } from "react-redux";
+import { logToCrashlytics } from "@/theme/Common";
 
 const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
+    logToCrashlytics('Profile screen')
     const {
         Layout,
         Fonts,

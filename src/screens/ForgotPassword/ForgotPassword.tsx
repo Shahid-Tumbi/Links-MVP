@@ -8,9 +8,10 @@ import { Constants } from '@/theme/Constants';
 import { CommonTextInput, Loader } from '@/components';
 import ErrorMessages from '@/theme/errorMessages';
 import { useForgotPasswordMutation } from '@/services/modules/users';
+import { logToCrashlytics } from '@/theme/Common';
 
 const ForgotPassword = ({ navigation }: ApplicationScreenProps) => {
-  
+    logToCrashlytics('Forgot password screen')
     const {
         Layout,
         Fonts,
@@ -26,6 +27,7 @@ const ForgotPassword = ({ navigation }: ApplicationScreenProps) => {
    
   
     const sendLink = async () => {
+        logToCrashlytics('On Forgot password link send')
         setButtonError(false)
         setErrorUserEmail('')
         if (email == '') {
@@ -36,7 +38,9 @@ const ForgotPassword = ({ navigation }: ApplicationScreenProps) => {
                 user: email,
             };
             const result: any = await forgotPassword(userData);
+            logToCrashlytics('Forgot password link send api call')
             if (result?.data?.statusCode === 200) {
+                logToCrashlytics('Forgot password link send api  success')
                 Alert.alert(result?.data?.message)
             } else {
                 if (result?.error?.data) {
@@ -44,6 +48,7 @@ const ForgotPassword = ({ navigation }: ApplicationScreenProps) => {
                         setButtonError(true)
                 }
                 if (result?.error?.error) {
+                    logToCrashlytics('Forgot password link send api call error',result?.error?.error)
                     Alert.alert('Something went wrong !!')
                 }
                 

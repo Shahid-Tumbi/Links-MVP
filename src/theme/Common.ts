@@ -8,6 +8,7 @@ import buttonStyles from './components/Buttons';
 import { CommonParams } from '../../@types/theme';
 import { clearToken } from '@/store/User';
 import auth from '@react-native-firebase/auth';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 
 export default function <C>({ Colors, ...args }: CommonParams<C>) {
@@ -76,4 +77,12 @@ export const firebaseOtpSent = (countryCode: string,phoneNumber: string ): Promi
         reject(error);
       });
   });
+};
+
+export const logToCrashlytics = (message: string, error?: Error) => {
+  crashlytics().log(message);
+
+  if (error instanceof Error) {
+    crashlytics().recordError(error);
+  }
 };
