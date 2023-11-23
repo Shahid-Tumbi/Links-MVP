@@ -41,8 +41,7 @@ const SinglePostItem = ({
         <ImageBackground
           source={require("../../../assets/pexels-daniel-absi-952670.jpg")}
           style={carouselView ? styles.carouselImage : styles.backImage}
-          imageStyle={styles.imageRadius}>
-        <LinearGradient colors={["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"]} style={[styles.imageRadius]}>
+          imageStyle={[styles.imageRadius,!carouselView && styles.imageOpacity]}>
           <View style={styles.UpperOverlayText}>
             <View style={[Layout.flex07, Layout.row]}>
               <Text style={styles.topLeftCorner}>7 min read</Text>
@@ -60,7 +59,6 @@ const SinglePostItem = ({
             style={styles.carouselProfile}
           />}
           {carouselView && <Text style={[styles.carouselNumbers]}>1</Text>}
-        </LinearGradient>
         </ImageBackground>
       </View>
       <View style={styles.bottomContainer}>
@@ -229,12 +227,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
     color: 'white',
+    marginTop:10
   },
   carouselBanner: {
     fontWeight: 'bold',
     fontSize: 16,
     marginVertical: 20,
     color: 'white',
+  },
+  imageOpacity:{
+    opacity:0.7,
   }
 });
 

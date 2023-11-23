@@ -11,13 +11,30 @@ import {
   UpvoteNotification,
   TrendingNotification,
   DiscussionNotification,
+  FocusedNotificaionIcon,
+  Logo,
 } from "@/theme/svg";
 import { ScrollView } from "react-native-gesture-handler";
+import { useTheme } from "@/hooks";
+import { globalStyles } from "@/theme/GlobalStyles";
 
 const Notifications = () => {
+  const {
+    Layout,
+    Fonts,
+    Gutters,
+    darkMode: isDark,
+  } = useTheme();
   return (
     <View style={styles.root}>
-      <ScrollView>
+
+
+      <View style={[Gutters.smallTMargin, Layout.fill]}>
+        <View style={[Layout.row, Layout.justifyContentBetween,globalStyles.screenMargin]}>
+          <Logo />
+          <FocusedNotificaionIcon />
+        </View>
+        <ScrollView style={[Gutters.regularTMargin]}>
         <View style={styles.New}>
           <Text style={styles.NewText}>New</Text>
         </View>
@@ -105,7 +122,8 @@ const Notifications = () => {
             </View>
           </View>
         </TouchableOpacity>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 };
