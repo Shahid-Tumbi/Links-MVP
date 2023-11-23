@@ -10,9 +10,10 @@ import { Loader } from "@/components";
 import { useDispatch, useSelector } from "react-redux";
 import { verifiedUser } from "@/store/User";
 import { useResendOtpMutation, useVerifyOtpMutation } from "@/services/modules/users";
-import { firebaseOtpSent, onTokenExpired } from "@/theme/Common";
+import { firebaseOtpSent, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 
 const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
+  logToCrashlytics('Otp screen')
   const {
     Layout,
     Fonts,
@@ -42,6 +43,7 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
 
   let timerInterval: any;
   useEffect(() => {
+    logToCrashlytics('Otp screen time interval')
     timerInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
@@ -62,20 +64,25 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     };
   }, [seconds, minutes]);
   useEffect(() => {
-    otpSend()
+    otpSend(false)
   }, [])
-  const otpSend = () => {
+  const otpSend = (resend:boolean) => {
+    logToCrashlytics('Otp send')
     if (configData.firebase) {
       firebaseOtpSent(authData.countryCode, authData.phoneNumber).then((res: any) => {
+       logToCrashlytics('Otp send through firebase')
+        if(resend){Alert.alert('Otp sent Successfully')}
         setApiLoader(false)
         setConfirmObj(res)
       }).catch((err: any) => {
+        logToCrashlytics('Otp send through firebase error',err)
         setApiLoader(false)
         console.log('err', err);
       })
     }
   }
   const onOtpChange = (index: number) => {
+    logToCrashlytics('Otp change fun')
     return (value: string) => {
       const otpArrayCopy = otpArray.concat();
       otpArrayCopy[index] = value;
@@ -104,6 +111,7 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     textInputRef.current = node;
   };
   const onOtpKeyPress = (index: number) => {
+    logToCrashlytics('On press of otp')
     return ({ nativeEvent: { key: value } }: any) => {
       // auto focus to previous InputText if value is blank and existing value is also blank
       if (value === 'Backspace' && otpArray[index] === '') {
@@ -136,12 +144,14 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     };
   };
   const onCodeSubmit = async () => {
+    logToCrashlytics('On Otp code submit')
     if (otpArray.includes('')) {
       Alert.alert('Please enter code properly');
       setButtonError(true)
 
     } else {
       if (confirmObj) {
+        logToCrashlytics('Otp verifying')
         await confirmObj.confirm(otpArray.join('')).then(
           (resp: any) => {
             setApiLoader(false);
@@ -149,6 +159,7 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
             verifyNumber()
           }
         ).catch((err: any) => {
+        logToCrashlytics('Otp verifying error',err)
           setApiLoader(false);
           Alert.alert("Invalid code entered.");
           console.log("err", err)
@@ -159,6 +170,7 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     }
   }
   const verifyNumber = async () => {
+    logToCrashlytics('verify otp api call')
     const result: any = await verifyOtp({ body: { otp: Constants.byPassOtp }, token })
     if (result?.data?.statusCode === 200) {
       dispatch(verifiedUser(true))
@@ -173,11 +185,13 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
         // Alert.alert(result?.error?.data?.message)
       }
       if (result?.error?.error) {
+        logToCrashlytics('verify otp api error',result?.error?.error)
         Alert.alert('Something went wrong !!')
       }
     }
   }
   const onResendOtp = async () => {
+    logToCrashlytics('verify otp api call')
     setOtpArray([])
     setSeconds(50)
     setOtpTimer(false)
@@ -185,9 +199,8 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     setErrorMessage('')
     const result: any = await resendOtp({ token })
     if (result?.data?.statusCode === 200) {
-      Alert.alert('Otp sent Successfully')
       if (configData.firebase) {
-        otpSend()
+        otpSend(true)
       }
     } else {
       if (result?.error?.data) {

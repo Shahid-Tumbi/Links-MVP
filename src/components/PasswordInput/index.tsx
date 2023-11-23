@@ -63,7 +63,7 @@ const PasswordInput = (props:any) => {
           style={[
             errorUserName? styles.passwordTextRed : isFocused? styles.passwordTextFocused : styles.passwordInput,
           ]}
-          right={
+          right={secureEntry &&
             <TextInput.Icon
               icon={passVisible? "eye-outline" : "eye-off-outline"}
               onPress={isVisible}

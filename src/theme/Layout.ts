@@ -72,6 +72,9 @@ export default function ({}: ThemeVariables) {
     justifyContentEnd: {
       justifyContent: 'flex-end',
     },
+    alignSelfEnd:{
+      alignSelf: 'flex-end',
+    },
     scrollSpaceAround: {
       flexGrow: 1,
       justifyContent: 'space-around',

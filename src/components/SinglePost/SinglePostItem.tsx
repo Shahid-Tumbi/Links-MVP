@@ -8,20 +8,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import Layout from "@/theme/Layout";
 import {
   DownvoteButton,
   Menu,
-  MinusGray,
-  Plus,
   ShareButton,
   UpvoteButton,
 } from "@/theme/svg";
 import useTheme from "@/hooks/useTheme";
 import { Colors } from "@/theme/Variables";
 import { Constants } from "@/theme/Constants";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
+import LinearGradient from "react-native-linear-gradient";
 
 const SinglePostItem = ({
   userAvatar,
@@ -36,166 +32,191 @@ const SinglePostItem = ({
   comment,
   onPostPress,
   enableComment,
+  carouselView
 }: any) => {
   const { Fonts, Layout, Gutters } = useTheme();
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[carouselView && {margin:6}]}>
         <ImageBackground
           source={require("../../../assets/pexels-daniel-absi-952670.jpg")}
-          style={styles.backImage}>
-            <View style={styles.UpperOverlayText}>
-                <Text style={styles.topLeftCorner}>7 min Read</Text>
-                <Text style={styles.topLeftCorner}>25 Oct 2023</Text>
-                <Menu />
+          style={carouselView ? styles.carouselImage : styles.backImage}
+          imageStyle={styles.imageRadius}>
+        <LinearGradient colors={["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, 0)"]} style={[styles.imageRadius]}>
+          <View style={styles.UpperOverlayText}>
+            <View style={[Layout.flex07, Layout.row]}>
+              <Text style={styles.topLeftCorner}>7 min read</Text>
+              <Text style={styles.topLeftCorner}>25 Oct 2023</Text>
             </View>
-            <View style={styles.banner}>
-              <Text style={styles.bannerText}>NCERT blablalbla blablalbla blablalbla blablalbla blablalbla.</Text>
+            <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}>
+              <Menu />
             </View>
-          </ImageBackground>
-          
-        
-        <Image
-          source={require("../../../assets/Ellipse38.jpg")}
-          style={styles.image}
-        />
+          </View>
+          <View style={styles.banner}>
+            <Text style={carouselView ? styles.carouselBanner : styles.bannerText}>NCERT clarifies on India to Bharat name change: ‘Too premature to comment’</Text>
+          </View>
+          {carouselView && <Image
+            source={require("../../../assets/Ellipse38.jpg")}
+            style={styles.carouselProfile}
+          />}
+          {carouselView && <Text style={[styles.carouselNumbers]}>1</Text>}
+        </LinearGradient>
+        </ImageBackground>
       </View>
       <View style={styles.bottomContainer}>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.username}>Tanmay Bhat</Text>
-        {/* <Text style={styles.time}>3 hours ago</Text>
-          <Text style={styles.count}>0000</Text> */}
-      </View>
-      <View style={styles.bioContainer}>
-        <Text style={styles.bioDetails}>
-          Investor, Comedian, Influencer, amongst other things. Live and let
-          live.
-        </Text>
-      </View>
-      <View style={styles.interactionsContainer}>
-        <View
-          style={[
-            styles.commentBox,
-            Layout.row,
-            Gutters.tinyPadding,
-            Layout.alignItemsCenter,
-            Gutters.smallTMargin,
-          ]}
-        >
-          <Text style={[Fonts.textSmall, Fonts.textGray, Gutters.tinyLMargin]}>
-            {Constants.addComments}
-          </Text>
+
+        <View style={styles.detailsContainer}>
+          {!carouselView && <View style={[Layout.flex02]}>
+            <Image
+              source={require("../../../assets/Ellipse38.jpg")}
+              style={styles.image}
+            />
+          </View>}
+
+          <View style={[carouselView ? Layout.fill : Layout.flex08, Gutters.tinyVMargin, carouselView && Gutters.regularTMargin]}>
+            <View style={[Layout.row, Layout.justifyContentBetween]}>
+              <View style={[carouselView && Layout.row]}>
+                <Text style={styles.username}>Tanmay Bhat</Text>
+                <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>0000</Text>
+              </View>
+              <View style={[Gutters.tinyRMargin, carouselView && Layout.alignSelfEnd]}>
+                <Text style={[Fonts.textTiny]}>3 hours ago</Text>
+              </View>
+            </View>
+            <Text style={styles.bioDetails}>
+              Investor, Comedian, Influencer, amongst other things. Live and let
+              live.
+            </Text>
+            {carouselView && <Text style={styles.likeUpvotes}>
+            333 upvotes . 334 downvotes . 12 comments
+            </Text>}
+          </View>
         </View>
-        <View style={[Layout.flex03, Layout.row, Layout.alignItemsCenter]}>
-          <TouchableOpacity>
-            <UpvoteButton fill={likes > 0 ? Colors.success : ""} />
-          </TouchableOpacity>
-          <Text
+        <View style={styles.interactionsContainer}>
+          <View
             style={[
-              Fonts.textLittle,
-              Fonts.textGray,
-              { color: likes > 0 ? Colors.success : Colors.primary },
-            ]}
-          >
-            {"  "}
-            {likes}
-          </Text>
-          <TouchableOpacity style={[Gutters.tinyLMargin]}>
-            <DownvoteButton fill={dislikes > 0 ? Colors.error : ""} />
-          </TouchableOpacity>
-          <Text
-            style={[
-              Fonts.textLittle,
-              Fonts.textGray,
+              styles.commentBox,
+              Layout.row,
+              Gutters.tinyPadding,
               Layout.alignItemsCenter,
-              { color: dislikes > 0 ? Colors.error : Colors.primary },
+              !carouselView && Gutters.smallTMargin,
+              Layout.flex07
             ]}
           >
-            {"  "}
-            {dislikes}
-          </Text>
-          <TouchableOpacity style={[Gutters.tinyLMargin]}>
-            <ShareButton />
-          </TouchableOpacity>
+            <Text style={[Fonts.textSmall, Fonts.textGray, Gutters.tinyLMargin]}>
+              {Constants.addComments}
+            </Text>
+          </View>
+          <View style={[Layout.flex03, Layout.row, Layout.justifyContentCenter, Layout.alignItemsCenter,!carouselView && Gutters.tinyTMargin]}>
+            <TouchableOpacity>
+              <UpvoteButton fill={likes > 0 ? Colors.success : ""} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[Gutters.tinyLMargin]}>
+              <DownvoteButton fill={dislikes > 0 ? Colors.error : ""} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[Gutters.tinyLMargin]}>
+              <ShareButton />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
-    borderRadius: 60,
+    borderRadius: 20,
 
   },
   header: {},
   backImage: {
     width: '100%',
     aspectRatio: 5 / 2,
-    marginBottom: -30,
+  },
+  carouselImage: {
+    width: '100%',
+    height: 258,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 20,
+  },
+  carouselNumbers:{
+    fontSize:96,
+    fontWeight:'400',
+    alignSelf:'flex-end',
+    bottom:40,
+    textShadowColor: 'rgba(255, 219, 31, 1)',
+    textShadowRadius: 2,
+    color:'black'
   },
   image: {
-    width: 300,
-    height: 100,
-    marginLeft: 0,
+    width: 70,
+    height: 70,
+    bottom: 20,
+    marginStart: 10,
     aspectRatio: 1,
     borderRadius: 60,
     borderWidth: 3,
     borderColor: "white",
   },
+  carouselProfile: {
+    width: 70,
+    height: 70,
+    top: 90,
+    marginStart: 10,
+    aspectRatio: 1,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: "white",
+  },
+  imageRadius: {
+    borderRadius: 20,
+  },
   detailsContainer: {
-
     flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: -60,
-    wp: ('80%')
-  
   },
   username: {
-    marginLeft: 120,
-    marginBottom: 15,
+    marginStart: 20,
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 16,
     color: 'white'
   },
-  bioContainer: {
-    width: 234,
-    marginLeft: 120,
-    backgroundColor: 'black',
-    color: 'white',
- 
-  },
   bioDetails: {
+    marginTop: 10,
+    fontSize: 12,
+    marginHorizontal: 20,
+    color: 'white'
+  },
+  likeUpvotes: {
+    marginTop: 10,
+    fontSize: 10,
+    marginHorizontal: 20,
     color: 'white'
   },
   interactionsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
-    backgroundColor: 'black',
+    borderRadius: 20,
     color: 'white',
-
-
   },
   commentBox: {
     backgroundColor: Colors.gray,
     borderRadius: 10,
-    width: 270,
-    marginLeft: 10
+    width: '100%',
+    marginHorizontal: 10
   },
   bottomContainer: {
     color: 'white',
-    backgroundColor: 'black'
+    borderRadius: 20,
   },
   UpperOverlayText: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    color: 'white'
+    marginTop:10,
+    color: 'white',
   },
   topLeftCorner: {
-    marginLeft: 10, 
+    marginLeft: 10,
     marginTop: 5,
     color: 'white',
     fontSize: 10
@@ -206,7 +227,13 @@ const styles = StyleSheet.create({
   },
   bannerText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 12,
+    color: 'white',
+  },
+  carouselBanner: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginVertical: 20,
     color: 'white',
   }
 });

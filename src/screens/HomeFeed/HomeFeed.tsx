@@ -2,10 +2,18 @@ import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import CarouselMain from "@/components/Carousel/CarouselMain";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
+import { useTheme } from "@/hooks";
+import { Logo, NotificationIcon } from "@/theme/svg";
+import { globalStyles } from "@/theme/GlobalStyles";
 
 const HomeFeed: React.FC = () => {
+  const {
+    Layout,
+    Fonts,
+    Gutters,
+    darkMode: isDark,
+  } = useTheme();
   // Sample data for user profiles
   const profiles = [
     {
@@ -50,33 +58,42 @@ const HomeFeed: React.FC = () => {
   const renderProfile = ({ item }) => <ProfileView {...item} />;
 
   return (
-    <View style={styles.container}>
-        <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
-    
-      <ScrollView contentContainerStyle={{marginTop: 30}}>
-      <CarouselMain />
-      <FlatList
-        data={profiles}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderProfile}
-        ItemSeparatorComponent={ItemSeparator}
-      />
-      </ScrollView>
+    <View style={[globalStyles.container]}>
+      <View style={[globalStyles.screenMargin]}>
+        <View style={[Gutters.smallTMargin,Layout.fill]}>
+          <View style={[Layout.row,Layout.justifyContentBetween]}>
+          <Logo />
+          <NotificationIcon />
+          </View>
+          <ScrollView style={[Gutters.regularTMargin]}>
+          <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
+            <CarouselMain />
+            <Text style={[Fonts.textLarge,Fonts.textBold,Fonts.textWhite,Gutters.smallVMargin]}>Top Feed</Text>
+            <FlatList
+              data={profiles}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderProfile}
+              ItemSeparatorComponent={ItemSeparator}
+            />
+          </ScrollView>
+        </View>
+      </View>
     </View>
-      
-   
+
+
   );
 };
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     backgroundColor: 'black',
     flex: 1,
   },
   textStyle: {
-    marginTop: 10,
+    marginVertical: 10,
+    marginEnd: 40,
     color: 'white',
-    fontSize: 30,
+    fontSize: 36,
     fontWeight: "bold"
   },
   separator: {

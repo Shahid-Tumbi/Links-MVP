@@ -257,4 +257,7 @@ google-services.json
 # Android Profiling
 *.hprof
 
+# Ignore package lock files
+package-lock.json
+yarn.lock
 # End of https://www.toptal.com/developers/gitignore/api/reactnative
