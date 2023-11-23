@@ -474,6 +474,61 @@ export const Play = (props: SvgProps) => (
     />
   </Svg>
 )
+
+export const UpvoteNotification = (props: SvgProps) => (
+  <Svg
+    width={25}
+    height={25}
+    fill="none"
+    {...props}
+  >
+    <Circle cx={12.5} cy={12.5} r={12} stroke="#fff" />
+    <Path
+      fill="#fff"
+      d="M17.839 11.8a.55.55 0 0 1-.6.118.55.55 0 0 1-.178-.118L13.05 7.85v10.608a.537.537 0 0 1-.161.383.554.554 0 0 1-.778 0 .537.537 0 0 1-.161-.383V7.85L7.94 11.8a.554.554 0 0 1-.779 0 .538.538 0 0 1 0-.766l4.95-4.875a.552.552 0 0 1 .6-.118.55.55 0 0 1 .178.118l4.95 4.875a.542.542 0 0 1 .12.59.542.542 0 0 1-.12.176Z"
+    />
+  </Svg>
+)
+
+export const DiscussionNotification = (props: SvgProps) => (
+  <Svg
+    width={25}
+    height={25}
+    fill="none"
+    {...props}
+  >
+    <Circle cx={12.5} cy={12.5} r={12} stroke="#fff" />
+    <Path
+      stroke="#fff"
+      d="M7 17.665V9.118c0-.297.14-.58.39-.79.25-.21.59-.328.943-.328h9.334c.353 0 .692.118.942.327.25.21.391.494.391.791v5.59c0 .296-.14.58-.39.79-.25.21-.59.328-.943.328h-7.36c-.2 0-.397.037-.577.11a1.32 1.32 0 0 0-.463.309l-1.554 1.629a.411.411 0 0 1-.202.113.475.475 0 0 1-.243-.006.401.401 0 0 1-.194-.122.3.3 0 0 1-.074-.194Z"
+    />
+  </Svg>
+)
+
+export const TrendingNotification = (props: SvgProps) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={25}
+    height={25}
+    fill="none"
+    {...props}
+  >
+    <Circle cx={12.5} cy={12.5} r={12} stroke="#fff" />
+    <Path
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m7 16.667 4-4 2.667 2.666L19 10"
+    />
+    <Path
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M14.333 10H19v4.667"
+    />
+  </Svg>
+)
+
 export const CloseButton = (props: SvgProps) => (
   <Svg
     width={30}

@@ -66,13 +66,13 @@ const Notifications = () => {
               <Text style={styles.NewText}>7 days ago</Text>
             </View>
             <TouchableOpacity style={styles.container}>
-           <TrendingNotification />
+           <DiscussionNotification />
       
             <View style={styles.verticalLine} />
             <View style={styles.content}>
               <View> 
                 <View style={styles.text}>
-                  <Text style={styles.name}>Your Link is trending at No. 1</Text>
+                  <Text style={styles.name}>Live Discussion that you attended, has ended. Replay chat.</Text>
                   <Text style={styles.NotificationContent}>Billions of blue blistering barnacles, thundering typhoons on salted seas</Text>
                 </View>
                 <Text style={styles.LowerNotification}>You don't wanna miss this!</Text>
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     marginTop: 5,
+    fontWeight: 'bold',
   },
   name: {
     fontSize: 18,
@@ -151,10 +152,9 @@ const styles = StyleSheet.create({
     marginLeft: 12
   },
   NotificationContent: {
-    color: '#1E90FF',
-    fontSize: 16,
+    color: 'white',
+    fontSize: 10,
     marginTop: 10,
-    fontWeight: 'bold'
 
   },
   New: {
