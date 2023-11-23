@@ -26,6 +26,7 @@ import UserProfile2 from '@/screens/UserProfile/UserProfile2';
 import NotificationsTwo from '@/screens/Notifications/NotificationsTwo';
 import BottomSheetInput from '@/components/ModalBottomSheet/UseBS';
 import PostDetails from '@/screens/PostDetails/PostDetails';
+import DiscoverCuratorPost from '@/screens/DiscoverCurator/DiscoverCuratorPost';
 
 // import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 // import ShareLink from '@/screens/ShareLink/ShareLink';
@@ -60,15 +61,15 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={PostDetails} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={HomeFeed} options={{headerShown: false, tabBarShowLabel:false,
 
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
           }}}   />
-      <Tab.Screen name="SettingsScreen" component={DiscoverCurator}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="SettingsScreen" component={DiscoverCuratorPost}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <Octicons name={ 'search' } color={focused ? blueColor : color} lineBreakMode='middle' size={size} />
           }}}   />
-      <Tab.Screen name="Message" component={HomeFeed}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="Message" component={MessageScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <MaterialCommunityIcons name={ 'comment-outline' } color={focused ? blueColor : color} size={size} />
           }}} />
       <Tab.Screen name="Profile" component={ProfileScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
