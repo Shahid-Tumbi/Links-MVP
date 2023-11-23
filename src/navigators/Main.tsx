@@ -24,6 +24,8 @@ import CommentInput from '@/screens/ShareLink/test';
 import test2 from '@/screens/ShareLink/test2';
 import UserProfile2 from '@/screens/UserProfile/UserProfile2';
 import NotificationsTwo from '@/screens/Notifications/NotificationsTwo';
+import BottomSheetInput from '@/components/ModalBottomSheet/UseBS';
+import PostDetails from '@/screens/PostDetails/PostDetails';
 
 // import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 // import ShareLink from '@/screens/ShareLink/ShareLink';
@@ -58,7 +60,7 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={NotificationsTwo} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={PostDetails} options={{headerShown: false, tabBarShowLabel:false,
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
           }}}   />
