@@ -4,7 +4,7 @@ import BottomSheet, { BottomSheetFlatList, BottomSheetTextInput } from "@gorhom/
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
-const BottomSheetInput = () => {
+const BottomSheetInput = ({isOpen, onOpen}) => {
   // hooks
   const sheetRef = useRef<BottomSheet>(null);
 
@@ -52,11 +52,11 @@ const BottomSheetInput = () => {
   //   []
   // );
   return (
-    <View style={styles.container}>
-      <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
+    <View style={styles.BScontainer}>
+      {/* <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
       <Button title="Snap To 50%" onPress={() => handleSnapPress(1)} />
       <Button title="Snap To 25%" onPress={() => handleSnapPress(0)} />
-      <Button title="Close" onPress={() => handleClosePress()} />
+      <Button title="Close" onPress={() => handleClosePress()} /> */}
       <BottomSheet
         ref={sheetRef}
         snapPoints={snapPoints}
@@ -102,7 +102,7 @@ const BottomSheetInput = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  BScontainer: {
     flex: 1,
     paddingTop: 200,
   },
