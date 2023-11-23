@@ -13,9 +13,9 @@ const BS = () => {
     <View style={styles.container}>
         <Button title="Open" onPress={handleOpenPress} />
         <Button title="Close" onPress={handleClosePress} />
-      <BottomSheet snapPoints={snapPoints} enablePanDownToClose={true}>
-        <View>
-            <Text>This is awesome!</Text>
+      <BottomSheet ref={bottomSheetReference} snapPoints={snapPoints} enablePanDownToClose={true} backdropComponent={renderBackdrop} backgroundStyle={{ backgroundColor : 'black'}}>
+        <View style={styles.contentContainer}>
+            <Text style={styles.containerHeadline}>This is awesome!</Text>
         </View>
       </BottomSheet>
     </View>
@@ -32,6 +32,12 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
     },
+    containerHeadline: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      padding: 20,
+      color: '#fff'
+    }
    
   });
 
