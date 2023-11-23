@@ -58,7 +58,7 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={HomeFeed} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={Notifications} options={{headerShown: false, tabBarShowLabel:false,
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
           }}}   />

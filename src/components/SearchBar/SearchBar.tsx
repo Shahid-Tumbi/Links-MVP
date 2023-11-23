@@ -6,7 +6,7 @@ const SearchBarComponent: React.FC = ({style=[],onFocus,onBlur,onCancel}:any) =>
   const [searchText, setSearchText] = useState<string>('');
 
   const onCancelSearch = () => {
-    // Handle canceling the search here
+    
     setSearchText('');
     onCancel()
   };
@@ -24,7 +24,7 @@ const SearchBarComponent: React.FC = ({style=[],onFocus,onBlur,onCancel}:any) =>
         clearIcon={<Icon name="cancel" type="MaterialCommunityIcons" color={'rgba(255, 255, 255, 0.5)'} onPress={onCancelSearch} />}
         onFocus={onFocus}
       />
-      {/* Your other components or search results go here */}
+      
     </View>
   );
 };
@@ -32,7 +32,6 @@ const SearchBarComponent: React.FC = ({style=[],onFocus,onBlur,onCancel}:any) =>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // Add your styles for the container if needed
   },
   placeHolderContainer:{
     fontSize:16,

@@ -99,12 +99,12 @@ const Notifications = () => {
       }
 
 
-
+        
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   container: {
     padding: 20,
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 5,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   content: {
     flex: 1,
@@ -148,14 +148,14 @@ const styles = StyleSheet.create({
   // },
   LowerNotification: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
     marginTop: 5,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   name: {
     fontSize: 18,
-    color: 'white',
-    fontWeight: 'bold'
+    color: "white",
+    fontWeight: "bold",
   },
   verticalLine: {
     width: 0.5,
@@ -165,21 +165,19 @@ const styles = StyleSheet.create({
     marginLeft: 12
   },
   NotificationContent: {
-    color: 'white',
+    color: "white",
     fontSize: 10,
     marginTop: 10,
-
   },
   New: {
     marginLeft: 20,
     marginTop: 20,
   },
   NewText: {
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
     fontSize: 16,
-  }
-})
+  },
+});
 
 export default Notifications;
-
