@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Dimensions, Image } from "react-native"
+import SinglePostItem from '../SinglePost/SinglePostItem';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width + 80
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
@@ -32,26 +34,18 @@ const CarouselCardItem = ({item, index}) => {
 
   
   return (
-    <View style={styles.container} key={index}>
-      <Image
-        source={item.imgUrl}
-        style={styles.image}
-      />
-      <Image source={item.profilePicture} style={styles.profilePicture} />
-      <Text style={styles.header}>{item.title}</Text>
-      <Text style={styles.body}>{item.body}</Text>
-    </View>
-    
+    <LinearGradient colors={["rgba(151, 71, 255, 0.85)","rgba(151, 71, 255, 0.05)"]} style={styles.container} key={index}>
+      <SinglePostItem carouselView={true} />
+    </LinearGradient>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'linear-gradient(180deg, rgba(151, 71, 255, 0.85) 34.9%, rgba(151, 71, 255, 0.05) 78.65%)',
     color: 'white',
     borderRadius: 30,
     width: ITEM_WIDTH,
-    paddingBottom: 40,
+    paddingBottom: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -88,7 +82,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     color: "white",
     fontSize: 12,
-    paddingLeft: 20,
     paddingLeft: 20,
     paddingRight: 20,
     marginLeft: -10

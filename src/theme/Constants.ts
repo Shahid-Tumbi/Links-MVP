@@ -36,7 +36,7 @@ export const Constants = {
     byPassOtp:'123456',
     top10Links: 'OUR TOP 10 LINKS',
     shareLink: 'Share a link',
-    addComments: 'Add a comment',
+    addComments: 'Add your comment',
     newPassword:'Enter new password',
     reenterPassword:'Re-enter new password',
     confirm:'Confirm',
