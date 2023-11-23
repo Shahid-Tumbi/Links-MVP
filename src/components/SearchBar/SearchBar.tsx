@@ -6,7 +6,7 @@ const SearchBarComponent: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const onCancelSearch = () => {
-    // Handle canceling the search here
+    
     setSearchText('');
   };
 
@@ -21,7 +21,7 @@ const SearchBarComponent: React.FC = () => {
         searchIcon={<Icon name="search" type="font-awesome" />}
         clearIcon={<Icon name="cancel" type="font-awesome" onPress={onCancelSearch} />}
       />
-      {/* Your other components or search results go here */}
+      
     </View>
   );
 };
@@ -29,7 +29,6 @@ const SearchBarComponent: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // Add your styles for the container if needed
   },
   searchBarContainer: {
     backgroundColor: 'transparent',
