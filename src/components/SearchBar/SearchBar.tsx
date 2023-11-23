@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 
-const SearchBarComponent: React.FC = () => {
+const SearchBarComponent: React.FC = ({style=[],onFocus,onBlur,onCancel}:any) => {
   const [searchText, setSearchText] = useState<string>('');
 
   const onCancelSearch = () => {
     // Handle canceling the search here
     setSearchText('');
+    onCancel()
   };
 
   return (
     <View style={styles.container}>
       <SearchBar
-        placeholder="Search..."
+        placeholder="Search"
         onChangeText={(text) => setSearchText(text)}
         value={searchText}
         containerStyle={styles.searchBarContainer}
-        inputContainerStyle={styles.inputContainer}
-        searchIcon={<Icon name="search" type="font-awesome" />}
-        clearIcon={<Icon name="cancel" type="font-awesome" onPress={onCancelSearch} />}
+        inputContainerStyle={[styles.inputContainer,...style]}
+        style={[styles.placeHolderContainer]}
+        searchIcon={<Icon name="search" size={16} type="font-awesome" color={'rgba(255, 255, 255, 0.5)'} />}
+        clearIcon={<Icon name="cancel" type="MaterialCommunityIcons" color={'rgba(255, 255, 255, 0.5)'} onPress={onCancelSearch} />}
+        onFocus={onFocus}
       />
       {/* Your other components or search results go here */}
     </View>
@@ -31,13 +34,18 @@ const styles = StyleSheet.create({
     flex: 1,
     // Add your styles for the container if needed
   },
+  placeHolderContainer:{
+    fontSize:16,
+  },
   searchBarContainer: {
     backgroundColor: 'transparent',
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
   },
   inputContainer: {
-    backgroundColor: '#EDEDED',
+    backgroundColor: 'rgba(30, 30, 32, 1)',
+    height:36,
+    fontSize:14
   },
 });
 
