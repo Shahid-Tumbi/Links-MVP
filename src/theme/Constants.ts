@@ -1,7 +1,7 @@
 
 
 export const Constants = {
-    getStarted : "GET STARTED" ,
+    getStarted : "Get Started" ,
     startByChoosing: "Start by choosing your role",
     login: "Login",
     keyboardType:{
@@ -42,5 +42,9 @@ export const Constants = {
     confirm:'Confirm',
     troubleLogin:'Trouble logging in?',
     enterDetails:"Enter your email, phone, or unique ID and we'll send you a link to get back into your account.",
-    sendLoginLink:'Send Login Link'
+    sendLoginLink:'Send Login Link',
+    curatorAccess: "Curator Access",
+    refferalOnly: "Referral invites only",
+    audienceAccess: "Audience access",
+    SignupMember: "Sign up and be a member",
 }
