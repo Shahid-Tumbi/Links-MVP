@@ -63,7 +63,6 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
                 logToCrashlytics('On register api call success')
                 dispatch(setToken(result?.data?.result?.token))
                 dispatch(setAuthData(result?.data?.result?.profile))
-                setApiLoader(true)
                 await Promise.all([
                     crashlytics().setUserId(result?.data?.result?.profile?._id),
                     crashlytics().setAttributes({
@@ -150,7 +149,7 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
     return (
         <View
             style={[globalStyles.container]} >
-            {isLoading || apiLoader ? <Loader state={isLoading} /> : null}
+            {isLoading ? <Loader state={isLoading} /> : null}
             <View style={[globalStyles.screenMargin, Gutters.tinyBMargin]}>
                 <ScrollView style={[Layout.flex08]} keyboardShouldPersistTaps="always" >
                     <Logo style={[Gutters.tinyTMargin]} />
