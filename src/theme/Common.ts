@@ -62,6 +62,15 @@ export function onTokenExpired(dispatch:any){
       return  dispatch(clearToken())
 }
 
+export const validateUrl = (text:string) => {
+  let reg = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+  if(reg.test(text.trim()) === false) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 export const firebaseOtpSent = (countryCode: string,phoneNumber: string ): Promise<any> => {
   return new Promise((resolve, reject) => {
     let phoneWithCount = countryCode + `${phoneNumber}`;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Alert } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity } from "react-native";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { BackButton, True } from "@/theme/svg";
 import { Constants } from "@/theme/Constants";
@@ -118,6 +118,9 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                             />
                         </View>
                     </View>
+                        <View style={[Layout.flex04, Layout.justifyContentCenter]}>
+                            <Text style={[Fonts.textSmall]} onPress={()=>navigation.navigate('ChangePassword')}>{Constants.changePassword}</Text>
+                        </View>
                 </KeyboardAvoidingView>
             </View>
         </View>

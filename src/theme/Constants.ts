@@ -1,7 +1,7 @@
 
 
 export const Constants = {
-    getStarted : "GET STARTED" ,
+    getStarted : "Get Started" ,
     startByChoosing: "Start by choosing your role",
     login: "Login",
     keyboardType:{
@@ -34,10 +34,19 @@ export const Constants = {
     dontHaveAcc:'Don’t have an account? ',
     sectionView:'Tap on a section to view',
     byPassOtp:'123456',
+    top10Links: 'OUR TOP 10 LINKS',
+    shareLink: 'Share a link',
+    addComments: 'Add your comment',
     newPassword:'Enter new password',
     reenterPassword:'Re-enter new password',
     confirm:'Confirm',
     troubleLogin:'Trouble logging in?',
     enterDetails:"Enter your email, phone, or unique ID and we'll send you a link to get back into your account.",
-    sendLoginLink:'Send Login Link'
+    sendLoginLink:'Send Login Link',
+    curatorAccess: "Curator Access",
+    refferalOnly: "Referral invites only",
+    audienceAccess: "Audience access",
+    SignupMember: "Sign up and be a member",
+    changePassword:'Change password',
+    enterCurrentPassword:'Enter Current Password'
 }

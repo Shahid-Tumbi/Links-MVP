@@ -6,6 +6,33 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors } from '@/theme/Variables';
 import { StyleSheet, Text, View } from 'react-native';
 import { EditProfile, ProfileScreen } from '@/screens';
+import ShareLink from '@/screens/ShareLink/ShareLink';
+import HomeFeed from '@/screens/HomeFeed/HomeFeed';
+import SinglePostItem from '@/components/SinglePost/SinglePostItem';
+import DiscoverCurator from '@/screens/DiscoverCurator/DiscoverCurator';
+import SingleCurator from '@/components/SingleCurator/SingleCurator';
+import Notifications from '@/screens/Notifications/Notifications';
+
+import PostDetailScreen from '@/screens/PostDetails/PostDetails';
+import CarouselMain from '@/components/Carousel/CarouselMain';
+import ShareLinkComment from '@/screens/ShareLink/ShareLinkComment';
+import BS from '@/components/ModalBottomSheet/BS';
+import CommentItem from '@/components/CommentItem/CommentItem';
+import SearchBarComponent from '@/components/SearchBar/SearchBar';
+import CommentInput from '@/screens/ShareLink/test';
+import test2 from '@/screens/ShareLink/test2';
+import UserProfile2 from '@/screens/UserProfile/UserProfile2';
+import NotificationsTwo from '@/screens/Notifications/NotificationsTwo';
+import BottomSheetInput from '@/components/ModalBottomSheet/UseBS';
+import PostDetails from '@/screens/PostDetails/PostDetails';
+import DiscoverCuratorPost from '@/screens/DiscoverCurator/DiscoverCuratorPost';
+import Welcome from '@/screens/Welcome/Welcome';
+import CommentScreen from '@/screens/CommentScreen/CommentScreen';
+import ChangePassword from '@/screens/ChangePassword/ChangePassword';
+
+// import HomeFeed from '@/screens/HomeFeed/HomeFeed';
+// import ShareLink from '@/screens/ShareLink/ShareLink';
+// import PostDetails from '@/screens/PostDetails/PostDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,14 +63,15 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={HomeFeed} options={{headerShown: false, tabBarShowLabel:false,
+
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
           }}}   />
-      <Tab.Screen name="Settings" component={SettingsScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="SettingsScreen" component={DiscoverCurator}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <Octicons name={ 'search' } color={focused ? blueColor : color} lineBreakMode='middle' size={size} />
           }}}   />
-      <Tab.Screen name="Message" component={MessageScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="Message" component={ShareLink}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <MaterialCommunityIcons name={ 'comment-outline' } color={focused ? blueColor : color} size={size} />
           }}} />
       <Tab.Screen name="Profile" component={ProfileScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
@@ -59,6 +87,13 @@ const MainNavigator = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
        <Stack.Screen name="Tab" component={TabNavigator} />
        <Stack.Screen name="EditProfile" component={EditProfile} />
+       <Stack.Screen name="HomeFeed" component={HomeFeed}/>      
+       <Stack.Screen name="NotificationsTwo" component={NotificationsTwo}/>      
+       <Stack.Screen name="PostDetailScreen" component={PostDetailScreen}/>      
+       <Stack.Screen name="DiscoverCuratorPost" component={DiscoverCuratorPost}/>      
+       <Stack.Screen name="UserProfile2" component={UserProfile2}/>      
+       <Stack.Screen name="CommentScreen" component={CommentScreen}/>      
+       <Stack.Screen name="ChangePassword" component={ChangePassword}/>      
     </Stack.Navigator>
   );
 };

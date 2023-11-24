@@ -6,6 +6,8 @@ import ApplicationNavigator from './src/navigators/Application';
 import { persistor, store } from './src/store';
 import messaging  from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from "@notifee/react-native";
+import './src/components/sheet';
+import { SheetProvider } from 'react-native-actions-sheet';
 
 const App = () => {
   useEffect(()=>{
@@ -66,7 +68,9 @@ const App = () => {
      * @see https://github.com/rt2zz/redux-persist/blob/master/docs/PersistGate.md
      */}
     <PersistGate loading={null} persistor={persistor}>
+      <SheetProvider>
         <ApplicationNavigator />
+      </SheetProvider>
     </PersistGate>
   </Provider>
 );

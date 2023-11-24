@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ForgotPassword, Login, OtpScreen, ResetPassword, Signup } from '@/screens';
+import GetStartedScreen from '@/screens/GetStartedScreen/GetStartedScreen';
 
 const Stack = createStackNavigator();
 
@@ -8,6 +9,7 @@ const Stack = createStackNavigator();
 const AuthNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='GetStartedScreen' component={GetStartedScreen} />
       <Stack.Screen name='Login' component={Login} />
       <Stack.Screen name='Signup' component={Signup} />
       <Stack.Screen name='OtpScreen' component={OtpScreen} />
