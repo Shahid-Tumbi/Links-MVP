@@ -19,7 +19,7 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
     <ScrollView style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       <View style={globalStyles.screenMargin}>
         <View style={globalStyles.header}>
-          <Logo />
+          <Logo onPress={() => navigation.navigate("Login")}/>
           <View style={styles.loginContainer}>
             <Text style={[styles.login, Fonts.textTiny, Fonts.textWhite]}>{Constants.login}</Text>
           </View>
@@ -27,7 +27,7 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
         <View style={[Gutters.largeTMargin]}>
           <Text style={[styles.getStarted, Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.getStarted}</Text>
           <Text style={[globalStyles.titleSub, Fonts.textRegular]}>{Constants.startByChoosing}</Text>
-          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("AudienceSetup")}>
+          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("Login")}>
             <View style={styles.choossingComponent}>
               <Sun style={styles.groupIcon} />
               <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.curatorAccess}</Text>
@@ -35,7 +35,7 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
             </View>
             <ForwardArrow />
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("AudienceSetup")}>
+          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("Login")}>
             <View style={styles.choossingComponent}>
               <Star />
               <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.audienceAccess}</Text>
