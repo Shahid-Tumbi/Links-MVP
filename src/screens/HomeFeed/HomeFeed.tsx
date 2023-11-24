@@ -2,18 +2,19 @@ import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import CarouselMain from "@/components/Carousel/CarouselMain";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { useTheme } from "@/hooks";
 import { Logo, NotificationIcon } from "@/theme/svg";
 import { globalStyles } from "@/theme/GlobalStyles";
+import { SheetManager } from "react-native-actions-sheet";
+import NewsSheet from "@/components/NewsSheet";
+import debounce from 'lodash/debounce';
 
 const HomeFeed: React.FC = () => {
-  const {
-    Layout,
-    Fonts,
-    Gutters,
-    darkMode: isDark,
-  } = useTheme();
+  const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   // Sample data for user profiles
   const profiles = [
     {
@@ -57,50 +58,70 @@ const HomeFeed: React.FC = () => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
 
+  const openActionSheet = debounce(() => {
+    return SheetManager.show("NewsSheet");
+  }, 300);
+
+  const hideActionSheet = () => {
+    SheetManager.hide("NewsSheet");
+  };
+
   return (
     <View style={[globalStyles.container]}>
       <View style={[globalStyles.screenMargin]}>
-        <View style={[Gutters.smallTMargin,Layout.fill]}>
-          <View style={[Layout.row,Layout.justifyContentBetween]}>
-          <Logo />
-          <NotificationIcon />
+        <View style={[Gutters.smallTMargin, Layout.fill]}>
+          <View style={[Layout.row, Layout.justifyContentBetween]}>
+            <Logo />
+            <NotificationIcon />
           </View>
           <ScrollView style={[Gutters.regularTMargin]}>
-          <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
+            <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
             <CarouselMain />
-            <Text style={[Fonts.textLarge,Fonts.textBold,Fonts.textWhite,Gutters.smallVMargin]}>Top Feed</Text>
-            <FlatList
-              data={profiles}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderProfile}
-              ItemSeparatorComponent={ItemSeparator}
+            <Text
+              style={[
+                Fonts.textLarge,
+                Fonts.textBold,
+                Fonts.textWhite,
+                Gutters.smallVMargin,
+              ]}
+            >
+              Top Feed
+            </Text>
+            <TouchableWithoutFeedback onPress={openActionSheet}>
+              <FlatList
+                data={profiles}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderProfile}
+                ItemSeparatorComponent={ItemSeparator}
+              />
+            </TouchableWithoutFeedback>
+            <NewsSheet
+              // content={newsContent}
+              onCancel={hideActionSheet}
             />
           </ScrollView>
         </View>
       </View>
     </View>
-
-
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     flex: 1,
   },
   textStyle: {
     marginVertical: 10,
     marginEnd: 40,
-    color: 'white',
+    color: "white",
     fontSize: 36,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   separator: {
     height: 20,
-    backgroundColor: 'transparent'
-  }
-})
+    backgroundColor: "transparent",
+  },
+});
 
 export default HomeFeed;
-

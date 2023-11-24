@@ -598,6 +598,34 @@ export const Eye = (props: SvgProps) => (
   </Svg>
 ) 
 
+export const ProceedButton = (props: SvgProps) => (
+  <Svg
+    width={51}
+    height={51}
+    fill="none"
+    {...props}
+  >
+    <G clipPath="url(#a)">
+      <Path
+        fill="green"
+        d="m33.726 25.5-5.97-6.292a.79.79 0 0 0-.255-.206.753.753 0 0 0-.897.16.834.834 0 0 0-.175.283.867.867 0 0 0 .024.661.823.823 0 0 0 .196.268l4.001 4.233H18.881a.765.765 0 0 0-.554.242.85.85 0 0 0-.23.585c0 .22.082.43.23.584a.765.765 0 0 0 .554.243h11.91l-4.142 4.365a.825.825 0 0 0-.196.268.861.861 0 0 0 .151.945c.077.08.168.143.269.185a.748.748 0 0 0 .628-.026.791.791 0 0 0 .254-.206l5.97-6.292Z"
+      />
+      <Circle
+        cx={25.911}
+        cy={25.911}
+        r={22.944}
+        stroke="#fff"
+        strokeOpacity={0.6}
+      />
+    </G>
+    <Defs>
+      <ClipPath id="a">
+        <Path fill="#fff" d="M51 0v51H0V0z" />
+      </ClipPath>
+    </Defs>
+  </Svg>
+)
+
 export const ThreeDots = (props: SvgProps) => (
   <Svg
    

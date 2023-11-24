@@ -72,6 +72,9 @@ import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { UrlLink } from "@/theme/svg";
 import LinearGradient from "react-native-linear-gradient";
+import { SheetManager } from "react-native-actions-sheet";
+import NewsSheet from "@/components/NewsSheet";
+import { debounce } from "lodash";
 
 const ShareLink = () => {
   // const {
@@ -93,6 +96,14 @@ const ShareLink = () => {
   const tags = ["Fitness", "Fashion", "Adventure", "Food", "Travel", "Nature"];
   const likes = 3;
   const dislikes = 2;
+  const openActionSheet = debounce(() => {
+    return SheetManager.show("NewsSheet");
+  }, 300);
+
+  const hideActionSheet = () => {
+    SheetManager.hide("NewsSheet");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.banner}>Share a Link</Text>
@@ -117,12 +128,18 @@ const ShareLink = () => {
             />
           </View>
         </TouchableWithoutFeedback> */}
-      <View style={styles.PostContainer}>
-        <ImageBackground
-          source={require("../../../assets/pexels-steve-johnson-1509534.jpg")}
-          style={styles.backgroundImage}
-        ></ImageBackground>
-      </View>
+      <TouchableWithoutFeedback onPress={openActionSheet}>
+        <View style={styles.PostContainer}>
+          <ImageBackground
+            source={require("../../../assets/pexels-steve-johnson-1509534.jpg")}
+            style={styles.backgroundImage}
+          ></ImageBackground>
+        </View>
+      </TouchableWithoutFeedback>
+      <NewsSheet
+        // content={newsContent}
+        onCancel={hideActionSheet}
+      />
       <View style={styles.CommentContainer}>
         <Text style={styles.title}>Add Your Comment(Optional)</Text>
         <TextInput
@@ -162,9 +179,9 @@ const styles = StyleSheet.create({
   //   elevation: 2,
   // },
   banner: {
-    color: 'white',
+    color: "white",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 20,
     marginTop: 20,
   },
