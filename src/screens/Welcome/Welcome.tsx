@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Logo, ProceedButton } from "@/theme/svg";
 import { useTheme } from "@/hooks";
 import { useSelector } from "react-redux";
+import { ApplicationScreenProps } from "types/navigation";
 
-const Welcome = () => {
+const Welcome = ({ navigation }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector((state: any) => state.auth.authData);
 
@@ -37,12 +38,14 @@ const Welcome = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </Text>
         </View>
-
       </View>
 
       <View style={styles.proceedContainer}>
         <Text style={styles.proceedText}>PROCEED</Text>
-        <ProceedButton style={styles.proceedButton} />
+        <ProceedButton
+          style={styles.proceedButton}
+          onPress={() => navigation.navigate("HomeFeed")}
+        />
       </View>
     </View>
   );
@@ -51,16 +54,16 @@ const Welcome = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", // Adjust background color as needed
+    backgroundColor: "#000", 
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
   headerContainer: {
     marginBottom: 20,
-    // alignItems: "center",
+   
   },
   logo: {
-    // Add any specific styles for the logo
+    
   },
   welcomeText: {
     color: "white",
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   proceedButton: {
-    // Add any specific styles for the ProceedButton SVG
+    
   },
 });
 

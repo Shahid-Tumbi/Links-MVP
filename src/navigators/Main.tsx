@@ -86,6 +86,7 @@ const MainNavigator = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
        <Stack.Screen name="Tab" component={TabNavigator} />
        <Stack.Screen name="EditProfile" component={EditProfile} />
+       <Stack.Screen name="HomeFeed" component={HomeFeed}/>      
     </Stack.Navigator>
   );
 };
