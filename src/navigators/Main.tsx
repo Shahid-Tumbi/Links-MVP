@@ -28,6 +28,7 @@ import PostDetails from '@/screens/PostDetails/PostDetails';
 import DiscoverCuratorPost from '@/screens/DiscoverCurator/DiscoverCuratorPost';
 import Welcome from '@/screens/Welcome/Welcome';
 import CommentScreen from '@/screens/CommentScreen/CommentScreen';
+import ChangePassword from '@/screens/ChangePassword/ChangePassword';
 
 // import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 // import ShareLink from '@/screens/ShareLink/ShareLink';
@@ -92,6 +93,7 @@ const MainNavigator = () => {
        <Stack.Screen name="DiscoverCuratorPost" component={DiscoverCuratorPost}/>      
        <Stack.Screen name="UserProfile2" component={UserProfile2}/>      
        <Stack.Screen name="CommentScreen" component={CommentScreen}/>      
+       <Stack.Screen name="ChangePassword" component={ChangePassword}/>      
     </Stack.Navigator>
   );
 };

@@ -47,4 +47,6 @@ export const Constants = {
     refferalOnly: "Referral invites only",
     audienceAccess: "Audience access",
     SignupMember: "Sign up and be a member",
+    changePassword:'Change password',
+    enterCurrentPassword:'Enter Current Password'
 }
