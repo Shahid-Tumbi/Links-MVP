@@ -1,9 +1,12 @@
 import * as React from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { Border, globalStyles } from "@/theme/GlobalStyles";
+import { Ellipse, ForwardArrow, Logo, RightArrow, Star, Sun } from "@/theme/svg";
 import { Constants } from "@/theme/Constants";
 import { ApplicationScreenProps } from "types/navigation";
-import { useTheme } from "../../hooks";
+import { useTheme } from "@/hooks";
+import { Colors } from "@/theme/Variables";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
   const {
@@ -13,16 +16,33 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
     darkMode: isDark,
   } = useTheme();
   return (
-    <ScrollView style={[Layout.fill, { backgroundColor: "#000" }]}>
+    <ScrollView style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       <View style={globalStyles.screenMargin}>
         <View style={globalStyles.header}>
+          <Logo />
           <View style={styles.loginContainer}>
             <Text style={[styles.login, Fonts.textTiny, Fonts.textWhite]}>{Constants.login}</Text>
           </View>
         </View>
         <View style={[Gutters.largeTMargin]}>
-          <Text style={[styles.getStarted, Fonts.textLarge, Fonts.textWhite]}>{Constants.getStarted}</Text>
+          <Text style={[styles.getStarted, Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.getStarted}</Text>
           <Text style={[globalStyles.titleSub, Fonts.textRegular]}>{Constants.startByChoosing}</Text>
+          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("AudienceSetup")}>
+            <View style={styles.choossingComponent}>
+              <Sun style={styles.groupIcon} />
+              <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.curatorAccess}</Text>
+              <Text style={[styles.referralInvitesOnly, Fonts.textTiny]}>{Constants.refferalOnly}</Text>
+            </View>
+            <ForwardArrow />
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("AudienceSetup")}>
+            <View style={styles.choossingComponent}>
+              <Star />
+              <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.audienceAccess}</Text>
+              <Text style={[styles.referralInvitesOnly, Fonts.textTiny]}>{Constants.SignupMember}</Text>
+            </View>
+            <ForwardArrow />
+          </TouchableWithoutFeedback>
         </View>
       </View>
     </ScrollView>
@@ -52,7 +72,7 @@ const styles = StyleSheet.create({
   },
   component13: {
     flexDirection: "row",
-    backgroundColor: "#1c1c22",
+    backgroundColor: Colors.textGray200,
     borderRadius: Border.br_3xs,
     marginTop: "10%",
     alignItems: "center",

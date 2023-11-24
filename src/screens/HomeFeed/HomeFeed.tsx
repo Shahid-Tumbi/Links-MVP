@@ -12,6 +12,7 @@ import { globalStyles } from "@/theme/GlobalStyles";
 import { SheetManager } from "react-native-actions-sheet";
 import NewsSheet from "@/components/NewsSheet";
 import debounce from 'lodash/debounce';
+import { ApplicationScreenProps } from "types/navigation";
 
 const HomeFeed: React.FC = () => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();

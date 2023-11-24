@@ -28,6 +28,7 @@ import BottomSheetInput from '@/components/ModalBottomSheet/UseBS';
 import PostDetails from '@/screens/PostDetails/PostDetails';
 import DiscoverCuratorPost from '@/screens/DiscoverCurator/DiscoverCuratorPost';
 import Welcome from '@/screens/Welcome/Welcome';
+import GetStartedScreen from '@/screens/GetStartedScreen/GetStartedScreen';
 
 // import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 // import ShareLink from '@/screens/ShareLink/ShareLink';
@@ -62,7 +63,7 @@ const TabNavigator = () => {
   const size = 25
   return <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={Welcome} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={GetStartedScreen} options={{headerShown: false, tabBarShowLabel:false,
 
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />
