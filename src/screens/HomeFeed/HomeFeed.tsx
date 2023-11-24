@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import CarouselMain from "@/components/Carousel/CarouselMain";
@@ -12,9 +12,12 @@ import { globalStyles } from "@/theme/GlobalStyles";
 import { SheetManager } from "react-native-actions-sheet";
 import NewsSheet from "@/components/NewsSheet";
 import debounce from 'lodash/debounce';
+import Welcome from "../Welcome/Welcome";
+import { ApplicationScreenProps } from "types/navigation";
 
-const HomeFeed: React.FC = () => {
+const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
+  const [welcomeScrern,setWelcomeScreen] = useState(true)
   // Sample data for user profiles
   const profiles = [
     {
@@ -56,7 +59,7 @@ const HomeFeed: React.FC = () => {
   ];
 
   const ItemSeparator = () => <View style={styles.separator} />;
-  const renderProfile = ({ item }) => <ProfileView {...item} />;
+  const renderProfile = ({ item }) => <ProfileView {...item} navigation={navigation}/>;
 
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet");
@@ -65,14 +68,17 @@ const HomeFeed: React.FC = () => {
   const hideActionSheet = () => {
     SheetManager.hide("NewsSheet");
   };
-
+  const onPress =() => {
+    setWelcomeScreen(false)
+  }
   return (
     <View style={[globalStyles.container]}>
+      {welcomeScrern ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
         <View style={[Gutters.smallTMargin, Layout.fill]}>
           <View style={[Layout.row, Layout.justifyContentBetween]}>
             <Logo />
-            <NotificationIcon />
+            <NotificationIcon onPress={()=>navigation.navigate('NotificationsTwo')}/>
           </View>
           <ScrollView style={[Gutters.regularTMargin]}>
             <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
@@ -87,21 +93,20 @@ const HomeFeed: React.FC = () => {
             >
               Top Feed
             </Text>
-            <TouchableWithoutFeedback onPress={openActionSheet}>
+            
               <FlatList
                 data={profiles}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderProfile}
                 ItemSeparatorComponent={ItemSeparator}
               />
-            </TouchableWithoutFeedback>
             <NewsSheet
               // content={newsContent}
               onCancel={hideActionSheet}
             />
           </ScrollView>
         </View>
-      </View>
+      </View> }
     </View>
   );
 };

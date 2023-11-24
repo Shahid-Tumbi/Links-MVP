@@ -85,7 +85,7 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
   // };
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.primary }]}>
-      <View style={[globalStyles.header, Gutters.regularRMargin]}>
+      <View style={[globalStyles.header, Gutters.regularRMargin,Gutters.regularTMargin]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons
             name={"chevron-left"}

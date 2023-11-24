@@ -5,7 +5,7 @@ import { useTheme } from "@/hooks";
 import { useSelector } from "react-redux";
 import { ApplicationScreenProps } from "types/navigation";
 
-const Welcome = ({ navigation }: ApplicationScreenProps) => {
+const Welcome = ({ navigation,onPress }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector((state: any) => state.auth.authData);
 
@@ -44,7 +44,7 @@ const Welcome = ({ navigation }: ApplicationScreenProps) => {
         <Text style={styles.proceedText}>PROCEED</Text>
         <ProceedButton
           style={styles.proceedButton}
-          onPress={() => navigation.navigate("HomeFeed")}
+          onPress={() => onPress("HomeFeed")}
         />
       </View>
     </View>

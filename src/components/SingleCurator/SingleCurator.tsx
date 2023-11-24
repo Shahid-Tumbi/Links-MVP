@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function SingleCurator(){
+    const navigation = useNavigation()
     return (
         <View style={styles.container}>
-        <Pressable style={styles.header}>
+        <Pressable style={styles.header} onPress={()=>navigation.navigate('DiscoverCuratorPost')}>
             <Image source={require('../../../assets/Ellipse38.jpg')} style={styles.userImage} />
             <View>
                 <Text style={styles.userName}>Tanmay Bhat</Text>
