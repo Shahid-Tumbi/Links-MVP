@@ -70,19 +70,19 @@ import React from "react";
 import { widthPercentageToDP } from "react-native-responsive-screen";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
-import { UrlLink } from "@/theme/svg";
+import { BellIcon, Logo, UrlLink } from "@/theme/svg";
 import LinearGradient from "react-native-linear-gradient";
 import { SheetManager } from "react-native-actions-sheet";
 import NewsSheet from "@/components/NewsSheet";
 import { debounce } from "lodash";
 
 const ShareLink = () => {
-  // const {
-  //   Layout,
-  //   Fonts,
-  //   Gutters,
-  //   darkMode: isDark,
-  // } = useTheme();
+  const {
+    Layout,
+    Fonts,
+    Gutters,
+    darkMode: isDark,
+  } = useTheme();
 
   const userAvatar =
     "https://pub-static.fotor.com/assets/projects/pages/d5bdd0513a0740a8a38752dbc32586d0/fotor-03d1a91a0cec4542927f53c87e0599f6.jpg";
@@ -106,6 +106,11 @@ const ShareLink = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Logo />
+        {/* <BellIcon /> */}
+      </View>
+ 
       <Text style={styles.banner}>Share a Link</Text>
       <TextInput
         style={styles.LinkBar}
@@ -141,7 +146,7 @@ const ShareLink = () => {
         onCancel={hideActionSheet}
       />
       <View style={styles.CommentContainer}>
-        <Text style={styles.title}>Add Your Comment(Optional)</Text>
+        <Text style={styles.title}>Add Some Comment(Optional)</Text>
         <TextInput
           style={styles.input}
           placeholder="here"
@@ -153,9 +158,12 @@ const ShareLink = () => {
         </View>
       </View>
       <TouchableOpacity>
-        <Pressable style={styles.button}>
+      <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Post Link</Text>
         </Pressable>
+        {/* <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Post Link</Text>
+        </Pressable> */}
       </TouchableOpacity>
     </View>
   );
@@ -167,6 +175,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
+  },
+
+  header: {
+    marginLeft: 20,
+    marginTop: 20,
+    // flexDirection: 'row',
+    // justifyContent: 'flex-end'
   },
   // PostContainer: {
   //   backgroundColor: 'white',
@@ -274,6 +289,11 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     width: widthPercentageToDP("90%"),
     marginLeft: 20,
+    elevation: 5, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
   },
   buttonText: {
     color: "white",
