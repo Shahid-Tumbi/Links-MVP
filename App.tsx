@@ -8,6 +8,7 @@ import messaging  from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from "@notifee/react-native";
 import './src/components/sheet';
 import { SheetProvider } from 'react-native-actions-sheet';
+import './src/components/sheet'
 
 const App = () => {
   useEffect(()=>{

@@ -21,29 +21,35 @@ const Welcome = ({ navigation, onPress }: ApplicationScreenProps) => {
         <Text style={styles.community}>Community Guidelines</Text>
 
         <View style={styles.rulesBox}>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bullet}>{"\u2022"}</Text>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </Text>
+          <View style={[Layout.row]}>
+          <Text style={styles.bullet}>{"\u2022"}</Text>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
           </View>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bullet}>{"\u2022"}</Text>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </Text>
+          <View style={[Layout.row]}>
+          <Text style={styles.bullet}>{"\u2022"}</Text>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
           </View>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bullet}>{"\u2022"}</Text>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </Text>
+          <View style={[Layout.row]}>
+          <Text style={styles.bullet}>{"\u2022"}</Text>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
           </View>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bullet}>{"\u2022"}</Text>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </Text>
+          <View style={[Layout.row]}>
+          <Text style={styles.bullet}>{"\u2022"}</Text>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
+          </View>
+          <View style={[Layout.row]}>
+          <Text style={styles.bullet}>{"\u2022"}</Text>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
           </View>
         </View>
       </View>

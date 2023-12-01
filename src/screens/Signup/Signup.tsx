@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { Logo, RightArrow } from "@/theme/svg";
 import crashlytics from '@react-native-firebase/crashlytics';
 
-const Signup = ({ navigation }: ApplicationScreenProps) => {
+const Signup = ({ navigation,route }: ApplicationScreenProps) => {
     logToCrashlytics('Signup Screen')
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
@@ -70,7 +70,11 @@ const Signup = ({ navigation }: ApplicationScreenProps) => {
                       username: result?.data?.result?.profile?.userName,
                     }),
                   ]);
+                if(route?.params?.curator){
+                    navigation.navigate('ReferralScreen')
+                } else {
                 navigation.navigate('OtpScreen')
+                }
             } else {
                 if (result?.error?.data) {
                     if (result?.error?.data?.message === 'Oops! This Email ID is already registered with Us') {

@@ -10,22 +10,12 @@ import { Apple, Facebook, Google, Logo, RightArrow, Twitter } from "@/theme/svg"
 import { useEffect, useState } from "react";
 import { Alert, PermissionsAndroid, Platform, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ApplicationScreenProps } from "types/navigation";
-import messaging from "@react-native-firebase/messaging";
 import crashlytics from '@react-native-firebase/crashlytics';
 
-const getFCMToken = (async () => {
-  try {
-    const token = await messaging().getToken();
-    console.log(token);
-  } catch (e) {
-    console.log(e);
-  }
-})();
-
-
 const Login = ({ navigation }: ApplicationScreenProps) => {
+    const isCurator = useSelector((state:any) => state.auth.isCurator)
     const {
         Layout,
         Fonts,
@@ -44,22 +34,8 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
 
     useEffect(() => {
         logToCrashlytics('Login Screen')
-        checkApplicationPermission()
         getAppConfig()
     }, [])
-    const checkApplicationPermission = async () => {
-        logToCrashlytics('Check Notification permission')
-
-        if (Platform.OS === 'android') {
-          try {
-            await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-            );
-          } catch (error:any) {
-            logToCrashlytics('Check Notification permission error',error)
-          }
-        }
-      };
     const getAppConfig = async () => {
         logToCrashlytics('App config on Login Screen')
         const result: any = await appConfig({})
@@ -233,7 +209,7 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                         <Apple />
                     </View>
                     <Text style={[Fonts.textRegular, Fonts.textCenter, Gutters.regularTMargin]}>{Constants.dontHaveAcc}
-                        <Text style={[Fonts.textLarge]} onPress={() => navigation.navigate('Signup')}>Sign up</Text>
+                        <Text style={[Fonts.textLarge]} onPress={() => navigation.navigate('Signup',{curator:isCurator})}>Sign up</Text>
                     </Text>
                 </View>
             </View>

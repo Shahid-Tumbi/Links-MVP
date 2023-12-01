@@ -1,64 +1,9 @@
-// import React, { useState } from 'react';
-// import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-// import Icon from 'react-native-vector-icons/Ionicons';
-
-// const CommentBox = () => {
-//   const [comment, setComment] = useState('');
-
-//   const handleCommentChange = (text) => {
-//     setComment(text);
-//   };
-
-//   const handlePostComment = () => {
-//     // Implement logic to post the comment
-//     console.log('Posting comment:', comment);
-//     // You can send the comment to your backend or perform any other necessary action
-//     // Reset the comment input
-//     setComment('');
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Add a public comment..."
-//         value={comment}
-//         onChangeText={handleCommentChange}
-//         multiline
-//       />
-//       <TouchableOpacity onPress={handlePostComment}>
-//         <Icon name="send" size={30} color="#606060" />
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     padding: 10,
-//     borderTopWidth: 1,
-//     borderTopColor: '#e0e0e0',
-//   },
-//   input: {
-//     flex: 1,
-//     marginRight: 10,
-//     minHeight: 40,
-//     maxHeight: 120,
-//     borderWidth: 1,
-//     borderColor: '#e0e0e0',
-//     borderRadius: 8,
-//     padding: 8,
-//     fontSize: 16,
-//   },
-// });
-
-// export default CommentBox;
 import {
+  ActivityIndicator,
+  Dimensions,
   Image,
   ImageBackground,
-  Pressable,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -66,98 +11,154 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { widthPercentageToDP } from "react-native-responsive-screen";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
-import { UrlLink } from "@/theme/svg";
 import LinearGradient from "react-native-linear-gradient";
-import { SheetManager } from "react-native-actions-sheet";
-import NewsSheet from "@/components/NewsSheet";
 import { debounce } from "lodash";
+import { Constants } from "@/theme/Constants";
+import { useAddPostMutation } from "@/services/modules/post";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "react-native";
+import { onTokenExpired } from "@/theme/Common";
+import { Colors } from "@/theme/Variables";
+import { URL } from "url";
 
-const ShareLink = () => {
-  // const {
-  //   Layout,
-  //   Fonts,
-  //   Gutters,
-  //   darkMode: isDark,
-  // } = useTheme();
-
-  const userAvatar =
-    "https://pub-static.fotor.com/assets/projects/pages/d5bdd0513a0740a8a38752dbc32586d0/fotor-03d1a91a0cec4542927f53c87e0599f6.jpg";
-  const userName = "Nikhil Kamath";
-  const score = "2050 Score";
-  const imageUrl =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXk9RJzuijLiEaognmD64tPjSIWPWHARvv55R-QDILxw&s";
-  const postTitle =
-    "Canada a haven for gangsters Goldy Brar, Arsh Dalla & Landa";
-  const postLink = "medium.com";
-  const tags = ["Fitness", "Fashion", "Adventure", "Food", "Travel", "Nature"];
-  const likes = 3;
-  const dislikes = 2;
-  const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet");
-  }, 300);
-
-  const hideActionSheet = () => {
-    SheetManager.hide("NewsSheet");
+const cheerio = require('cheerio');
+const ShareLink = ({sheetRef}:any) => {
+  const {
+    Layout,
+    Fonts,
+    Gutters,
+    darkMode: isDark,
+  } = useTheme();
+  const [error,setError]=useState('')
+  const [link,setLink]=useState('')
+  const [pinComment,setPinComment]=useState('')
+  const [image,setImage]=useState('')
+  const [loader,setLoader]=useState(false)
+  const dispatch = useDispatch()
+  const authData = useSelector((state:any)=>state.auth.authData) 
+  const token = useSelector((state:any)=>state.auth.token) 
+  const [addPost, { isLoading }] = useAddPostMutation();
+  const fetchOGImage = async (targetUrl: string) => {
+    try {
+      setLoader(true)
+      const response = await fetch(targetUrl);
+      const htmlContent = await response.text();
+      
+      const $ = cheerio.load(htmlContent);
+      const image = $("meta[property='og:image']").attr('content');
+      
+      if (image) {
+        setLoader(false)
+        setImage(image);
+      } else {
+        setLoader(false)
+        // Handle case where OG image meta tag is not found
+        console.log('OG Image meta tag not found');
+      }
+    } catch (error) {
+      setLoader(false)
+      console.error('Error fetching OG image:', error);
+    }
   };
+  const submitPost = async () =>{
 
+    if (link == '' ) {
+      setError('plese enter a Link')
+    }else {
+
+      const postData = {
+        userId: authData._id,
+        link,
+        pinComment
+      }
+      const result: any = await addPost({ body: postData, token })
+      if (result?.data?.statusCode === 200) {
+        setLink('')
+        setPinComment('')
+        setImage('')
+        setError('')
+        Alert.alert('Link posted successfully')
+        sheetRef?.current?.close()
+      } else {
+        if (result.error && result.error.status === 401) {
+          onTokenExpired(dispatch)
+        }
+        if (result?.error?.data) {
+          if(result?.error?.data?.message === 'URL type not supported.'){
+            setError('Invalid Link, please recheck the link you would like to enter.')
+          } else {
+          Alert.alert(result?.error?.data?.message)
+          }
+          
+        }
+        if (result?.error?.error) {
+          Alert.alert('Something went wrong !!')
+        }
+        
+      }
+    }
+  }
+  const debounceFun = debounce((e)=>{return fetchOGImage(e)},400)
   return (
-    <View style={styles.container}>
-      <Text style={styles.banner}>Share a Link</Text>
+    <KeyboardAvoidingView style={styles.container}>
+      <Text style={styles.cancelButton} onPress={()=>{
+         setLink('')
+         setPinComment('')
+         setImage('')
+         setError('')
+         sheetRef.current?.close()
+        }}>Cancel</Text>
+      <Text style={styles.banner}>{Constants.shareLink}</Text>
+      <Text style={styles.subbanner}>{Constants.linkInterested}</Text>
       <TextInput
         style={styles.LinkBar}
         placeholder="Enter or paste a link"
         placeholderTextColor={"white"}
+        value={link}
+        onChange={({ nativeEvent: { eventCount, target, text} }) => {            
+          setLink(text)
+          debounceFun(text)
+          setError('')
+        }}
       />
-      {/* <TouchableWithoutFeedback style={styles.PostContainer}>
-          <Image source={{ uri: imageUrl }} style={styles.image} />
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{postTitle}</Text>
-            <View style={[Layout.row, Layout.alignItemsCenter]}>
-              <View style={[Gutters.tinyTMargin]}>
-                <UrlLink />
-              </View>
-              <Text style={[Fonts.textTiny, Fonts.textGray]}>{postLink}</Text>
-            </View>
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-              style={styles.titleGradient}
-            />
-          </View>
-        </TouchableWithoutFeedback> */}
-      <TouchableWithoutFeedback onPress={openActionSheet}>
+      {error&&<Text style={[Fonts.textRegular,Fonts.textError,Layout.alignSelfEnd,Gutters.tinyHMargin]}>{error}</Text>}
+      <TouchableWithoutFeedback>
         <View style={styles.PostContainer}>
+          {loader ? <ActivityIndicator style={styles.backgroundImage} color={Colors.blue} size={30}/> : 
           <ImageBackground
-            source={require("../../../assets/pexels-steve-johnson-1509534.jpg")}
+            source={({uri:image})}
             style={styles.backgroundImage}
-          ></ImageBackground>
+            imageStyle={styles.backgroundImage}
+          ></ImageBackground>}
         </View>
       </TouchableWithoutFeedback>
-      <NewsSheet
-        // content={newsContent}
-        onCancel={hideActionSheet}
-      />
       <View style={styles.CommentContainer}>
-        <Text style={styles.title}>Add Your Comment(Optional)</Text>
+        <Text style={styles.title}>{Constants.addYourComment}</Text>
         <TextInput
           style={styles.input}
           placeholder="here"
           placeholderTextColor="#A0A0A0"
+          maxLength={60}
+          value={pinComment}
+          onChangeText={(e)=>setPinComment(e)}
         />
         <View style={styles.line} />
         <View style={styles.characterCountContainer}>
-          <Text style={styles.characterCountText}>60 characters</Text>
+          <Text style={styles.characterCountText}>{Constants.characters}</Text>
         </View>
       </View>
       <TouchableOpacity>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Post Link</Text>
-        </Pressable>
+        <TouchableOpacity onPress={()=>submitPost()}>
+      <LinearGradient style={styles.button} colors={['rgba(70, 70, 70, 1)','rgba(0, 0, 0, 1)']}>
+          <Text style={styles.buttonText}>{Constants.postLink}</Text>
+      </LinearGradient>
+        </TouchableOpacity>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -168,16 +169,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
   },
-  // PostContainer: {
-  //   backgroundColor: 'white',
-  //   borderTopLeftRadius: 10,
-  //   borderTopRightRadius: 10,
-  //   marginVertical: 10,
-  //   shadowColor: 'black',
-  //   shadowOpacity: 0.2,
-  //   shadowOffset: { width: 0, height: 2 },
-  //   elevation: 2,
-  // },
   banner: {
     color: "white",
     fontSize: 24,
@@ -186,18 +177,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   PostContainer: {
-    width: 324,
+    width: Dimensions.get('screen').width - 40,
     height: 162,
-    flexShrink: 0,
     borderRadius: 10,
-    marginLeft: 30,
+    marginLeft: 20,
     marginTop: 30,
   },
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
-    backgroundColor: "lightgray",
+    borderRadius:10
   },
   LinkBar: {
     backgroundColor: "#242424",
@@ -206,7 +196,8 @@ const styles = StyleSheet.create({
     margin: 10,
     color: "white",
     width: widthPercentageToDP("90%"),
-    marginLeft: 15,
+    marginLeft: 20,
+    marginTop: 20,
   },
   image: {
     width: "100%",
@@ -215,22 +206,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
-  // titleContainer: {
-  //   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  //   padding: 10,
-  // },
-  // title: {
-  //   color: 'white',
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  // },
-  // titleGradient: {
-  //   position: 'absolute',
-  //   left: 0,
-  //   right: 0,
-  //   bottom: 0,
-  //   height: 50,
-  // },
   CommentContainer: {
     marginHorizontal: 20,
     marginVertical: 10,
@@ -279,4 +254,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  subbanner:{
+    color: "rgba(255, 255, 255, 0.60)",
+    fontSize: 12,
+    marginLeft: 20,
+  },
+  cancelButton:{
+    color:'white',
+    fontSize:16,
+    textAlign:'right',
+    marginEnd:20
+}
 });

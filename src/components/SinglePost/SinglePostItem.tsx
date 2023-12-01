@@ -5,7 +5,6 @@ import {
   ImageBackground,
   StyleSheet,
   Image,
-  TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
 import {
@@ -21,63 +20,57 @@ import LinearGradient from "react-native-linear-gradient";
 import { SheetManager } from "react-native-actions-sheet";
 import { debounce } from "lodash";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import moment from "moment";
 
 const SinglePostItem = ({
-  userAvatar,
-  userName,
-  postTitle,
-  postImage,
-  score,
-  timeToRead,
-  date,
-  likes,
-  dislikes,
-  comment,
-  onPostPress,
-  enableComment,
+  data,
+  number,
   carouselView
 }: any) => {
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters } = useTheme();
   const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet");
+    return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);
   return (
     <View style={styles.container}>
-      <View style={[carouselView && { margin: 6 }]}>
+      <View style={[carouselView && { margin: 6, height: 258 }]}>
         <TouchableWithoutFeedback onPress={openActionSheet}>
+          <>
           <ImageBackground
-            source={require("../../../assets/pexels-daniel-absi-952670.jpg")}
+            source={data?.image?{uri:data?.image}:require("../../../assets/pexels-daniel-absi-952670.jpg")}
             style={carouselView ? styles.carouselImage : styles.backImage}
             imageStyle={[styles.imageRadius, !carouselView && styles.imageOpacity]}>
             <View style={styles.UpperOverlayText}>
               <View style={[Layout.flex07, Layout.row]}>
-                <Text style={styles.topLeftCorner}>7 min read</Text>
-                <Text style={styles.topLeftCorner}>25 Oct 2023</Text>
+                <Text style={styles.topLeftCorner}>{data?.readingTime || '0'} min read </Text>
+                <Text style={styles.bullet}>.</Text>
+                <Text style={styles.topLeftCornerDate}>{moment(data?.postPublished).format("DD MMM YYYY")}</Text>
               </View>
               <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}>
                 <Menu />
               </View>
             </View>
             <View style={styles.banner}>
-              <Text style={carouselView ? styles.carouselBanner : styles.bannerText}>NCERT clarifies on India to Bharat name change: ‘Too premature to comment’</Text>
+              <Text style={carouselView ? styles.carouselBanner : styles.bannerText}>{data?.title || 'NCERT clarifies on India to Bharat name change: ‘Too premature to comment’'}</Text>
             </View>
-            {carouselView && <Image
-              source={require("../../../assets/Ellipse38.jpg")}
+          </ImageBackground>
+          {carouselView && <Image
+              source={data?.user_info?.profileImage ? {uri:data?.user_info?.profileImage }: require("../../../assets/Ellipse38.jpg")}
               style={styles.carouselProfile}
             />}
-            {carouselView && <Text style={[styles.carouselNumbers]}>1</Text>}
-          </ImageBackground>
+            {carouselView && <Text style={[styles.carouselNumbers]}>{number}</Text>}
+            </>
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{postData:data})}>
         <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2')}>
               <Image
-                source={require("../../../assets/Ellipse38.jpg")}
+                source={data?.user_info?.profileImage ? {uri:data?.user_info?.profileImage } : require("../../../assets/Ellipse38.jpg")}
                 style={styles.image}
               />
               </TouchableOpacity>
@@ -86,19 +79,18 @@ const SinglePostItem = ({
             <View style={[carouselView ? Layout.fill : Layout.flex08, Gutters.tinyVMargin, carouselView && Gutters.regularTMargin]}>
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
-                  <Text style={styles.username}>Tanmay Bhat</Text>
-                  <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>0000</Text>
+                  <Text style={styles.username}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || 'Tanmay Bhat'}</Text>
+                  <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>{data?.score || '0000'}</Text>
                 </View>
                 <View style={[Gutters.tinyRMargin, carouselView && Layout.alignSelfEnd]}>
-                  <Text style={[Fonts.textTiny]}>3 hours ago</Text>
+                  <Text style={[Fonts.textTiny]}>{moment(data?.createdAt).fromNow()}</Text>
                 </View>
               </View>
               <Text style={styles.bioDetails}>
-                Investor, Comedian, Influencer, amongst other things. Live and let
-                live.
+               {data?.description || 'Investor, Comedian, Influencer, amongst other things. Live and let live.'}
               </Text>
               {carouselView && <Text style={styles.likeUpvotes}>
-                333 upvotes . 334 downvotes . 12 comments
+                {data?.likes || '0'} upvotes <Text style={styles.bullet}>{"\u2022"}</Text> {data?.dislikes || '0'} downvotes <Text style={styles.bullet}>{"\u2022"}</Text> {data?.totalComments || '0'} comments
               </Text>}
             </View>
         </View>
@@ -120,10 +112,10 @@ const SinglePostItem = ({
           </View>
           <View style={[Layout.flex03, Layout.row, Layout.justifyContentCenter, Layout.alignItemsCenter, !carouselView && Gutters.tinyTMargin]}>
             <TouchableOpacity>
-              <UpvoteButton fill={likes > 0 ? Colors.success : ""} />
+              <UpvoteButton fill={data?.likes > 0 ? Colors.success : ""} />
             </TouchableOpacity>
             <TouchableOpacity style={[Gutters.tinyLMargin]}>
-              <DownvoteButton fill={dislikes > 0 ? Colors.error : ""} />
+              <DownvoteButton fill={data?.dislikes > 0 ? Colors.error : ""} />
             </TouchableOpacity>
             <TouchableOpacity style={[Gutters.tinyLMargin]}>
               <ShareButton />
@@ -156,7 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 96,
     fontWeight: '400',
     alignSelf: 'flex-end',
-    bottom: 40,
+    bottom: 180,
     textShadowColor: 'rgba(255, 219, 31, 1)',
     textShadowRadius: 2,
     color: 'black'
@@ -174,7 +166,7 @@ const styles = StyleSheet.create({
   carouselProfile: {
     width: 70,
     height: 70,
-    top: 90,
+    bottom: 55,
     marginStart: 10,
     aspectRatio: 1,
     borderRadius: 60,
@@ -232,6 +224,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 10
   },
+  topLeftCornerDate: {
+    marginLeft: 5,
+    marginTop: 5,
+    color: 'white',
+    fontSize: 10
+  },
   banner: {
     justifyContent: 'center',
     marginLeft: 10,
@@ -250,7 +248,11 @@ const styles = StyleSheet.create({
   },
   imageOpacity: {
     opacity: 0.7,
-  }
+  },
+  bullet: {
+    fontSize: 12,
+    color: "white",
+  },
 });
 
 export default SinglePostItem;

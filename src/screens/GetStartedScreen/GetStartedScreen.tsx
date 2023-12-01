@@ -7,6 +7,8 @@ import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { setCurator } from "@/store/User";
+import { useDispatch } from "react-redux";
 
 const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
   const {
@@ -15,19 +17,23 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
     Gutters,
     darkMode: isDark,
   } = useTheme();
+  const dispatch = useDispatch()
   return (
     <ScrollView style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       <View style={globalStyles.screenMargin}>
         <View style={globalStyles.header}>
-          <Logo onPress={() => navigation.navigate("Login")}/>
+          <Logo />
           <View style={styles.loginContainer}>
-            <Text style={[styles.login, Fonts.textTiny, Fonts.textWhite]}>{Constants.login}</Text>
+            <Text style={[styles.login, Fonts.textTiny, Fonts.textWhite]} onPress={() => navigation.navigate("Login")}>{Constants.login}</Text>
           </View>
         </View>
         <View style={[Gutters.largeTMargin]}>
           <Text style={[styles.getStarted, Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.getStarted}</Text>
           <Text style={[globalStyles.titleSub, Fonts.textRegular]}>{Constants.startByChoosing}</Text>
-          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("Login")}>
+          <TouchableWithoutFeedback style={styles.component13} onPress={() => {
+            dispatch(setCurator(true))
+            navigation.navigate("Login")
+            }}>
             <View style={styles.choossingComponent}>
               <Sun style={styles.groupIcon} />
               <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.curatorAccess}</Text>
@@ -35,7 +41,10 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
             </View>
             <ForwardArrow />
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback style={styles.component13} onPress={() => navigation.navigate("Login")}>
+          <TouchableWithoutFeedback style={styles.component13} onPress={() => {
+            dispatch(setCurator(false))
+            navigation.navigate("Login")
+            }}>
             <View style={styles.choossingComponent}>
               <Star />
               <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.audienceAccess}</Text>

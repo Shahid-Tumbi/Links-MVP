@@ -9,7 +9,7 @@ import { CommonTextInput, Loader } from "@/components";
 import { Avatar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation } from "@/services/modules/users";
-import { setAuthData } from "@/store/User";
+import { clearToken, setAuthData } from "@/store/User";
 import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 
 const EditProfile = ({ navigation }: ApplicationScreenProps) => {
@@ -118,8 +118,20 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                             />
                         </View>
                     </View>
-                        <View style={[Layout.flex04, Layout.justifyContentCenter]}>
+                        <View style={[]}>
+                            <View style={[Layout.row,Gutters.regularTMargin, Layout.scrollSpaceBetween]}>
                             <Text style={[Fonts.textSmall]} onPress={()=>navigation.navigate('ChangePassword')}>{Constants.changePassword}</Text>
+                            <Text style={[Fonts.textSmall, styles.logoutBtn]} onPress={() => {
+                                Alert.alert('Logout', 'Do you want to Logout?', [
+                                    {
+                                        text: 'Cancel',
+                                        onPress: () => console.log('Cancel Pressed'),
+                                        style: 'cancel',
+                                    },
+                                    { text: 'OK', onPress: () =>  dispatch(clearToken())},
+                                ])
+                            }}>{Constants.logout}</Text>
+                            </View>
                         </View>
                 </KeyboardAvoidingView>
             </View>
@@ -128,7 +140,12 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
 };
 
 const styles = StyleSheet.create({
-
+logoutBtn:{
+    padding:10,
+    color:'#f5f5f5',
+    borderRadius:10,
+    backgroundColor:'#3F51B5'
+}
 });
 
 export default EditProfile;

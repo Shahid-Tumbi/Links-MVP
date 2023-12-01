@@ -11,6 +11,7 @@ import {
   ScrollView,
   Image,
   Modal,
+  SafeAreaView,
 } from "react-native";
 import ActionSheet, {
   SheetManager,
@@ -18,9 +19,11 @@ import ActionSheet, {
 } from "react-native-actions-sheet";
 import LinearGradient from "react-native-linear-gradient";
 import * as Progress from "react-native-progress";
+import WebView from "react-native-webview";
 const NewsSheet = (props: any) => {
   const { Fonts, Layout, Gutters, darkMode: isDark } = useTheme();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [summaryView, setSummaryView] = useState(false);
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -36,7 +39,7 @@ const NewsSheet = (props: any) => {
   return (
     <ActionSheet id={props.sheetId}>
       <LinearGradient colors={["rgba(0,0,0,0)", "rgba(120,120,120,0.5)"]}>
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <View style={styles.header}>
             <View>
               <Text
@@ -46,10 +49,7 @@ const NewsSheet = (props: any) => {
               </Text>
             </View>
             <View style={styles.iconContainer}>
-              <TouchableOpacity style={[Gutters.smallRPadding]}>
-                <Play />
-              </TouchableOpacity>
-              <TouchableOpacity style={[Gutters.smallRPadding]}>
+              <TouchableOpacity style={[Gutters.smallRPadding]} onPress={()=>setSummaryView(!summaryView)}>
                 <Stars />
               </TouchableOpacity>
               <TouchableOpacity onPress={hideActionSheet}>
@@ -57,52 +57,28 @@ const NewsSheet = (props: any) => {
               </TouchableOpacity>
             </View>
           </View>
-          <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-            <View style={[Gutters.tinyMargin]}>
-              {/* <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXk9RJzuijLiEaognmD64tPjSIWPWHARvv55R-QDILxw&s' }} style={styles.image} />
-                            <Text style={[Fonts.textSmall, Fonts.textWhite]}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            </Text>
-                            <Text style={[Fonts.textSmall, Fonts.textWhite]}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            </Text>
-                            <Text style={[Fonts.textSmall, Fonts.textWhite]}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            </Text> */}
-              <View style={styles.AISummary}>
+           <View style={[Gutters.tinyMargin,Layout.fill]}>
+              {summaryView ? <View style={styles.AISummary}>
                 <View style={styles.AIHeader}>
                     <Text style={styles.AICaption}>Summary</Text>
                 </View>
                 <View style={styles.AIParagraph}>
                   <Text style={styles.AIText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text style={styles.AIText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text style={styles.AIText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text style={styles.AIText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text style={styles.AIText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    {props?.payload?.summary || ''}
                   </Text>
                 </View>
                 <View style={styles.AIFooter}>
                     <Text style={styles.AIFooterText}>Summary generated by AI.</Text> 
                 </View>
 
-              </View>
+              </View> :
+              <WebView 
+              source={{ uri: props?.payload?.linkUrl.toString() }} 
+              style={{ flex: 1 }} 
+              onScroll={handleScroll}
+            />
+            }
             </View>
-          </ScrollView>
           <View style={[Layout.row, Gutters.tinyMargin]}>
             <Progress.Bar
               progress={scrollPosition / 100}
@@ -114,7 +90,7 @@ const NewsSheet = (props: any) => {
             />
             <Eye style={[Gutters.smallBMargin]} />
           </View>
-        </View>
+        </SafeAreaView>
       </LinearGradient>
     </ActionSheet>
   );
@@ -135,12 +111,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  image: {
-    width: "100%",
-    height: 200,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
   progressBar: {
     height: 5,
     marginBottom: 30,
@@ -149,14 +119,13 @@ const styles = StyleSheet.create({
     marginEnd: 10,
   },
   AISummary: {
-    height: 200,
+    paddingVertical:10,
     backgroundColor: 'black',
     borderRadius: 10,
   },
   AIHeader: {
     marginLeft: 10,
     marginTop: 10,
-
   },
   AIParagraph: {
     marginLeft: 10,
