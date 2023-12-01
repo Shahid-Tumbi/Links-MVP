@@ -139,7 +139,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
                 onEndReached={onEndreach}
                 onEndReachedThreshold={0.1}
                 nestedScrollEnabled
-                ListEmptyComponent={()=><ActivityIndicator size={25} color={Colors.blue} />}
+                ListEmptyComponent={()=>topfeedList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue}  />:<Text style={[Fonts.textLarge,Fonts.textWhite]}>No data found </Text>}
                 
               />
           </ScrollView>
