@@ -88,18 +88,7 @@ export const userApi = api.injectEndpoints({
             Authorization: token ? `Bearer ${token}` : '',
           }
         }},
-      }),
-      postList: build.mutation({
-        query: ({page,limit,token}:any) => {
-          return {
-            url:`/posts?page=${page}&limit=${limit}`,
-            method:'GET',
-            headers:{
-              Authorization: token ? `Bearer ${token}` : '',
-            }
-          }
-        },      
-      }),
+      })
     }),
     
     overrideExisting: true,
@@ -113,5 +102,4 @@ export const {
   useLoginUserMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useUpdateUserMutation, 
-  usePostListMutation } = userApi;
+  useUpdateUserMutation } = userApi;

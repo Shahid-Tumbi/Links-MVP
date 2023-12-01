@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ForgotPassword, Login, OtpScreen, ResetPassword, Signup } from '@/screens';
-import GetStartedScreen from '@/screens/GetStartedScreen/GetStartedScreen';
+import { ForgotPassword, GetStartedScreen, Login, OtpScreen, ReferralScreen, ResetPassword, Signup } from '@/screens';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +14,7 @@ const AuthNavigator = () => {
       <Stack.Screen name='OtpScreen' component={OtpScreen} />
       <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
       <Stack.Screen name='ResetPassword' component={ResetPassword} />
+      <Stack.Screen name="ReferralScreen" component={ReferralScreen}/>   
     </Stack.Navigator>
   );
 };

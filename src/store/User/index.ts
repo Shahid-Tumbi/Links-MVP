@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
     name: 'auth',
-    initialState: { token: null,isVerified:false,authData:{} ,appConfigData:{}},
+    initialState: { token: null,isVerified:false,authData:{} ,appConfigData:{},isCurator:false,welcomeScreen:true},
     reducers: {
         setToken: (state, action) => {
             state.token = action.payload;
@@ -20,10 +20,16 @@ const authSlice = createSlice({
         },
         setAppConfig: (state, action) => {
             state.appConfigData = action.payload
-        }
+        },
+        setCurator: (state, action) => {
+            state.isCurator = action.payload
+        },
+        setWelcomeScreen: (state, action) => {
+            state.welcomeScreen = action.payload
+        },
     },
   });
 
-export const { setToken,setAuthData,clearToken,verifiedUser,setAppConfig } = authSlice.actions;
+export const { setToken,setAuthData,clearToken,verifiedUser,setAppConfig,setCurator,setWelcomeScreen } = authSlice.actions;
 
 export default authSlice.reducer;

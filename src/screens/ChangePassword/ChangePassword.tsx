@@ -109,7 +109,7 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
                     <View>
                         <Text style={[Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.changePassword}</Text>
                     </View>
-                    <True style={[Gutters.tinyTMargin]} onPress={() => onSubmit()} />
+                    <True style={[Gutters.tinyTMargin]} onPress={() => getConfirm()} />
                 </View>
                 <View style={[Gutters.largeTMargin]}>
                     <Text style={[Fonts.textLarge, Gutters.regularTMargin]}>
@@ -200,17 +200,6 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
                             {errorNewPassword}
                         </Text>
                     ) : null}
-                    <View style={[Layout.row, Layout.alignItemsCenter, Gutters.largeTMargin]}>
-
-                        <View style={[Layout.fill, Layout.row, Layout.justifyContentEnd, Layout.alignItemsCenter]}>
-                            <Text style={[Fonts.textRegular, Layout.alignItemsEnd, Gutters.tinyRMargin]}>
-                                {Constants.confirm}
-                            </Text>
-                            <TouchableOpacity onPress={() => getConfirm()}>
-                                <RightArrow error={buttonError} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
                 </View>
                 </View>
                 </View>

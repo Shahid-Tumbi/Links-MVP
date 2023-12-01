@@ -2,12 +2,11 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, View, Text, Image, KeyboardAvoidingView } from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
-import { Colors, FontSize } from "@/theme/Variables";
-import NewsSheet from "@/components/NewsSheet";
+import { Colors } from "@/theme/Variables";
 import UserCard from "@/components/UserCard";
 import { globalStyles } from "@/theme/GlobalStyles";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Menu, MinusGray, Plus, UrlLink } from "@/theme/svg";
+import {UrlLink } from "@/theme/svg";
 import {
   TextInput,
   TouchableOpacity,
@@ -18,9 +17,12 @@ import { SheetManager } from "react-native-actions-sheet";
 import debounce from "lodash/debounce";
 import { widthPercentageToDP } from "react-native-responsive-screen";
 import BottomSheet, { BottomSheetFlatList, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import BottomSheetInput from "@/components/ModalBottomSheet/UseBS";
-const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
+import moment from "moment";
+import { useSelector } from "react-redux";
+const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
+  const authData = useSelector(state => state.auth.authData)
+  const {postData}= route?.params
   const userAvatar =
     "https://pub-static.fotor.com/assets/projects/pages/d5bdd0513a0740a8a38752dbc32586d0/fotor-03d1a91a0cec4542927f53c87e0599f6.jpg";
   const userName = "Nikhil Kamath";
@@ -30,9 +32,6 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
   const postTitle =
     "Canada a haven for gangsters Goldy Brar, Arsh Dalla & Landa";
   const postLink = "medium.com";
-  const tags = ["Fitness", "Fashion", "Adventure", "Food", "Travel", "Nature"];
-  const likes = 3;
-  const dislikes = 2;
 
   const sheetRef = useRef<BottomSheet>(null);
 
@@ -58,31 +57,15 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
   ]
 
   const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
-
-  // const handleSheetChange = useCallback((index) => {
-  //   console.log("handleSheetChange", index);
-  // }, []);
-
   const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet");
+    return SheetManager.show("NewsSheet",{payload:{linkUrl:postData.link,summary:postData?.gpt_summary}});
   }, 300);
 
-  const hideActionSheet = () => {
-    SheetManager.hide("NewsSheet");
-  };
 
   const handleTextInputFocus = () => {
-    sheetRef.current?.snapToIndex(2); // Snap to 90%
+    sheetRef.current?.snapToIndex(1); // Snap to 90%
   };
 
-  // const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-  // const handleTextInputFocus = () => {
-  //   setBottomSheetVisible(true);
-  // };
-
-  // const handleTextInputBlur = () => {
-  //   setBottomSheetVisible(false);
-  // };
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       <View style={[globalStyles.header, Gutters.regularRMargin,Gutters.regularTMargin]}>
@@ -94,35 +77,35 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
           />
         </TouchableOpacity>
         <UserCard
-          userAvatar={userAvatar}
-          userName={userName}
-          score={score}
+          userAvatar={postData?.user_info?.profileImage || userAvatar}
+          userName={postData?.user_info?.name ||userName}
+          score={postData?.user_info?.score || score}
           menu={true}
         />
       </View>
       <View style={[Layout.flex08, globalStyles.screenMargin]}>
         <Text style={[Fonts.textRegular, Fonts.textWhite]}>
-          {"I think we are headed in the right direction."}
+          {postData?.description || "I think we are headed in the right direction."}
         </Text>
         <Text style={[Fonts.textTiny, Fonts.textGray]}>
-          {"5 min read"}
+          {`${postData?.readingTime || '0'} min read`}
           <View>
             <Text style={{ color: Colors.textGray400 }}> .</Text>
           </View>{" "}
-          {"September, 2023"}
+          {moment(postData?.createdAt).format("MMMM YYYY")}
         </Text>
         <TouchableWithoutFeedback
           style={styles.container}
           onPress={openActionSheet}
         >
-          <Image source={{ uri: imageUrl }} style={styles.image} />
+          <Image source={{ uri: postData?.image|| imageUrl }} style={styles.image} />
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{postTitle}</Text>
-            <View style={[Layout.row, Layout.alignItemsCenter]}>
+            <Text style={styles.title}>{postData?.title || postTitle}</Text>
+            <View style={[Layout.row, Layout.alignItemsCenter,Gutters.tinyRMargin]}>
               <View style={[Gutters.tinyTMargin]}>
                 <UrlLink />
               </View>
-              <Text style={[Fonts.textTiny, Fonts.textGray]}>{postLink}</Text>
+              <Text style={[Fonts.textTiny, Fonts.textGray]}>{postData?.link || postLink}</Text>
             </View>
             <LinearGradient
               colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
@@ -133,10 +116,10 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
         <View style={styles.CommentBox}>
           <View style={styles.CommentHeader}>
             <Text style={styles.CommentHeaderText}>Comments</Text>
-            <Text style={styles.CommentHeaderNumber}>112</Text>
+            <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
           </View>
           <KeyboardAvoidingView style={styles.ContentInCommentBox}>
-            <Image source={require("../../../assets/Ellipse38.jpg")} style={styles.avatar}/>
+            <Image source={authData?.profileImage ? {uri : authData?.profileImage } : require("../../../assets/Ellipse38.jpg")} style={styles.avatar}/>
             <TextInput
               style={styles.CommentInput}
               placeholder="Add Your Comment"
@@ -147,16 +130,13 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
         </View>
       </View>
       <View style={styles.BScontainer}>
-      {/* <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
-      <Button title="Snap To 50%" onPress={() => handleSnapPress(1)} />
-      <Button title="Snap To 25%" onPress={() => handleSnapPress(0)} />
-      <Button title="Close" onPress={() => handleClosePress()} /> */}
       <BottomSheet
         ref={sheetRef}
         snapPoints={snapPoints}
+        index={-1}
         // onChange={handleSheetChange}
         style={styles.BS}
-        enablePanDownToClose={false}
+        enablePanDownToClose={true}
         handleIndicatorStyle={{backgroundColor: 'white', borderRadius: 10}}
         backgroundStyle={{ backgroundColor: 'black'}}
 
@@ -192,11 +172,6 @@ const PostDetailScreen = ({ navigation }: ApplicationScreenProps) => {
       
       </BottomSheet>
     </View>
-
-      <NewsSheet
-        // content={newsContent}
-        onCancel={hideActionSheet}
-      />
     </View>
   );
 };

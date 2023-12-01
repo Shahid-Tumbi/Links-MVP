@@ -1,88 +1,125 @@
-import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Dimensions,  PermissionsAndroid, Platform, RefreshControl, StyleSheet, Text, View } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import CarouselMain from "@/components/Carousel/CarouselMain";
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
 import { useTheme } from "@/hooks";
 import { Logo, NotificationIcon } from "@/theme/svg";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { SheetManager } from "react-native-actions-sheet";
-import NewsSheet from "@/components/NewsSheet";
 import debounce from 'lodash/debounce';
 import Welcome from "../Welcome/Welcome";
 import { ApplicationScreenProps } from "types/navigation";
-
+import messaging from "@react-native-firebase/messaging";
+import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { useDispatch, useSelector } from "react-redux";
+import { setWelcomeScreen } from "@/store/User";
+import { useUpdateUserMutation } from "@/services/modules/users";
+import { usePostListMutation } from "@/services/modules/post";
+import { Loader } from "@/components";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { Colors } from "@/theme/Variables";
 const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
-  const [welcomeScrern,setWelcomeScreen] = useState(true)
-  // Sample data for user profiles
-  const profiles = [
-    {
-      id: 1,
-      name: "John Doe",
-      username: "johndoe",
-      avatarUrl: "https://www.bootdey.com/img/Content/avatar/avatar6.png",
-      backgroundImageUrl:
-        "https://www.istockphoto.com/photo/circuit-board-background-computer-data-technology-artificial-intelligence-gm1435226158-476624682?utm_campaign=category_photos_top&utm_content=https%3A%2F%2Funsplash.com%2Fbackgrounds&utm_medium=affiliate&utm_source=unsplash&utm_term=backgrounds%3A%3A%3A",
-      tweets: 1234,
-      following: 123,
-      followers: 456,
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
+  const dispatch = useDispatch()  
+  const welcomeScreen = useSelector((state:any) => state.auth.welcomeScreen)
+  const authData = useSelector((state:any) => state.auth.authData)
+  const token = useSelector((state:any) => state.auth.token)
+  const [updateUser] = useUpdateUserMutation()
+  const [postList, { isLoading }] = usePostListMutation()
+  const [page,setPage]= useState(1)
+  const [limit,setLimit]= useState(10)
+  const [refreshing,setRefreshing]= useState(false)
+  const [carouselList,setCarouselList]= useState([])
+  const [topfeedList,setTopFeedList]= useState([])
 
-    {
-      id: 2,
-      name: "John Doe",
-      username: "johndoe",
-      avatarUrl: "https://www.bootdey.com/img/Content/avatar/avatar6.png",
-      backgroundImageUrl: "https://via.placeholder.com/500",
-      tweets: 1234,
-      following: 123,
-      followers: 456,
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
+  const getFCMToken = async () => {
+    try {
+      const deviceToken = await messaging().getToken();
+      updateUser({ id: authData._id, body: {deviceToken} , token })
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const checkApplicationPermission = async () => {
+    logToCrashlytics('Check Notification permission')
 
-    {
-      id: 3,
-      name: "John Doe",
-      username: "johndoe",
-      avatarUrl: "https://www.bootdey.com/img/Content/avatar/avatar6.png",
-      backgroundImageUrl: "https://via.placeholder.com/500",
-      tweets: 1234,
-      following: 123,
-      followers: 456,
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
-  ];
+    if (Platform.OS === 'android') {
+      try {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+      } catch (error:any) {
+        logToCrashlytics('Check Notification permission error',error)
+      }
+    }
+  };
+  const getPostList = async (page:any) => { 
+    setPage(page)   
+    const result:any = await postList({page,limit,token})
+    if (result?.data?.statusCode === 200) {
+      setRefreshing(false)
+      logToCrashlytics('On update profile api success')
+      if(page === 1){
+        setCarouselList(result?.data?.result?.rows)
+      } else {
+        setTopFeedList(prevList => [...prevList,...result?.data?.result?.rows])
+      }
+    } else {
+      setRefreshing(false)
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('On update profile api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+    
+  }
+  useEffect(()=>{
+    checkApplicationPermission()
+    getFCMToken()
+    getPostList(1)
+    getPostList(2)
+  },[])
+  
+  
 
   const ItemSeparator = () => <View style={styles.separator} />;
-  const renderProfile = ({ item }) => <ProfileView {...item} navigation={navigation}/>;
+  const renderProfile = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
 
-  const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet");
-  }, 300);
-
-  const hideActionSheet = () => {
-    SheetManager.hide("NewsSheet");
-  };
   const onPress =() => {
-    setWelcomeScreen(false)
+    dispatch(setWelcomeScreen(false))
+  }
+  const refereshFun = () => {
+    setRefreshing(true)
+    setTopFeedList([])
+    setCarouselList([])
+    getPostList(1)
+    getPostList(2)
+  }
+  const onEndreach = () => {
+    getPostList(page+1)
   }
   return (
     <View style={[globalStyles.container]}>
-      {welcomeScrern ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
+      {welcomeScreen ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
         <View style={[Gutters.smallTMargin, Layout.fill]}>
           <View style={[Layout.row, Layout.justifyContentBetween]}>
             <Logo />
             <NotificationIcon onPress={()=>navigation.navigate('NotificationsTwo')}/>
           </View>
-          <ScrollView style={[Gutters.regularTMargin]}>
+          <ScrollView style={[Gutters.regularTMargin]} nestedScrollEnabled refreshControl={
+            <RefreshControl
+            refreshing={refreshing}
+            onRefresh={()=>refereshFun()}
+          />}>
             <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
-            <CarouselMain />
+            <CarouselMain data={carouselList}/>
             <Text
               style={[
                 Fonts.textLarge,
@@ -93,17 +130,18 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
             >
               Top Feed
             </Text>
-            
               <FlatList
-                data={profiles}
-                keyExtractor={(item) => item.id.toString()}
+                data={topfeedList}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={renderProfile}
+                style={[Gutters.regularBMargin,{ height: Dimensions.get('window').height / 1.5}]}
                 ItemSeparatorComponent={ItemSeparator}
+                onEndReached={onEndreach}
+                onEndReachedThreshold={0.1}
+                nestedScrollEnabled
+                ListEmptyComponent={()=><ActivityIndicator size={25} color={Colors.blue} />}
+                
               />
-            <NewsSheet
-              // content={newsContent}
-              onCancel={hideActionSheet}
-            />
           </ScrollView>
         </View>
       </View> }

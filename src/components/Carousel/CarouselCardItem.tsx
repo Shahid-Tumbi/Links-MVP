@@ -35,7 +35,7 @@ const CarouselCardItem = ({item, index}) => {
   
   return (
     <LinearGradient colors={["rgba(151, 71, 255, 0.65)","rgba(0, 0, 0, 1)"]} style={styles.container} key={index}>
-      <SinglePostItem carouselView={true} />
+      <SinglePostItem data={item} number={index+1} carouselView={true} />
     </LinearGradient>
   )
 }

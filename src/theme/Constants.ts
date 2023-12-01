@@ -48,5 +48,14 @@ export const Constants = {
     audienceAccess: "Audience access",
     SignupMember: "Sign up and be a member",
     changePassword:'Change password',
-    enterCurrentPassword:'Enter Current Password'
+    enterCurrentPassword:'Enter Current Password',
+    havingTrouble:'Having trouble with signing up?',
+    contactTeam:'Contact our team',
+    referralCode:'Referral code',
+    enterReferral:'Enter the referral code you have',
+    linkInterested:"Share links to news you find interesting",
+    addYourComment:'Add Your Comment(Optional)',
+    postLink:'Post Link',
+    characters:'60 characters',
+    logout:'Logout'
 }
