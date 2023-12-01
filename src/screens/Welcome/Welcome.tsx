@@ -5,7 +5,7 @@ import { useTheme } from "@/hooks";
 import { useSelector } from "react-redux";
 import { ApplicationScreenProps } from "types/navigation";
 
-const Welcome = ({ navigation,onPress }: ApplicationScreenProps) => {
+const Welcome = ({ navigation, onPress }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector((state: any) => state.auth.authData);
 
@@ -68,17 +68,14 @@ const Welcome = ({ navigation,onPress }: ApplicationScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", 
+    backgroundColor: "#000",
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
   headerContainer: {
     marginBottom: 20,
-   
   },
-  logo: {
-    
-  },
+  logo: {},
   welcomeText: {
     color: "white",
     fontSize: 50,
@@ -94,11 +91,16 @@ const styles = StyleSheet.create({
   },
   community: {
     color: "white",
-    fontSize: 20,
+    fontSize: 21,
     fontWeight: "bold",
     marginBottom: 10,
   },
   rulesBox: {},
+  bulletContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
   bullet: {
     fontSize: 20,
     marginRight: 5,
@@ -112,15 +114,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
+    marginTop: 40
   },
   proceedText: {
     color: "white",
     fontSize: 18,
     marginRight: 10,
-  },
-  proceedButton: {
     
   },
+  proceedButton: {},
 });
 
 export default Welcome;
