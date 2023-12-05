@@ -1,10 +1,13 @@
-import { FlatList, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, FlatList, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useTheme } from '@/hooks';
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import SearchBarComponent from '@/components/SearchBar/SearchBar';
 import { Logo } from '@/theme/svg';
 import { Colors } from '@/theme/Variables';
+import { useGetUserWisePostListMutation } from '@/services/modules/post';
+import { useDispatch, useSelector } from 'react-redux';
+import { logToCrashlytics, onTokenExpired } from '@/theme/Common';
 
 const DiscoverCuratorPost = () => {
     const {
@@ -61,6 +64,59 @@ const DiscoverCuratorPost = () => {
 
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
+
+  const [userWisePostList, { isLoading }] = useGetUserWisePostListMutation();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const authData = useSelector((state:any) => state.auth.authData)
+  const token = useSelector((state:any) => state.auth.token)
+  const [refreshing, setRefreshing] = useState(false);
+  const [userPostList, setUserPostList] = useState([]);
+  const dispatch = useDispatch();
+
+  const getUserWisePostList = async(page: any) => {
+    setPage(page);
+    const result: any = await userWisePostList({page, limit, token})
+    if(result?.data?.statusCode === 200){
+      setRefreshing(false);
+      logToCrashlytics('fetching requested user posts');
+      if(page === 1) {
+        setUserPostList(result?.data?.result?.rows);
+      } else {
+        setUserPostList(prevState => [...prevState, ...result?.data?.result?.rows]);
+      }
+    } else {
+      setRefreshing(false);
+      if(result?.error?.data){
+        Alert.alert(result?.error?.data.message);
+      }
+      if(result?.error?.error){
+        logToCrashlytics('Error fetching user posts. Please try again, or try again later.', result?.error?.error);
+        Alert.alert('Something went wrong!!');
+      }
+      if(result.error && result.error.status === 401){
+        onTokenExpired(dispatch);
+      }
+
+    }
+  }
+
+  useEffect(() => {
+    getUserWisePostList(1)
+  }, [])
+
+  const onComplete = () => {
+    getUserWisePostList(page + 1);
+  }
+
+  const refreshFunction = () => {
+    setRefreshing(true);
+    setUserPostList([]);
+    getUserWisePostList(1);
+  }
+ 
+
+
 
   return (
     <KeyboardAvoidingView style={styles.container}>
