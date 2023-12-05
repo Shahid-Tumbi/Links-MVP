@@ -34,10 +34,23 @@ export const postApi = api.injectEndpoints({
           }
         },      
       }),
+      getUserWisePostList: build.mutation({
+        query: ({page,limit,token,userId}:any) => {
+          return {
+            url:`/posts/userWiseList/${userId}?page=${page}&limit=${limit}'`,
+            method:'GET',
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
     }),
     
     overrideExisting: true,
   });
 
 export const {
-  usePostListMutation,useAddPostMutation } = postApi;
+  usePostListMutation,useAddPostMutation, useGetUserWisePostListMutation } = postApi;
+
+
