@@ -8,6 +8,7 @@ import { Colors } from '@/theme/Variables';
 import { useGetUserWisePostListMutation } from '@/services/modules/post';
 import { useDispatch, useSelector } from 'react-redux';
 import { logToCrashlytics, onTokenExpired } from '@/theme/Common';
+import { ActivityIndicator } from 'react-native-paper';
 
 const DiscoverCuratorPost = () => {
     const {
@@ -65,18 +66,19 @@ const DiscoverCuratorPost = () => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
 
-  const [userWisePostList, { isLoading }] = useGetUserWisePostListMutation();
+  const [getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const authData = useSelector((state:any) => state.auth.authData)
   const token = useSelector((state:any) => state.auth.token)
+  const userId = useSelector((state:any) => state.auth.authData._id)
   const [refreshing, setRefreshing] = useState(false);
   const [userPostList, setUserPostList] = useState([]);
   const dispatch = useDispatch();
 
-  const getUserWisePostList = async(page: any) => {
+  const getUserWisePostListMethod = async(page: any) => {
     setPage(page);
-    const result: any = await userWisePostList({page, limit, token})
+    const result: any = await getUserWisePostList({page, limit, token, userId})
     if(result?.data?.statusCode === 200){
       setRefreshing(false);
       logToCrashlytics('fetching requested user posts');
@@ -102,17 +104,17 @@ const DiscoverCuratorPost = () => {
   }
 
   useEffect(() => {
-    getUserWisePostList(1)
+    getUserWisePostListMethod(1)
   }, [])
 
   const onComplete = () => {
-    getUserWisePostList(page + 1);
+    getUserWisePostListMethod(page + 1);
   }
 
   const refreshFunction = () => {
     setRefreshing(true);
     setUserPostList([]);
-    getUserWisePostList(1);
+    getUserWisePostListMethod(1);
   }
  
 
@@ -136,7 +138,11 @@ const DiscoverCuratorPost = () => {
               keyExtractor={(item) => item.id.toString()}
               renderItem={renderProfile}
               ItemSeparatorComponent={ItemSeparator}
-            />
+              nestedScrollEnabled
+              onEndReached={onComplete}
+              onEndReachedThreshold={0.1}
+              ListEmptyComponent={ () => userPostList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textLarge, Fonts.textWhite]}>No data found</Text>}
+              />
             </View>
           </View>
           

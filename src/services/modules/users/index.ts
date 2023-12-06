@@ -90,7 +90,7 @@ export const userApi = api.injectEndpoints({
         }},
       }),
       getCuratorList: build.mutation<User, Partial<User>>({
-        query: ({ id,body,token }:any) => {
+        query: ({ token }:any) => {
           return {
             url: `/users/curatorList`,
             method: 'GET',

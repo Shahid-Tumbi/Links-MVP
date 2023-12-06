@@ -31,16 +31,19 @@ const CuratorList = () => {
     // Add more curator data as needed
   ]);
 
-  const [curatorList, setCuratorList] = useGetCuratorListMutation();
+  const [getCuratorList, setCuratorList] = useGetCuratorListMutation();
   const authData = useSelector((state:any) => state.auth.authData)
   const token = useSelector((state:any) => state.auth.token)
   const [refreshing, setRefreshing] = useState(false);
   const [displayCuratorList, setDisplayCuratorList] = useState([]);
   const dispatch = useDispatch();
 
-  const getCuratorList = async() => {
-    const result: any = await curatorList({token})
+  const getCuratorListMethod = async() => {
+    const result: any = await getCuratorList({token})
+    console.log('making get curator call');
+    console.log(result);
     if(result?.data?.statusCode === 200){
+      console.log("inside Discover Curator List");
       setRefreshing(false);
       logToCrashlytics('fetching curator list')
       setDisplayCuratorList(prevState => [...prevState, ...result?.data?.result?.rows?.name]);
@@ -62,7 +65,7 @@ const CuratorList = () => {
   }
 
   useEffect(() => {
-    getCuratorList();
+    getCuratorListMethod();
   }, []);
 
   const refreshFunction = () => {

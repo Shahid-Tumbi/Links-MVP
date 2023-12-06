@@ -1,6 +1,6 @@
 import WhiteLine from "@/components/WhiteLine/WhiteLine";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, ScrollView, Alert } from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { BackButton, FollowIcon, FollowedIcon } from "@/theme/svg";
@@ -10,6 +10,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { Colors } from "@/theme/Variables";
 
 
 const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
@@ -58,30 +59,40 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
       bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     },
   ];
+  
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
+  const renderProfileDynamic = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
   const onSubmit = () => { setFollow(!Follow)}
-  const [userWisePostList, { isLoading }] = useGetUserWisePostListMutation();
+  const[getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const authData = useSelector((state:any) => state.auth.authData)
+  const userName = useSelector((state:any) => state.auth.authData.name)
   const token = useSelector((state:any) => state.auth.token)
+  const userId = useSelector((state:any) => state.auth.authData._id)
   const [refreshing, setRefreshing] = useState(false);
   const [userPostList, setUserPostList] = useState([]);
   const dispatch = useDispatch();
 
-  const getUserWisePostList = async(page: any) => {
+  const getUserWisePostListMethod = async(page: any) => {
+
     setPage(page);
-    const result: any = await userWisePostList({page, limit, token})
+    const result: any = await getUserWisePostList({page, limit, token, userId })
     if(result?.data?.statusCode === 200){
+      console.log('in if block of getUserWisePostList');
       setRefreshing(false);
       logToCrashlytics('fetching requested user posts');
       if(page === 1) {
+        console.log('Fetching user posts');
+        console.log(result?.data?.result?.rows);
         setUserPostList(result?.data?.result?.rows);
+      
       } else {
         setUserPostList(prevState => [...prevState, ...result?.data?.result?.rows]);
       }
     } else {
+      console.log('in else block of getUserWisePostList');
       setRefreshing(false);
       if(result?.error?.data){
         Alert.alert(result?.error?.data.message);
@@ -98,17 +109,20 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
   }
 
   useEffect(() => {
-    getUserWisePostList(1)
+    console.log('in useEffect');
+    getUserWisePostListMethod(1)
   }, [])
 
+  
+
   const onComplete = () => {
-    getUserWisePostList(page + 1);
+    getUserWisePostListMethod(page + 1);
   }
 
   const refreshFunction = () => {
     setRefreshing(true);
     setUserPostList([]);
-    getUserWisePostList(1);
+    getUserWisePostListMethod(1);
   }
 
 
@@ -133,7 +147,7 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
               <Text style={styles.referredBy}>Referred by Nikhil Kamath</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>Tanmay Bhat</Text>
+              <Text style={styles.name}>{userName}</Text>
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Credibility Score:</Text>
@@ -163,10 +177,21 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
             <Text style={styles.recentLinks}>Recent Links</Text>
           </View>
           <FlatList
-            data={profiles}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderProfile}
+            data={userPostList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderProfileDynamic}
             ItemSeparatorComponent={ItemSeparator}
+            onEndReached={onComplete}
+            onEndReachedThreshold={0.1}
+            nestedScrollEnabled
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={refreshFunction}
+              />
+            }
+            ListEmptyComponent={()=>userPostList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue}  />:<Text style={[Fonts.textLarge,Fonts.textWhite]}>No data found </Text>}
+
           />
           </View>
         </ScrollView>
