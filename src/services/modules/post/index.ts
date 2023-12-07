@@ -37,7 +37,7 @@ export const postApi = api.injectEndpoints({
     getUserWisePostList: build.mutation({
       query: ({ page, limit, token, userId }: any) => {
         return {
-          url: `/posts/userWiseList/656edb62a0fe3f89cb80ad42?page=${page}&limit=${limit}'`,
+          url: `/posts/userWiseList/${userId}?page=${page}&limit=${limit}'`,
           method: "GET",
           headers: {
             Authorization: token ? `Bearer ${token}` : "",
