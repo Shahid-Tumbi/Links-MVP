@@ -88,8 +88,22 @@ export const userApi = api.injectEndpoints({
             Authorization: token ? `Bearer ${token}` : '',
           }
         }},
-      })
+      }),
+      getCuratorList: build.mutation<User, Partial<User>>({
+        query: ({ id,body,token }:any) => {
+          return {
+            url: `/users/curatorList`,
+            method: 'GET',
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }},
+        }),
+
     }),
+   
+
+
     
     overrideExisting: true,
   });
@@ -102,4 +116,4 @@ export const {
   useLoginUserMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useUpdateUserMutation } = userApi;
+  useUpdateUserMutation, useGetCuratorListMutation } = userApi;
