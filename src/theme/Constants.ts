@@ -57,5 +57,6 @@ export const Constants = {
     addYourComment:'Add Your Comment(Optional)',
     postLink:'Post Link',
     characters:'60 characters',
-    logout:'Logout'
+    logout:'Logout',
+    DEV_URL:'https://dev-api.wtfnewsapp.com'
 }

@@ -100,7 +100,7 @@ const SinglePostItem = ({
     try {
     const shareResult = await Share.share({
       message:
-        `Please check this out https://dev-api.wtfnewsapp.com/shared-post/id=${data?._id}`,
+        `Please check this out ${Constants.DEV_URL}/shared-post/id=${data?._id}`,
         url:data?.link
     });   
     const result: any = await sharePost({ body: postData, token })
