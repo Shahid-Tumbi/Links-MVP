@@ -11,9 +11,10 @@ import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
+import { useFollowSomeoneMutation, useGetFollowerListMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
 
 
-const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
+const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const {
     Layout,
     Fonts,
@@ -63,7 +64,16 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
   const renderProfileDynamic = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
-  const onSubmit = () => { setFollow(!Follow)}
+  // const onSubmit = () => { setFollow(!Follow)}
+  const onSubmit = () => {
+    if(isFollowing) {
+      unfollow();
+    } else {
+      follow();
+    }
+  }  
+  
+  
   const[getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -74,6 +84,22 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
   const [refreshing, setRefreshing] = useState(false);
   const [userPostList, setUserPostList] = useState([]);
   const dispatch = useDispatch();
+  const [getFollowerList, { isLoadingFollowers }] = useGetFollowerListMutation();
+  const  [userFollowerList, setUserFollowerList] = useState([]);
+  const  [userFollowerCount, setUserFollowerCount] = useState(0);
+  const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
+  const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const {postData} = route?.params;
+  const followUserId = postData?.user_info?.userId;
+  const myUserId = useSelector((state:any) => state.auth.authData._id);
+  const FollowBody = {
+    followUserId,
+    myUserId
+  }
+
+
+
 
   const getUserWisePostListMethod = async(page: any) => {
 
@@ -111,6 +137,7 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
   useEffect(() => {
     console.log('in useEffect');
     getUserWisePostListMethod(1)
+    getFollowerCountMethod(1)
   }, [])
 
   
@@ -122,7 +149,85 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
   const refreshFunction = () => {
     setRefreshing(true);
     setUserPostList([]);
+    setUserFollowerList([]);
+    setUserFollowerCount(0);
     getUserWisePostListMethod(1);
+    setIsFollowing(false);
+  }
+
+  const getFollowerCountMethod = async(page: any) => {
+    setPage(page);
+    const result: any = await getFollowerList({ userId, token, page, limit })
+    if(result?.data?.statusCode == 200){
+      setRefreshing(false);
+      logToCrashlytics('fetching follower list')
+      if(page == 1){
+        console.log(result?.data?.result?.count);
+        setUserFollowerCount(result?.data?.result?.count);
+        setUserFollowerList(result?.data?.result?.rows);
+      } else {
+        setUserFollowerCount(0);
+        setUserFollowerList(prevState => [...prevState, result?.data?.result?.rows]);
+      }
+    } else {
+      setRefreshing(false);
+      if(result?.error?.data){
+        Alert.alert(result?.error?.data.message);
+      }
+      if(result?.error?.error){
+        logToCrashlytics('Error! Could not get user follower list', result?.error?.error); 
+        Alert.alert('Something went wrong!')
+      }
+      if(result.error && result.error.status === 401){
+        onTokenExpired(dispatch);
+      }
+    }
+  }
+
+  const follow = async() => {
+    const result: any = await followSomeone({body: FollowBody, token})
+    if(result?.data?.statusCode === 200){
+      setIsFollowing(true);
+      setRefreshing(false);
+      console.log('You have successfully followed this user');
+      console.log('result');
+    } else {
+      setRefreshing(false);
+      setIsFollowing(false);
+      if(result?.error?.data){
+        Alert.alert(result?.error?.data.message);
+      }
+      if(result?.error?.error){
+        logToCrashlytics('Error! Could not follow user', result?.error?.error); 
+        Alert.alert('Something went wrong!')
+      }
+      if(result.error && result.error.status === 401){
+        onTokenExpired(dispatch);
+      }
+    }
+  }
+
+  const unfollow = async() => {
+    const result: any = await unfollowSomeone({ body: FollowBody, token })
+    if(result?.data?.statusCode === 200){
+      setIsFollowing(false);
+      setRefreshing(false);
+      console.log('You have successfully unfollowed this user');
+      console.log('result');
+    } else {
+      setRefreshing(false);
+      setIsFollowing(false);
+      if(result?.error?.data){
+        Alert.alert(result?.error?.data.message);
+      }
+      if(result?.error?.error){
+        logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
+        Alert.alert('Something went wrong!')
+      }
+      if(result.error && result.error.status === 401){
+        onTokenExpired(dispatch);
+      }
+    }
   }
 
 
@@ -147,7 +252,7 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
               <Text style={styles.referredBy}>Referred by Nikhil Kamath</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>{userName}</Text>
+              <Text style={styles.name}>{postData?.user_info?.userId}</Text>
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Credibility Score:</Text>
@@ -155,7 +260,7 @@ const ProfileDetail = ({ navigation }: ApplicationScreenProps) => {
             </View>
             <View style={styles.stats}>
               <View style={styles.stat}>
-                <Text style={styles.statValue}>1234</Text>
+                <Text style={styles.statValue}>{userFollowerCount}</Text>
                 <Text style={styles.statLabel}>Followers</Text>
               </View>
               <View style={styles.verticalLine}></View>

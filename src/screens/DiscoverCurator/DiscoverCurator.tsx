@@ -37,8 +37,11 @@ const CuratorList = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [displayCuratorList, setDisplayCuratorList] = useState([]);
   const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const getCuratorListMethod = async() => {
+  const getCuratorListMethod = async(page: any) => {
+    setPage(page)
     const result: any = await getCuratorList({token})
     console.log('making get curator call');
     console.log(result);
@@ -46,7 +49,9 @@ const CuratorList = () => {
       console.log("inside Discover Curator List");
       setRefreshing(false);
       logToCrashlytics('fetching curator list')
-      setDisplayCuratorList(prevState => [...prevState, ...result?.data?.result?.rows?.name]);
+      setDisplayCuratorList(prevState => [...prevState, ...result?.data?.result?.rows]);
+      console.log('here we are, brother, see if it works');
+      console.log(result?.data?.result?.rows[0].name); {/*TODO: find a way to display just the name */}
 
     }else {
       setRefreshing(false);
@@ -65,7 +70,8 @@ const CuratorList = () => {
   }
 
   useEffect(() => {
-    getCuratorListMethod();
+    getCuratorListMethod(1);
+    refreshFunction();
   }, []);
 
   const refreshFunction = () => {
@@ -79,6 +85,7 @@ const CuratorList = () => {
 
   const renderItem = ({ item }) => <SingleCurator {...item} />;
   const renderFocusedItem = ({ item }) => <UserCard userAvatar={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkms62ywj8noI96YorLX4kg6qHaHcq5lhoj_VYj9I0-A&s'} userName={item.userName} score={item.count} menu={false}/>;
+  const renderProfileDynamic = ({item, index}: any) => <SingleCurator data={item} number={index+1} navigation={navigation} />;
 
   const ItemSeparator = () => <View style={styles.separator} />;
 
@@ -107,6 +114,7 @@ const CuratorList = () => {
               keyExtractor={(item) => item.id}
               renderItem={renderFocusedItem}
               ItemSeparatorComponent={ItemSeparator}
+              
             />
           
         </View>
@@ -117,8 +125,9 @@ const CuratorList = () => {
               contentContainerStyle={{ marginTop: 30 }}
               data={filteredCurators}
               keyExtractor={(item) => item.id}
-              renderItem={renderItem}
+              renderItem={renderProfileDynamic}
               ItemSeparatorComponent={ItemSeparator}
+
             />
           </View>}
       </View>

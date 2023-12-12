@@ -90,10 +90,10 @@ export const userApi = api.injectEndpoints({
         };
       },
     }),
-    getCuratorList: build.mutation<User, Partial<User>>({
-      query: ({ id, token }: any) => {
+    getCuratorList: build.mutation({
+      query: ({ page, limit, id, token }: any) => {
         return {
-          url: `/users/curatorList`,
+          url: `/users/curatorList?page=${page}&limit=${limit}`,
           method: "GET",
           headers: {
             Authorization: token ? `Bearer ${token}` : "",
@@ -102,10 +102,10 @@ export const userApi = api.injectEndpoints({
       },
     }),
 
-    getFollowerList: build.mutation<User, Partial<User>>({
-      query: ({ id, token }: any) => {
+    getFollowerList: build.mutation({
+      query: ({ id, token, page, limit }: any) => {
         return {
-          url: `/users/followers/${id}`,
+          url: `/users/followers/${id}?page=${page}&limit=${limit}`,
           method: "GET",
           headers: {
             Authorization: token ? `Bearer ${token}` : "",
@@ -114,10 +114,10 @@ export const userApi = api.injectEndpoints({
       },
     }),
 
-    getFollowingList: build.mutation<User, Partial<User>>({
-      query: ({ id, token }: any) => {
+    getFollowingList: build.mutation({
+      query: ({ id, token, page, limit }: any) => {
         return {
-          url: `/users/following/${id}`,
+          url: `/users/following/${id}?page=${page}&limit=${limit}`,
           method: "GET",
           headers: {
             Authorization: token ? `Bearer ${token}` : "",
@@ -127,11 +127,12 @@ export const userApi = api.injectEndpoints({
     }),
 
     followSomeone: build.mutation<User, Partial<User>>({
-      query: ({ id, token }: any) => {
+      query: ({ id, token, body }: any) => {
         return {
           url: `/users/follow`,
           method: "POST",
-          header: {
+          body: body,
+          headers: {
             Authorization: token ? `Bearer ${token}` : "",
           },
         };
@@ -139,11 +140,12 @@ export const userApi = api.injectEndpoints({
     }),
 
     unfollowSomeone: build.mutation<User, Partial<User>>({
-      query: ({ id, token }: any) => {
+      query: ({ id, token, body }: any) => {
         return {
           url: `/users/unfollow`,
           method: "POST",
-          header: {
+          body: body,
+          headers: {
             Authorization: token ? `Bearer ${token}` : "",
           },
         };
