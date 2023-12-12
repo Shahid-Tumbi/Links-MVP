@@ -48,7 +48,11 @@ const ApplicationNavigator = () => {
         console.log('Token not found');        
       }   
       navigationRef.navigate('ResetPassword',{token})
-    }    
+    }
+    if(url.includes('/shared-post')) {
+      const id = url.split('id=')[1];
+      navigationRef.navigate('PostDetailScreen',{id})
+    }   
   };
   useEffect( () => {
     Linking.getInitialURL().then((url) => {

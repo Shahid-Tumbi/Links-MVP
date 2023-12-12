@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { useTheme } from '@/hooks';
 import { Constants } from '@/theme/Constants';
@@ -104,14 +104,14 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
     <View style={[globalStyles.container]}>
             {/* {isLoading && <Loader state={isLoading} />} */}
             <View style={[globalStyles.screenMargin]}>
-                <View style={[globalStyles.header,Layout.flex02]}>
+                <View style={[globalStyles.header,Layout.flex01]}>
                     <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
                     <View>
                         <Text style={[Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.changePassword}</Text>
                     </View>
                     <True style={[Gutters.tinyTMargin]} onPress={() => getConfirm()} />
                 </View>
-                <View style={[Gutters.largeTMargin]}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Gutters.largeVMargin,Layout.flex09]}>
                     <Text style={[Fonts.textLarge, Gutters.regularTMargin]}>
                         {Constants.enterCurrentPassword}
                     </Text>
@@ -200,7 +200,7 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
                             {errorNewPassword}
                         </Text>
                     ) : null}
-                </View>
+                </KeyboardAvoidingView>
                 </View>
                 </View>
   )

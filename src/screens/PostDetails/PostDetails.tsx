@@ -1,14 +1,13 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, KeyboardAvoidingView } from "react-native";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Pressable, Platform, Alert } from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
 import UserCard from "@/components/UserCard";
 import { globalStyles } from "@/theme/GlobalStyles";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {UrlLink } from "@/theme/svg";
+import { UrlLink } from "@/theme/svg";
 import {
-  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
@@ -16,163 +15,131 @@ import LinearGradient from "react-native-linear-gradient";
 import { SheetManager } from "react-native-actions-sheet";
 import debounce from "lodash/debounce";
 import { widthPercentageToDP } from "react-native-responsive-screen";
-import BottomSheet, { BottomSheetFlatList, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import moment from "moment";
-import { useSelector } from "react-redux";
-const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
+import { useDispatch, useSelector } from "react-redux";
+import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
+import { Constants } from "@/theme/Constants";
+import { usePostDetailMutation } from "@/services/modules/post";
+import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { Loader } from "@/components";
+import { capitalize } from "lodash";
+const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector(state => state.auth.authData)
-  const {postData}= route?.params
-  const userAvatar =
-    "https://pub-static.fotor.com/assets/projects/pages/d5bdd0513a0740a8a38752dbc32586d0/fotor-03d1a91a0cec4542927f53c87e0599f6.jpg";
-  const userName = "Nikhil Kamath";
-  const score = "2050 Score";
-  const imageUrl =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXk9RJzuijLiEaognmD64tPjSIWPWHARvv55R-QDILxw&s";
-  const postTitle =
-    "Canada a haven for gangsters Goldy Brar, Arsh Dalla & Landa";
-  const postLink = "medium.com";
+  const token = useSelector(state => state.auth.token)
+  const [postData,setPostData] = useState()
+  const [getDetail,{isLoading}] = usePostDetailMutation()
+  const dispatch= useDispatch()
+  const userAvatar = defaultAvatar;
+  const userName = "";
+  const score = "0000 Score";
+  const imageUrl = "";
+  const postTitle = "";
+  const postLink = " ";
 
-  const sheetRef = useRef<BottomSheet>(null);
-
-  const comments = [
-    {
-      id: 1,
-      author: 'Tanmay Bhat',
-      authorAvatar: require('../../../assets/Ellipse38.jpg'),
-      text: 'Great post!',
-    },
-    {
-      id: 2,
-      author: 'Tanmay Bhat',
-      authorAvatar: require('../../../assets/Ellipse38.jpg'),
-      text: 'I agree, this was very informative.',
-    },
-    {
-      id: 3,
-      author: 'Tanmay Bhat',
-      authorAvatar: require('../../../assets/Ellipse38.jpg'),
-      text: 'Well Done!',
-    },
-  ]
-
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
   const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet",{payload:{linkUrl:postData.link,summary:postData?.gpt_summary}});
+    return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
   }, 300);
+  const commentBottomSheetRef = useRef(null);
 
-
-  const handleTextInputFocus = () => {
-    sheetRef.current?.snapToIndex(1); // Snap to 90%
+  // Method to trigger text input focus in CommentBottomSheet
+  const focusTextInputInCommentBottomSheet = () => {
+    if (commentBottomSheetRef?.current?.handleTextInputFocus) {
+      commentBottomSheetRef?.current?.handleTextInputFocus(postData);
+    }
   };
-
-  return (
-    <View style={[Layout.fill, { backgroundColor: Colors.primary }]}>
-      <View style={[globalStyles.header, Gutters.regularRMargin,Gutters.regularTMargin]}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons
-            name={"chevron-left"}
-            color={Colors.white}
-            size={28}
-          />
-        </TouchableOpacity>
-        <UserCard
-          userAvatar={postData?.user_info?.profileImage || userAvatar}
-          userName={postData?.user_info?.name ||userName}
-          score={postData?.user_info?.score || score}
-          menu={true}
-        />
-      </View>
-      <View style={[Layout.flex08, globalStyles.screenMargin]}>
-        <Text style={[Fonts.textRegular, Fonts.textWhite]}>
-          {postData?.description || "I think we are headed in the right direction."}
-        </Text>
-        <Text style={[Fonts.textTiny, Fonts.textGray]}>
-          {`${postData?.readingTime || '0'} min read`}
-          <View>
-            <Text style={{ color: Colors.textGray400 }}> .</Text>
-          </View>{" "}
-          {moment(postData?.createdAt).format("MMMM YYYY")}
-        </Text>
-        <TouchableWithoutFeedback
-          style={styles.container}
-          onPress={openActionSheet}
-        >
-          <Image source={{ uri: postData?.image|| imageUrl }} style={styles.image} />
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{postData?.title || postTitle}</Text>
-            <View style={[Layout.row, Layout.alignItemsCenter,Gutters.tinyRMargin]}>
-              <View style={[Gutters.tinyTMargin]}>
-                <UrlLink />
-              </View>
-              <Text style={[Fonts.textTiny, Fonts.textGray]}>{postData?.link || postLink}</Text>
-            </View>
-            <LinearGradient
-              colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-              style={styles.titleGradient}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-        <View style={styles.CommentBox}>
-          <View style={styles.CommentHeader}>
-            <Text style={styles.CommentHeaderText}>Comments</Text>
-            <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
-          </View>
-          <KeyboardAvoidingView style={styles.ContentInCommentBox}>
-            <Image source={authData?.profileImage ? {uri : authData?.profileImage } : require("../../../assets/Ellipse38.jpg")} style={styles.avatar}/>
-            <TextInput
-              style={styles.CommentInput}
-              placeholder="Add Your Comment"
-              placeholderTextColor="white"
-              onFocus={handleTextInputFocus} 
-            />
-          </KeyboardAvoidingView>
-        </View>
-      </View>
-      <View style={styles.BScontainer}>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        index={-1}
-        // onChange={handleSheetChange}
-        style={styles.BS}
-        enablePanDownToClose={true}
-        handleIndicatorStyle={{backgroundColor: 'white', borderRadius: 10}}
-        backgroundStyle={{ backgroundColor: 'black'}}
-
-      >
-        <View style={styles.header}>
-        <Image source={require('../../../assets/Ellipse38.jpg')} style={styles.commentAvatar} />
-              <View style={styles.commentTextContainer}>
-              <Text style={styles.headerAuthor}>Tanmay Bhat started the conversation.</Text>
-              <Text style={styles.headerText}>Urgent Issue! Requires Attention.</Text>
-              </View>
-        </View>
-        <View style={styles.horizontalLine} />
-        <BottomSheetFlatList style={styles.list}
-          data={comments}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => (
-            <View style={styles.commentContainer}>
-              <Image source={item.authorAvatar} style={styles.commentAvatar} />
-              <View style={styles.commentTextContainer}>
-              <Text style={styles.commentAuthor}>{item.author}</Text>
-              <Text style={styles.commentText}>{item.text}</Text>
-            </View>
-            </View>
-          )}
-          contentContainerStyle={styles.contentContainer}
-        />
-
-        <View style={styles.commentZone}>
-          <Image source={require('../../../assets/Ellipse38.jpg')} style={styles.yourAvatar} />
-          <BottomSheetTextInput style={styles.input} placeholder="Add your comment" placeholderTextColor="white"/>
-        </View>
-
+  const getpostDetail= async ()=>{
+    logToCrashlytics('get post detail api call')
+    const result:any = await getDetail({id:route?.params?.id,token});
+    if (result?.data?.statusCode === 200) {
+      setPostData(result?.data?.result)
+    } else {
       
-      </BottomSheet>
-    </View>
-    </View>
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('get post detail api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
+  useEffect(()=>{    
+    if(route?.params?.id){
+      getpostDetail()
+    } else {
+      setPostData(route?.params?.postData)
+    }
+  },[])
+  return (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
+      {isLoading ? <Loader state={isLoading} /> : null}
+      <View style={[Layout.flex09]}>
+        <View style={[globalStyles.header, Gutters.regularRMargin, Gutters.regularTMargin]}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons
+              name={"chevron-left"}
+              color={Colors.white}
+              size={28}
+            />
+          </TouchableOpacity>
+          <UserCard
+            userAvatar={postData?.user_info?.profileImage || userAvatar}
+            userName={capitalize(postData?.user_info?.name || userName)}
+            score={postData?.user_info?.score || score}
+            menu={true}
+          />
+        </View>
+        <View style={[Layout.flex08, globalStyles.screenMargin]}>
+          <Text style={[Fonts.textRegular, Fonts.textWhite]}>
+            {postData?.description || ""}
+          </Text>
+          <Text style={[Fonts.textTiny, Fonts.textGray]}>
+            {`${postData?.readingTime || '0'} min read`}
+            <View>
+              <Text style={{ color: Colors.textGray400 }}> .</Text>
+            </View>{" "}
+            {moment(postData?.createdAt).format("MMMM YYYY")}
+          </Text>
+          <TouchableWithoutFeedback
+            style={styles.container}
+            onPress={openActionSheet}
+          >
+            <Image source={postData?.image ? { uri: postData?.image } : require("../../../assets/pexels-daniel-absi-952670.jpg") } style={styles.image} />
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{postData?.title || postTitle}</Text>
+              <View style={[Layout.row, Layout.alignItemsCenter, Gutters.tinyRMargin]}>
+                <View style={[Gutters.tinyTMargin]}>
+                  <UrlLink />
+                </View>
+                <Text style={[Fonts.textTiny, Fonts.textGray]}>{postData?.link || postLink}</Text>
+              </View>
+              <LinearGradient
+                colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
+                style={styles.titleGradient}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+          <View style={styles.CommentBox}>
+            <View style={styles.CommentHeader}>
+              <Text style={styles.CommentHeaderText}>Comments</Text>
+              <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
+            </View>
+            <View style={styles.ContentInCommentBox}>
+              <Image source={{uri: authData?.profileImage || defaultAvatar}} style={styles.avatar}/>
+              <Pressable onPress={focusTextInputInCommentBottomSheet} style={[styles.CommentInput]}>
+                <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+        <CommentBottomSheet ref={commentBottomSheetRef} />        
+    </KeyboardAvoidingView>
+
   );
 };
 
@@ -193,6 +160,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    backgroundColor: "rgba(41, 41, 41, 0.8)",
   },
   titleContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.8)",

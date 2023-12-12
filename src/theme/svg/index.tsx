@@ -301,12 +301,12 @@ export const DownvoteButton = (props: SvgProps) => (
   <Svg
     width={16}
     height={19}
-    fill="none"
+    fill={props.fill ? props.fill : "none"}
     {...props}
   >
     <Path
-      fill="red"
-      stroke="red"
+      fill={props.fill ? props.fill :"#fff"}
+      stroke={props.fill ? props.fill :"#fff"}
       d="M14.645 10.796a.7.7 0 0 0-.764-.154.7.7 0 0 0-.227.154L8.55 15.962V2.09a.713.713 0 0 0-.205-.5.696.696 0 0 0-.99 0 .713.713 0 0 0-.205.5v13.873l-5.105-5.166a.696.696 0 0 0-.99 0 .713.713 0 0 0 0 1.002l6.3 6.375a.7.7 0 0 0 .763.154.7.7 0 0 0 .227-.154l6.3-6.375a.708.708 0 0 0 .151-.772.708.708 0 0 0-.151-.23Z"
     />
   </Svg>
@@ -316,11 +316,11 @@ export const UpvoteButton = (props: SvgProps) => (
   <Svg
     width={16}
     height={19}
-    fill="none"
+    fill={props.fill ? props.fill : "none"}
     {...props}
   >
     <Path
-      fill="#fff"
+      fill={props.fill ? props.fill : "#fff"}
       d="M15.63 8.412a.749.749 0 0 1-1.061 0l-5.47-5.47V17.63a.75.75 0 0 1-1.5 0V2.94l-5.468 5.47a.75.75 0 1 1-1.061-1.06L7.82.6a.75.75 0 0 1 1.06 0l6.75 6.75a.748.748 0 0 1 0 1.06Z"
     />
   </Svg>
