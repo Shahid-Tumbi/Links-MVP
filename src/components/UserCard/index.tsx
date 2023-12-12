@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 20,
         marginRight: 10,
+        backgroundColor: "rgba(41, 41, 41, 0.6)",
     },
     score: {
         fontSize: 10,

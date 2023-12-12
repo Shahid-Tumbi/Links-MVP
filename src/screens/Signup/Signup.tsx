@@ -154,7 +154,7 @@ const Signup = ({ navigation,route }: ApplicationScreenProps) => {
         <View
             style={[globalStyles.container]} >
             {isLoading ? <Loader state={isLoading} /> : null}
-            <View style={[globalStyles.screenMargin, Gutters.tinyBMargin]}>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.screenMargin, Gutters.tinyBMargin]}>
                 <ScrollView style={[Layout.flex08]} keyboardShouldPersistTaps="always" >
                     <Logo style={[Gutters.tinyTMargin]} />
                     <View style={[Gutters.largeTMargin]}>
@@ -313,7 +313,7 @@ const Signup = ({ navigation,route }: ApplicationScreenProps) => {
                         </View>
                     </View>
                 </ScrollView>
-            </View>
+            </KeyboardAvoidingView>
         </View>
     );
 };

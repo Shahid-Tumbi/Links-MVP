@@ -10,7 +10,7 @@ import { Avatar } from "react-native-paper";
 import ThreeDotLoader from "@/components/ThreeDotLoader/ThreeDotLoader";
 import { Path, Svg } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { logToCrashlytics } from "@/theme/Common";
+import { defaultAvatar, logToCrashlytics } from "@/theme/Common";
 
 const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
     logToCrashlytics('Profile screen')
@@ -20,7 +20,7 @@ const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
         Gutters,
         darkMode: isDark,
     } = useTheme();
-    const [imageUri, setImageUri] = useState('https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=')
+    const [imageUri, setImageUri] = useState(defaultAvatar)
     const [page, setPage] = useState(1)
     const authData = useSelector((state: any) => state.auth.authData);
     
@@ -45,7 +45,7 @@ const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
                     page == 1 ?
                         <View style={[Gutters.largeTMargin, Layout.flex05, Layout.center]}>
                             <Text style={[styles.title]}>{`Hey, ${authData?.name}`}</Text>
-                            <Avatar.Image size={135} source={{ uri: imageUri }} style={[Gutters.regularTMargin]} />
+                            <Avatar.Image size={135} source={{ uri:authData?.profileImage || imageUri }} style={[Gutters.regularTMargin]} />
                             <Text style={[Fonts.textRegular, Gutters.largeTMargin]}>{Constants.analyseProfile}</Text>
                             <ThreeDotLoader />
                         </View>
@@ -64,7 +64,7 @@ const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
                                 ]}>
                                     <Path d="M0 31.5002C151.284 -9.07657 236.954 -10.3224 391.5 31.5002" stroke="white" stroke-opacity="0.6" />
                                 </Svg>
-                                <Avatar.Image size={90} source={{ uri: imageUri }} style={[styles.profile]} />
+                                <Avatar.Image size={90} source={{ uri: authData?.profileImage || imageUri }} style={[styles.profile]} />
 
                             </View>
                             <View style={[Layout.fill, Layout.center]}>

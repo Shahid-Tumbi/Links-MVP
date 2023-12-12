@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity, Platform } from "react-native";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { BackButton, True } from "@/theme/svg";
 import { Constants } from "@/theme/Constants";
@@ -10,7 +10,7 @@ import { Avatar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation } from "@/services/modules/users";
 import { clearToken, setAuthData } from "@/store/User";
-import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 
 const EditProfile = ({ navigation }: ApplicationScreenProps) => {
     logToCrashlytics('Edit profile screen')
@@ -25,7 +25,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
     const [userName, setUserName] = useState(authData?.userName)
     const [fullName, setFullName] = useState(authData?.name)
     const [bio, setBio] = useState(authData?.bio)
-    const [imageUri, setImageUri] = useState('https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=')
+    const [imageUri, setImageUri] = useState(authData?.profileImage || defaultAvatar)
     const [updateUser, { isLoading }] = useUpdateUserMutation()
     const dispatch = useDispatch()
     const onSubmit = async () => {
@@ -64,7 +64,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                     </View>
                     <True style={[Gutters.tinyTMargin]} onPress={() => onSubmit()} />
                 </View>
-                <KeyboardAvoidingView style={[Layout.flex09, Gutters.largeTMargin]}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.flex09, Gutters.largeTMargin]}>
                     <View style={[Layout.center]}>
                         <Avatar.Image size={80} source={{ uri: imageUri }} />
                         <Text style={[Fonts.textLarge, Fonts.textWhite, Gutters.tinyTMargin]}>{Constants.editPicture}</Text>

@@ -13,7 +13,6 @@ const CarouselCards = ({data}:any) => {
     <View>
       <Carousel
         layout="default"
-        layoutCardOffset={9}
         ref={isCarousel}
         data={data}
         renderItem={CarouselCardItem}

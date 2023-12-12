@@ -34,10 +34,87 @@ export const postApi = api.injectEndpoints({
           }
         },      
       }),
+      PostDetail: build.mutation({
+        query: ({id,token}:any) => {
+          return {
+            url:`/posts/${id}`,
+            method:'GET',
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
+      likePost: build.mutation({
+        query: ({ body,token }:any) => {
+          return {
+            url:`/posts/like`,
+            method:'POST',
+            body:body,
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
+      dislikePost: build.mutation({
+        query: ({ body,token }:any) => {
+          return {
+            url:`/posts/dislike`,
+            method:'POST',
+            body:body,
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
+      sharePost: build.mutation({
+        query: ({ body,token }:any) => {
+          return {
+            url:`/posts/share`,
+            method:'POST',
+            body:body,
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
+      commentPost: build.mutation({
+        query: ({ body,token }:any) => {
+          return {
+            url:`/posts/comment`,
+            method:'POST',
+            body:body,
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
+      commentList: build.mutation({
+        query: ({ id,page,limit,token }:any) => {
+          return {
+            url:`/posts/comment/${id}?parentId=&page=${page}&limit=${limit}`,
+            method:'GET',
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
     }),
     
     overrideExisting: true,
   });
 
 export const {
-  usePostListMutation,useAddPostMutation } = postApi;
+  usePostListMutation,
+  useAddPostMutation,
+  usePostDetailMutation,
+  useLikePostMutation,
+  useDislikePostMutation,
+  useSharePostMutation,
+  useCommentPostMutation,
+  useCommentListMutation} = postApi;

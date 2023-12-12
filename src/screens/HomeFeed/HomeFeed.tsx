@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Dimensions,  PermissionsAndroid, Platform, RefreshControl, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Alert, Dimensions,  KeyboardAvoidingView,  PermissionsAndroid, Platform, RefreshControl, StyleSheet, Text, View } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import CarouselMain from "@/components/Carousel/CarouselMain";
 import { useTheme } from "@/hooks";
 import { Logo, NotificationIcon } from "@/theme/svg";
 import { globalStyles } from "@/theme/GlobalStyles";
-import { SheetManager } from "react-native-actions-sheet";
-import debounce from 'lodash/debounce';
 import Welcome from "../Welcome/Welcome";
 import { ApplicationScreenProps } from "types/navigation";
 import messaging from "@react-native-firebase/messaging";
@@ -15,9 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setWelcomeScreen } from "@/store/User";
 import { useUpdateUserMutation } from "@/services/modules/users";
 import { usePostListMutation } from "@/services/modules/post";
-import { Loader } from "@/components";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { Colors } from "@/theme/Variables";
+import { FlashList } from "@shopify/flash-list";
+import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
+export const FocusedInputContext = React.createContext(null);
 const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const dispatch = useDispatch()  
@@ -31,6 +31,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const [refreshing,setRefreshing]= useState(false)
   const [carouselList,setCarouselList]= useState([])
   const [topfeedList,setTopFeedList]= useState([])
+  const [bottomsheetData,setBottomsheetData]= useState()
 
   const getFCMToken = async () => {
     try {
@@ -87,9 +88,19 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   },[])
   
   
+  const commentBottomSheetRef = useRef(null);
 
+  // Method to trigger text input focus in CommentBottomSheet
+  const focusTextInputInCommentBottomSheet = (data:any) => {
+    if (commentBottomSheetRef?.current?.handleTextInputFocus) {
+      commentBottomSheetRef?.current?.handleTextInputFocus(data);
+    }
+  };
   const ItemSeparator = () => <View style={styles.separator} />;
-  const renderProfile = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
+  const renderProfile = ({ item,index }:any) => {return (
+  <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
+    <ProfileView data={item} number={index+1} navigation={navigation}/>
+  </FocusedInputContext.Provider>)}
 
   const onPress =() => {
     dispatch(setWelcomeScreen(false))
@@ -105,7 +116,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
     getPostList(page+1)
   }
   return (
-    <View style={[globalStyles.container]}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
       {welcomeScreen ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
         <View style={[Gutters.smallTMargin, Layout.fill]}>
@@ -113,13 +124,15 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
             <Logo />
             <NotificationIcon onPress={()=>navigation.navigate('NotificationsTwo')}/>
           </View>
-          <ScrollView style={[Gutters.regularTMargin]} nestedScrollEnabled refreshControl={
+          <ScrollView style={[Gutters.regularTMargin]} keyboardShouldPersistTaps={'handled'} nestedScrollEnabled={true} refreshControl={
             <RefreshControl
             refreshing={refreshing}
             onRefresh={()=>refereshFun()}
           />}>
             <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
-            <CarouselMain data={carouselList}/>
+            <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}>
+            <CarouselMain data={carouselList} />
+            </FocusedInputContext.Provider>
             <Text
               style={[
                 Fonts.textLarge,
@@ -130,22 +143,27 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
             >
               Top Feed
             </Text>
-              <FlatList
+            <View  style={[Gutters.regularBMargin,{ height: Dimensions.get('window').height / 1.5}]}>
+              <FlashList
                 data={topfeedList}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={renderProfile}
-                style={[Gutters.regularBMargin,{ height: Dimensions.get('window').height / 1.5}]}
                 ItemSeparatorComponent={ItemSeparator}
                 onEndReached={onEndreach}
-                onEndReachedThreshold={0.1}
-                nestedScrollEnabled
-                ListEmptyComponent={()=>topfeedList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue}  />:<Text style={[Fonts.textLarge,Fonts.textWhite]}>No data found </Text>}
+                estimatedItemSize={50}
+                onEndReachedThreshold={0.4}
+                nestedScrollEnabled={true}
+                ListEmptyComponent={()=>isLoading ? <ActivityIndicator size={25} color={Colors.blue}  />:<Text style={[Fonts.textLarge,Fonts.textWhite]}>No data found </Text>}
                 
               />
+              </View>
           </ScrollView>
         </View>
       </View> }
-    </View>
+
+    <CommentBottomSheet ref={commentBottomSheetRef} data={bottomsheetData} />        
+    </KeyboardAvoidingView>
+    
   );
 };
 
