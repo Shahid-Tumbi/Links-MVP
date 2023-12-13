@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logToCrashlytics, onTokenExpired } from '@/theme/Common';
 import { ActivityIndicator } from 'react-native-paper';
 
-const DiscoverCuratorPost = () => {
+const DiscoverCuratorPost = ({data}: any) => {
     const {
         Layout,
         Fonts,

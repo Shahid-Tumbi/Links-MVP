@@ -39,6 +39,7 @@ const CuratorList = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const getCuratorListMethod = async(page: any) => {
     setPage(page)
@@ -97,6 +98,21 @@ const CuratorList = () => {
     curator?.result?.rows[0]?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const searchCurators = (searchQuery) => {
+    setSearchQuery(searchQuery)
+    if(searchQuery !== ''){
+      const filteredData = displayCuratorList.filter((item) => {
+        return Object.values(item).join('').toLowerCase().includes(searchQuery.toLowerCase())
+      })
+      setFilteredResults(filteredData);
+
+    }
+
+    else {
+      setFilteredResults(displayCuratorList);
+    }
+  }
+
   const handleFocused = () => {
     setFocused(true)
   }
@@ -104,7 +120,7 @@ const CuratorList = () => {
     <KeyboardAvoidingView style={styles.container}>
       <View style={[Layout.row, Gutters.regularMargin]}>
         <Logo style={[Gutters.tinyTMargin]} />
-        <SearchBarComponent style={[Gutters.tinyLMargin]} onFocus={handleFocused} onBlur={()=>setFocused(false)} onCancel={()=>setFocused(false)}/>
+        <SearchBarComponent style={[Gutters.tinyLMargin]} onFocus={handleFocused} onBlur={()=>setFocused(false)} onCancel={()=>setFocused(false)} onChange={(e) => searchCurators(e.target.value)}/>
       </View>
       <View style={[Gutters.regularHMargin]}>
         {focused ? <View>
@@ -114,8 +130,8 @@ const CuratorList = () => {
           </View>
           <FlatList
               contentContainerStyle={{ marginTop: 30 }}
-              data={filteredCurators}
-              keyExtractor={(item) => item.id}
+              data={searchQuery.length > 1 ? filteredResults : displayCuratorList}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={renderFocusedItem}
               ItemSeparatorComponent={ItemSeparator}
               nestedScrollEnabled
@@ -131,8 +147,8 @@ const CuratorList = () => {
             <Text style={[Fonts.textRegular, Fonts.textBold, Fonts.textWhite]}>Explore Our Top Club Curators</Text>
             <FlatList
               contentContainerStyle={{ marginTop: 30 }}
-              data={filteredCurators}
-              keyExtractor={(item) => item.id}
+              data={searchQuery.length > 1 ? filteredResults : displayCuratorList}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={renderProfileDynamic}
               ItemSeparatorComponent={ItemSeparator}
               nestedScrollEnabled
