@@ -99,7 +99,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   }
 
 
-
+/* get User Wise Post List */
 
   const getUserWisePostListMethod = async(page: any) => {
 
@@ -155,6 +155,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     setIsFollowing(false);
   }
 
+  /* get Follower Count */
   const getFollowerCountMethod = async(page: any) => {
     setPage(page);
     const result: any = await getFollowerList({ userId, token, page, limit })
@@ -184,6 +185,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     }
   }
 
+  /* Follow user */
+
   const follow = async() => {
     const result: any = await followSomeone({body: FollowBody, token})
     if(result?.data?.statusCode === 200){
@@ -206,6 +209,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       }
     }
   }
+
+  /* unfollow a user */
 
   const unfollow = async() => {
     const result: any = await unfollowSomeone({ body: FollowBody, token })
@@ -242,6 +247,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
             <TouchableOpacity onPress={()=>onSubmit()}>
             {Follow ? <FollowIcon /> : <FollowedIcon /> }
+            {/*isFollowing ? <FollowIcon> : <FollowedIcon /> */}
             </TouchableOpacity>
           </View>
           <View style={styles.body}>

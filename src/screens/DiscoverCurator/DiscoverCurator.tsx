@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import SingleCurator from '../../components/SingleCurator/SingleCurator';
 import { useNavigation } from '@react-navigation/native';
 import { Logo } from '@/theme/svg';
@@ -78,6 +78,10 @@ const CuratorList = () => {
     setRefreshing(true);
     setDisplayCuratorList([]); //
   }
+
+  const onComplete = () => {
+    getCuratorListMethod(page + 1);
+  }
  
   const [searchQuery, setSearchQuery] = useState('');
   const [focused, setFocused] = useState(false);
@@ -89,8 +93,8 @@ const CuratorList = () => {
 
   const ItemSeparator = () => <View style={styles.separator} />;
 
-  const filteredCurators = curators.filter((curator) =>
-    curator.userName.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCurators = displayCuratorList.filter((curator) =>
+    curator?.result?.rows[0]?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleFocused = () => {
@@ -114,6 +118,10 @@ const CuratorList = () => {
               keyExtractor={(item) => item.id}
               renderItem={renderFocusedItem}
               ItemSeparatorComponent={ItemSeparator}
+              nestedScrollEnabled
+              onEndReached={onComplete}
+              onEndReachedThreshold={0.1}
+              ListEmptyComponent={ () => displayCuratorList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textSmall, Fonts.textWhite]}>No data found</Text>}
               
             />
           
@@ -127,7 +135,10 @@ const CuratorList = () => {
               keyExtractor={(item) => item.id}
               renderItem={renderProfileDynamic}
               ItemSeparatorComponent={ItemSeparator}
-
+              nestedScrollEnabled
+              onEndReached={onComplete}
+              onEndReachedThreshold={0.1}
+              ListEmptyComponent={ () => displayCuratorList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textSmall, Fonts.textWhite]}>No data found</Text>}
             />
           </View>}
       </View>

@@ -68,7 +68,7 @@ const SinglePostItem = ({
           <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{postData:data})}>
         <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
-            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2')}>
+            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data?.userId})}>
               <Image
                 source={data?.user_info?.profileImage ? {uri:data?.user_info?.profileImage } : require("../../../assets/Ellipse38.jpg")}
                 style={styles.image}
