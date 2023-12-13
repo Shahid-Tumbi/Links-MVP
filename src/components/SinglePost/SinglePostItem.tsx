@@ -33,8 +33,6 @@ const SinglePostItem = ({
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);
-  console.log("inside single post item")
-  console.log(data);
   return (
     <View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
@@ -79,6 +77,7 @@ const SinglePostItem = ({
             </View>}
 
             <View style={[carouselView ? Layout.fill : Layout.flex08, Gutters.tinyVMargin, carouselView && Gutters.regularTMargin]}>
+              <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data})}>
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
                   <Text style={styles.username}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || 'Tanmay Bhat'}</Text>
@@ -88,6 +87,7 @@ const SinglePostItem = ({
                   <Text style={[Fonts.textTiny]}>{moment(data?.createdAt).fromNow()}</Text>
                 </View>
               </View>
+              </TouchableOpacity>
               <Text style={styles.bioDetails}>
                {data?.description || 'Investor, Comedian, Influencer, amongst other things. Live and let live.'}
               </Text>

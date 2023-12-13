@@ -64,14 +64,14 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
   const renderProfileDynamic = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
-  // const onSubmit = () => { setFollow(!Follow)}
-  const onSubmit = () => {
-    if(isFollowing) {
-      unfollow();
-    } else {
-      follow();
-    }
-  }  
+  const onSubmit = () => { setFollow(!Follow)}
+  // const onSubmit = () => {
+  //   if(isFollowing) {
+  //     unfollow();
+  //   } else {
+  //     follow();
+  //   }
+  // }  
   
   
   const[getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
@@ -90,13 +90,13 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [isFollowing, setIsFollowing] = useState(false);
-  // const {postData} = route?.params;
-  // const followUserId = postData?.user_info?.userId;
+  const {postData} = route?.params;
+  const followUserId = postData?.userId;
   const myUserId = useSelector((state:any) => state.auth.authData._id);
-  // const FollowBody = {
-  //   followUserId,
-  //   myUserId
-  // }
+  const FollowBody = {
+    followerId: followUserId,
+    followingId: myUserId
+  }
 
 
 /* get User Wise Post List */
@@ -138,8 +138,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     console.log('in useEffect');
     getUserWisePostListMethod(1)
     getFollowerCountMethod(1)
-    console.log(navigation);
-    console.log(route);
+    console.log('Cristiano Ronaldo')
   }, [])
 
   
@@ -190,7 +189,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   /* Follow user */
 
   const follow = async() => {
-    const result: any = await followSomeone({ token})
+    const result: any = await followSomeone({ body: FollowBody, token})
     if(result?.data?.statusCode === 200){
       setIsFollowing(true);
       setRefreshing(false);
@@ -215,7 +214,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   /* unfollow a user */
 
   const unfollow = async() => {
-    const result: any = await unfollowSomeone({ token })
+    const result: any = await unfollowSomeone({ body: FollowBody, token })
     if(result?.data?.statusCode === 200){
       setIsFollowing(false);
       setRefreshing(false);
@@ -248,7 +247,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
           <View style={[globalStyles.header]}>
             <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
             <TouchableOpacity onPress={()=>onSubmit()}>
-            {Follow ? <FollowIcon /> : <FollowedIcon /> }
+            {Follow ? <FollowIcon onPress={() => follow()}/> : <FollowedIcon onPress={() => unfollow()}/> }
             {/*isFollowing ? <FollowIcon> : <FollowedIcon /> */}
             </TouchableOpacity>
           </View>
@@ -260,7 +259,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
               <Text style={styles.referredBy}>Referred by Nikhil Kamath</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>{authData.name}</Text>
+              <Text style={styles.name}>{postData?.user_info?.name}</Text>
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Credibility Score:</Text>
