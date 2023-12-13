@@ -90,13 +90,13 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [isFollowing, setIsFollowing] = useState(false);
-  const {postData} = route?.params;
-  const followUserId = postData?.user_info?.userId;
+  // const {postData} = route?.params;
+  // const followUserId = postData?.user_info?.userId;
   const myUserId = useSelector((state:any) => state.auth.authData._id);
-  const FollowBody = {
-    followUserId,
-    myUserId
-  }
+  // const FollowBody = {
+  //   followUserId,
+  //   myUserId
+  // }
 
 
 /* get User Wise Post List */
@@ -138,6 +138,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     console.log('in useEffect');
     getUserWisePostListMethod(1)
     getFollowerCountMethod(1)
+    console.log(navigation);
+    console.log(route);
   }, [])
 
   
@@ -188,7 +190,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   /* Follow user */
 
   const follow = async() => {
-    const result: any = await followSomeone({body: FollowBody, token})
+    const result: any = await followSomeone({ token})
     if(result?.data?.statusCode === 200){
       setIsFollowing(true);
       setRefreshing(false);
@@ -213,7 +215,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   /* unfollow a user */
 
   const unfollow = async() => {
-    const result: any = await unfollowSomeone({ body: FollowBody, token })
+    const result: any = await unfollowSomeone({ token })
     if(result?.data?.statusCode === 200){
       setIsFollowing(false);
       setRefreshing(false);
@@ -258,7 +260,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
               <Text style={styles.referredBy}>Referred by Nikhil Kamath</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>{postData?.user_info?.userId}</Text>
+              <Text style={styles.name}>{authData.name}</Text>
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Credibility Score:</Text>

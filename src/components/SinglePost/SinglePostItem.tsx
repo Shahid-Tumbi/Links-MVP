@@ -33,6 +33,8 @@ const SinglePostItem = ({
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);
+  console.log("inside single post item")
+  console.log(data);
   return (
     <View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
@@ -68,7 +70,7 @@ const SinglePostItem = ({
           <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{postData:data})}>
         <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
-            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data?.userId})}>
+            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data})}>
               <Image
                 source={data?.user_info?.profileImage ? {uri:data?.user_info?.profileImage } : require("../../../assets/Ellipse38.jpg")}
                 style={styles.image}
