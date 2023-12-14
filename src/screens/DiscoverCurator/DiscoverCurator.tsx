@@ -52,7 +52,8 @@ const CuratorList = () => {
       logToCrashlytics('fetching curator list')
       setDisplayCuratorList(prevState => [...prevState, ...result?.data?.result?.rows]);
       console.log('here we are, brother, see if it works');
-      console.log(result?.data?.result?.rows[0].name); {/*TODO: find a way to display just the name */}
+      console.log(result?.data); 
+
 
     }else {
       setRefreshing(false);
@@ -117,6 +118,7 @@ const CuratorList = () => {
     setFocused(true)
   }
 
+ 
   
   return (
     <KeyboardAvoidingView style={styles.container}>

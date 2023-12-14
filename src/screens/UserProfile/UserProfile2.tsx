@@ -1,6 +1,15 @@
 import WhiteLine from "@/components/WhiteLine/WhiteLine";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { BackButton, FollowIcon, FollowedIcon } from "@/theme/svg";
@@ -11,17 +20,15 @@ import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
-import { useFollowSomeoneMutation, useGetFollowerListMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
-
+import {
+  useFollowSomeoneMutation,
+  useGetFollowerListMutation,
+  useUnfollowSomeoneMutation,
+} from "@/services/modules/users";
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
-  const {
-    Layout,
-    Fonts,
-    Gutters,
-    darkMode: isDark,
-  } = useTheme();
-  const [Follow,setFollow] = useState(false)
+  const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
+  const [Follow, setFollow] = useState(false);
   const profiles = [
     {
       id: 1,
@@ -60,90 +67,105 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     },
   ];
-  
+
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
-  const renderProfileDynamic = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
-  const onSubmit = () => { setFollow(!Follow)}
+  const renderProfileDynamic = ({ item, index }: any) => {
+    console.log("Inside render profile dynamic");
+    console.log(item);
+    return (
+      <ProfileView data={item} number={index + 1} navigation={navigation} />
+    );
+  };
+  const onSubmit = () => {
+    setFollow(!Follow);
+  };
   // const onSubmit = () => {
   //   if(isFollowing) {
   //     unfollow();
   //   } else {
   //     follow();
   //   }
-  // }  
-  
-  
-  const[getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
+  // }
+
+  const [getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const authData = useSelector((state:any) => state.auth.authData)
-  const userName = useSelector((state:any) => state.auth.authData.name)
-  const token = useSelector((state:any) => state.auth.token)
-  const userId = useSelector((state:any) => state.auth.authData._id)
+  const authData = useSelector((state: any) => state.auth.authData);
+  const userName = useSelector((state: any) => state.auth.authData.name);
+  const token = useSelector((state: any) => state.auth.token);
+  const userId = useSelector((state: any) => state.auth.authData._id);
   const [refreshing, setRefreshing] = useState(false);
   const [userPostList, setUserPostList] = useState([]);
   const dispatch = useDispatch();
-  const [getFollowerList, { isLoadingFollowers }] = useGetFollowerListMutation();
-  const  [userFollowerList, setUserFollowerList] = useState([]);
-  const  [userFollowerCount, setUserFollowerCount] = useState(0);
+  const [getFollowerList, { isLoadingFollowers }] =
+    useGetFollowerListMutation();
+  const [userFollowerList, setUserFollowerList] = useState([]);
+  const [userFollowerCount, setUserFollowerCount] = useState(0);
   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [isFollowing, setIsFollowing] = useState(false);
-  const {postData} = route?.params;
+  const { postData } = route?.params;
+  console.log("inside user profile screen");
+  console.log(postData);
   const followUserId = postData?.userId;
-  const myUserId = useSelector((state:any) => state.auth.authData._id);
+  const myUserId = useSelector((state: any) => state.auth.authData._id);
   const FollowBody = {
     followerId: followUserId,
-    followingId: myUserId
-  }
+    followingId: myUserId,
+  };
 
+  /* get User Wise Post List */
 
-/* get User Wise Post List */
-
-  const getUserWisePostListMethod = async(page: any) => {
-
+  const getUserWisePostListMethod = async (page: any) => {
     setPage(page);
-    const result: any = await getUserWisePostList({page, limit, token, userId })
-    if(result?.data?.statusCode === 200){
-      console.log('in if block of getUserWisePostList');
+    const result: any = await getUserWisePostList({
+      page,
+      limit,
+      token,
+      userId,
+    });
+    if (result?.data?.statusCode === 200) {
+      console.log("in if block of getUserWisePostList");
       setRefreshing(false);
-      logToCrashlytics('fetching requested user posts');
-      if(page === 1) {
-        console.log('Fetching user posts');
+      logToCrashlytics("fetching requested user posts");
+      if (page === 1) {
+        console.log("Fetching user posts");
         console.log(result?.data?.result?.rows);
         setUserPostList(result?.data?.result?.rows);
-      
       } else {
-        setUserPostList(prevState => [...prevState, ...result?.data?.result?.rows]);
+        setUserPostList((prevState) => [
+          ...prevState,
+          ...result?.data?.result?.rows,
+        ]);
       }
     } else {
-      console.log('in else block of getUserWisePostList');
+      console.log("in else block of getUserWisePostList");
       setRefreshing(false);
-      if(result?.error?.data){
+      if (result?.error?.data) {
         Alert.alert(result?.error?.data.message);
       }
-      if(result?.error?.error){
-        logToCrashlytics('Error fetching user posts. Please try again, or try again later.', result?.error?.error);
-        Alert.alert('Something went wrong!!');
+      if (result?.error?.error) {
+        logToCrashlytics(
+          "Error fetching user posts. Please try again, or try again later.",
+          result?.error?.error
+        );
+        Alert.alert("Something went wrong!!");
       }
-      if(result.error && result.error.status === 401){
+      if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch);
       }
-
     }
-  }
+  };
 
   useEffect(() => {
-    getUserWisePostListMethod(1)
+    getUserWisePostListMethod(1);
     getFollowerCountMethod(1);
-  }, [])
-
-  
+  }, []);
 
   const onComplete = () => {
     getUserWisePostListMethod(page + 1);
-  }
+  };
 
   const refreshFunction = () => {
     setRefreshing(true);
@@ -152,101 +174,113 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     setUserFollowerCount(0);
     getUserWisePostListMethod(1);
     setIsFollowing(false);
-  }
+  };
 
   /* get Follower Count */
-  const getFollowerCountMethod = async(page: any) => {
+  const getFollowerCountMethod = async (page: any) => {
     setPage(page);
-    const result: any = await getFollowerList({ userId, token, page, limit })
-    if(result?.data?.statusCode == 200){
+    const result: any = await getFollowerList({ userId, token, page, limit });
+    if (result?.data?.statusCode == 200) {
       setRefreshing(false);
-      logToCrashlytics('fetching follower list')
-      if(page == 1){
+      logToCrashlytics("fetching follower list");
+      if (page == 1) {
         console.log(result?.data?.result?.count);
         setUserFollowerCount(result?.data?.result?.count);
         setUserFollowerList(result?.data?.result?.rows);
       } else {
         setUserFollowerCount(0);
-        setUserFollowerList(prevState => [...prevState, result?.data?.result?.rows]);
+        setUserFollowerList((prevState) => [
+          ...prevState,
+          result?.data?.result?.rows,
+        ]);
       }
     } else {
       setRefreshing(false);
-      if(result?.error?.data){
+      if (result?.error?.data) {
         Alert.alert(result?.error?.data.message);
       }
-      if(result?.error?.error){
-        logToCrashlytics('Error! Could not get user follower list', result?.error?.error); 
-        Alert.alert('Something went wrong!')
+      if (result?.error?.error) {
+        logToCrashlytics(
+          "Error! Could not get user follower list",
+          result?.error?.error
+        );
+        Alert.alert("Something went wrong!");
       }
-      if(result.error && result.error.status === 401){
+      if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch);
       }
     }
-  }
+  };
 
   /* Follow user */
 
-  const follow = async() => {
-    const result: any = await followSomeone({ body: FollowBody, token})
-    if(result?.data?.statusCode === 200){
+  const follow = async () => {
+    const result: any = await followSomeone({ body: FollowBody, token });
+    if (result?.data?.statusCode === 200) {
       setIsFollowing(true);
       setRefreshing(false);
-      console.log('You have successfully followed this user');
-      console.log('result');
+      console.log("You have successfully followed this user");
+      console.log("result");
     } else {
       setRefreshing(false);
       setIsFollowing(false);
-      if(result?.error?.data){
+      if (result?.error?.data) {
         Alert.alert(result?.error?.data.message);
       }
-      if(result?.error?.error){
-        logToCrashlytics('Error! Could not follow user', result?.error?.error); 
-        Alert.alert('Something went wrong!')
+      if (result?.error?.error) {
+        logToCrashlytics("Error! Could not follow user", result?.error?.error);
+        Alert.alert("Something went wrong!");
       }
-      if(result.error && result.error.status === 401){
+      if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch);
       }
     }
-  }
+  };
 
   /* unfollow a user */
 
-  const unfollow = async() => {
-    const result: any = await unfollowSomeone({ body: FollowBody, token })
-    if(result?.data?.statusCode === 200){
+  const unfollow = async () => {
+    const result: any = await unfollowSomeone({ body: FollowBody, token });
+    if (result?.data?.statusCode === 200) {
       setIsFollowing(false);
       setRefreshing(false);
-      console.log('You have successfully unfollowed this user');
-      console.log('result');
+      console.log("You have successfully unfollowed this user");
+      console.log("result");
     } else {
       setRefreshing(false);
       setIsFollowing(false);
-      if(result?.error?.data){
+      if (result?.error?.data) {
         Alert.alert(result?.error?.data.message);
       }
-      if(result?.error?.error){
-        logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
-        Alert.alert('Something went wrong!')
+      if (result?.error?.error) {
+        logToCrashlytics(
+          "Error! Could not unfollow user",
+          result?.error?.error
+        );
+        Alert.alert("Something went wrong!");
       }
-      if(result.error && result.error.status === 401){
+      if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch);
       }
     }
-  }
-
-
+  };
 
   return (
-
-
     <View style={[globalStyles.container]}>
-        <ScrollView>
-          <View style={[globalStyles.screenMargin]}>
+      <ScrollView>
+        <View style={[globalStyles.screenMargin]}>
           <View style={[globalStyles.header]}>
-            <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
-            <TouchableOpacity onPress={()=>onSubmit()}>
-            {Follow ? <FollowIcon onPress={() => follow()}/> : <FollowedIcon onPress={() => unfollow()}/> }
-            {/*isFollowing ? <FollowIcon> : <FollowedIcon /> */}
+            <BackButton
+              style={[Gutters.tinyTMargin]}
+              onPress={() => navigation.goBack()}
+            />
+            <TouchableOpacity onPress={() => onSubmit()}>
+              {Follow ? (
+                <FollowIcon onPress={() => follow()} />
+              ) : (
+                <FollowedIcon onPress={() => unfollow()} />
+              )}
+              {/*isFollowing ? <FollowIcon> : <FollowedIcon /> */}
             </TouchableOpacity>
           </View>
           <View style={styles.body}>
@@ -280,9 +314,9 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
               </View>
             </View>
           </View>
-          </View>
-          <WhiteLine />
-          <View style={[globalStyles.screenMargin]}>
+        </View>
+        <WhiteLine />
+        <View style={[globalStyles.screenMargin]}>
           <View style={styles.recentLinksContainer}>
             <Text style={styles.recentLinks}>Recent Links</Text>
           </View>
@@ -300,11 +334,18 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
                 onRefresh={refreshFunction}
               />
             }
-            ListEmptyComponent={()=>userPostList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue}  />:<Text style={[Fonts.textLarge,Fonts.textWhite]}>No data found </Text>}
-
+            ListEmptyComponent={() =>
+              userPostList.length > 1 ? (
+                <ActivityIndicator size={25} color={Colors.blue} />
+              ) : (
+                <Text style={[Fonts.textLarge, Fonts.textWhite]}>
+                  No data found{" "}
+                </Text>
+              )
+            }
           />
-          </View>
-        </ScrollView>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -396,19 +437,19 @@ const styles = StyleSheet.create({
   recentLinks: {
     fontWeight: "bold",
     fontSize: 16,
-    color: 'white',
+    color: "white",
     marginBottom: 20,
   },
   separator: {
     height: 20,
-    backgroundColor: 'transparent'
+    backgroundColor: "transparent",
   },
-  verticalLine:{
-    backgroundColor:'rgba(255, 255, 255, 0.4)',
-    width:1,
-    height:'120%',
-    marginTop:30
-  }
+  verticalLine: {
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    width: 1,
+    height: "120%",
+    marginTop: 30,
+  },
 });
 
 export default ProfileDetail;

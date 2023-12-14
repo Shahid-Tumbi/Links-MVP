@@ -28,6 +28,9 @@ const SinglePostItem = ({
   number,
   carouselView
 }: any) => {
+  console.log("Inside Single Post Item component");
+  console.log(data);
+  console.log(number);
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters } = useTheme();
   const openActionSheet = debounce(() => {

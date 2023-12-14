@@ -12,11 +12,12 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const UserCard = ({
+    data,
     userAvatar,
     userName,
     score,
     menu
-}:any, {route, navigation} : ApplicationScreenProps) => {
+}:any, ) => {
     const [following, setFollowing] = useState(false)
     const {
         Fonts,
