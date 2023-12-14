@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 import SingleCurator from '../../components/SingleCurator/SingleCurator';
 import { useNavigation } from '@react-navigation/native';
 import { Logo } from '@/theme/svg';
@@ -89,7 +89,7 @@ const CuratorList = () => {
   const navigation = useNavigation();
 
   const renderItem = ({ item }) => <SingleCurator {...item} />;
-  const renderFocusedItem = ({ item }) => <UserCard userAvatar={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkms62ywj8noI96YorLX4kg6qHaHcq5lhoj_VYj9I0-A&s'} userName={item.userName} score={item.count} menu={false}/>;
+  const renderFocusedItem = ({ item }) => <UserCard userAvatar={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkms62ywj8noI96YorLX4kg6qHaHcq5lhoj_VYj9I0-A&s'} userName={item.name} score={item.count} menu={false}/>;
   const renderProfileDynamic = ({item, index}: any) => <SingleCurator data={item} number={index+1} navigation={navigation} />;
 
   const ItemSeparator = () => <View style={styles.separator} />;
@@ -116,6 +116,8 @@ const CuratorList = () => {
   const handleFocused = () => {
     setFocused(true)
   }
+
+  
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={[Layout.row, Gutters.regularMargin]}>
@@ -138,6 +140,12 @@ const CuratorList = () => {
               onEndReached={onComplete}
               onEndReachedThreshold={0.1}
               ListEmptyComponent={ () => displayCuratorList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textSmall, Fonts.textWhite]}>No data found</Text>}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={refreshFunction}
+                />
+              }
               
             />
           
@@ -155,6 +163,12 @@ const CuratorList = () => {
               onEndReached={onComplete}
               onEndReachedThreshold={0.1}
               ListEmptyComponent={ () => displayCuratorList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textSmall, Fonts.textWhite]}>No data found</Text>}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={refreshFunction}
+                />
+              }
             />
           </View>}
       </View>

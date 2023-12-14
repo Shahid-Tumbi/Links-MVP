@@ -1,4 +1,4 @@
-import { Alert, FlatList, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, KeyboardAvoidingView, RefreshControl, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useTheme } from '@/hooks';
 import ProfileView from "../../components/SinglePost/SinglePostItem";
@@ -9,8 +9,9 @@ import { useGetUserWisePostListMutation } from '@/services/modules/post';
 import { useDispatch, useSelector } from 'react-redux';
 import { logToCrashlytics, onTokenExpired } from '@/theme/Common';
 import { ActivityIndicator } from 'react-native-paper';
+import { ApplicationScreenProps } from 'types/navigation';
 
-const DiscoverCuratorPost = ({data}: any) => {
+const DiscoverCuratorPost = ({navigation, route}: ApplicationScreenProps) => {
     const {
         Layout,
         Fonts,
@@ -65,6 +66,7 @@ const DiscoverCuratorPost = ({data}: any) => {
 
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item }) => <ProfileView {...item} />;
+  const renderProfileDynamic = ({ item,index }:any) => <ProfileView data={item} number={index+1} navigation={navigation}/>;
 
   const [getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
@@ -75,6 +77,7 @@ const DiscoverCuratorPost = ({data}: any) => {
   const [refreshing, setRefreshing] = useState(false);
   const [userPostList, setUserPostList] = useState([]);
   const dispatch = useDispatch();
+  const { postData } = route?.params;
 
   const getUserWisePostListMethod = async(page: any) => {
     setPage(page);
@@ -105,6 +108,8 @@ const DiscoverCuratorPost = ({data}: any) => {
 
   useEffect(() => {
     getUserWisePostListMethod(1)
+    console.log('Chelsea');
+    console.log(userPostList);
   }, [])
 
   const onComplete = () => {
@@ -134,14 +139,21 @@ const DiscoverCuratorPost = ({data}: any) => {
           </View>
           <View style={styles.flat}>
           <FlatList
-              data={profiles}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderProfile}
+              data={userPostList}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderProfileDynamic}
               ItemSeparatorComponent={ItemSeparator}
               nestedScrollEnabled
               onEndReached={onComplete}
               onEndReachedThreshold={0.1}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={refreshFunction}
+                />
+              }
               ListEmptyComponent={ () => userPostList.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textLarge, Fonts.textWhite]}>No data found</Text>}
+
               />
             </View>
           </View>

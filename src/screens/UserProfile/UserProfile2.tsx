@@ -135,10 +135,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   }
 
   useEffect(() => {
-    console.log('in useEffect');
     getUserWisePostListMethod(1)
-    getFollowerCountMethod(1)
-    console.log('Cristiano Ronaldo')
+    getFollowerCountMethod(1);
   }, [])
 
   

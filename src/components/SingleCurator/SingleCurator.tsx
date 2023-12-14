@@ -22,7 +22,7 @@ const SingleCurator = ({data}: any) => {
     const navigation = useNavigation()
     return (
         <View style={styles.container}>
-        <Pressable style={styles.header} onPress={()=>navigation.navigate('DiscoverCuratorPost')}>
+        <Pressable style={styles.header} onPress={()=>navigation.navigate('DiscoverCuratorPost', {postData: data})}>
             <Image source={data?.user_info?.profileImage ? {uri:data?.user_info?.profileImage } : require("../../../assets/Ellipse38.jpg")} style={styles.userImage} />
             <View>
                 <Text style={styles.userName}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || 'Tanmay Bhat'}</Text>
