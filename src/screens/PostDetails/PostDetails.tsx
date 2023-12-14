@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert } from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
@@ -18,7 +18,9 @@ import debounce from "lodash/debounce";
 import { widthPercentageToDP } from "react-native-responsive-screen";
 import BottomSheet, { BottomSheetFlatList, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
+import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector(state => state.auth.authData)
@@ -65,6 +67,68 @@ const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const handleTextInputFocus = () => {
     sheetRef.current?.snapToIndex(1); // Snap to 90%
   };
+
+  const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
+  const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
+  const [refreshing, setRefreshing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const dispatch = useDispatch();
+const {postFollowData} = route?.params;
+const followUserId = postFollowData?.userId;
+const token = useSelector((state:any) => state.auth.token)
+const myUserId = useSelector((state:any) => state.auth.authData._id);
+const FollowBody = {
+  followerId: followUserId,
+  followingId: myUserId
+}
+
+  const follow = async() => {
+      const result: any = await followSomeone({ body: FollowBody, token})
+      if(result?.data?.statusCode === 200){
+        setIsFollowing(true);
+        setRefreshing(false);
+        console.log('You have successfully followed this user');
+        console.log('result');
+      } else {
+        setRefreshing(false);
+        setIsFollowing(false);
+        if(result?.error?.data){
+          Alert.alert(result?.error?.data.message);
+        }
+        if(result?.error?.error){
+          logToCrashlytics('Error! Could not follow user', result?.error?.error); 
+          Alert.alert('Something went wrong!')
+        }
+        if(result.error && result.error.status === 401){
+          onTokenExpired(dispatch);
+        }
+      }
+    }
+  
+    /* unfollow a user */
+  
+    const unfollow = async() => {
+      const result: any = await unfollowSomeone({ body: FollowBody, token })
+      if(result?.data?.statusCode === 200){
+        setIsFollowing(false);
+        setRefreshing(false);
+        console.log('You have successfully unfollowed this user');
+        console.log('result');
+      } else {
+        setRefreshing(false);
+        setIsFollowing(false);
+        if(result?.error?.data){
+          Alert.alert(result?.error?.data.message);
+        }
+        if(result?.error?.error){
+          logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
+          Alert.alert('Something went wrong!')
+        }
+        if(result.error && result.error.status === 401){
+          onTokenExpired(dispatch);
+        }
+      }
+    }
 
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.primary }]}>
