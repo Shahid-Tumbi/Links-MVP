@@ -11,7 +11,7 @@ import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 import DiscoverCurator from '@/screens/DiscoverCurator/DiscoverCurator';
 import PostDetailScreen from '@/screens/PostDetails/PostDetails';
 import UserProfile2 from '@/screens/UserProfile/UserProfile2';
-import NotificationsTwo from '@/screens/Notifications/NotificationsTwo';
+import Notifications from '@/screens/Notifications/Notifications';
 import DiscoverCuratorPost from '@/screens/DiscoverCurator/DiscoverCuratorPost';
 import CommentScreen from '@/screens/CommentScreen/CommentScreen';
 import ChangePassword from '@/screens/ChangePassword/ChangePassword';
@@ -94,7 +94,7 @@ const MainNavigator = () => {
        <Stack.Screen name="Tab" component={TabNavigator} />
        <Stack.Screen name="EditProfile" component={EditProfile} />
        <Stack.Screen name="HomeFeed" component={HomeFeed}/>      
-       <Stack.Screen name="NotificationsTwo" component={NotificationsTwo}/>      
+       <Stack.Screen name="Notifications" component={Notifications} />      
        <Stack.Screen name="PostDetailScreen" component={PostDetailScreen}/>      
        <Stack.Screen name="DiscoverCuratorPost" component={DiscoverCuratorPost}/>      
        <Stack.Screen name="UserProfile2" component={UserProfile2}/>      
