@@ -122,7 +122,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
         <View style={[Gutters.smallTMargin, Layout.fill]}>
           <View style={[Layout.row, Layout.justifyContentBetween]}>
             <Logo />
-            <NotificationIcon onPress={()=>navigation.navigate('NotificationsTwo')}/>
+            <NotificationIcon onPress={()=>navigation.navigate('Notifications')}/>
           </View>
           <ScrollView style={[Gutters.regularTMargin]} keyboardShouldPersistTaps={'handled'} nestedScrollEnabled={true} refreshControl={
             <RefreshControl
