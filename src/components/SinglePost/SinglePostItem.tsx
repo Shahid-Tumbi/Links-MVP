@@ -183,7 +183,7 @@ const SinglePostItem = ({
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
                   <Text style={styles.username}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || ''}</Text>
-                  <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>{data?.score || '0000'}</Text>
+                  {/* <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>{data?.score || '0000'}</Text> */}
                 </View>
                 <View style={[Gutters.tinyRMargin, carouselView && Layout.alignSelfEnd]}>
                   <Text style={[Fonts.textTiny]}>{moment(data?.createdAt).fromNow()}</Text>
