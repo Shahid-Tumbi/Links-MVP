@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 
-const SearchBarComponent: React.FC = ({style=[],onFocus,onBlur,onCancel}:any) => {
+const SearchBarComponent: React.FC = ({style=[],value,onFocus,onBlur,onCancel,onChange}:any) => {
   const [searchText, setSearchText] = useState<string>('');
 
   const onCancelSearch = () => {
@@ -15,8 +15,8 @@ const SearchBarComponent: React.FC = ({style=[],onFocus,onBlur,onCancel}:any) =>
     <View style={styles.container}>
       <SearchBar
         placeholder="Search"
-        onChangeText={(text) => setSearchText(text)}
-        value={searchText}
+        onChangeText={(text) => onChange(text)}
+        value={value}
         containerStyle={styles.searchBarContainer}
         inputContainerStyle={[styles.inputContainer,...style]}
         style={[styles.placeHolderContainer]}

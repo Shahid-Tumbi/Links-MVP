@@ -170,14 +170,16 @@ const SinglePostItem = ({
         <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { postData: data })}>
           <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
-              <TouchableOpacity onPress={() => navigation.navigate('UserProfile2')}>
-                <Image
-                  source={{ uri: data?.user_info?.profileImage || defaultAvatar}}
-                  style={styles.image} />
+            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data})}>
+              <Image
+                source={ {uri:data?.user_info?.profileImage || defaultAvatar} }
+                style={styles.image}
+              />
               </TouchableOpacity>
             </View>}
 
             <View style={[carouselView ? Layout.fill : Layout.flex08, Gutters.tinyVMargin, carouselView && Gutters.regularTMargin]}>
+              <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data})}>
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
                   <Text style={styles.username}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || ''}</Text>
@@ -187,6 +189,7 @@ const SinglePostItem = ({
                   <Text style={[Fonts.textTiny]}>{moment(data?.createdAt).fromNow()}</Text>
                 </View>
               </View>
+              </TouchableOpacity>
               <Text style={styles.bioDetails}>
                 {data?.description || ''}
               </Text>

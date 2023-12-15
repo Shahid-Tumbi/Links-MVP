@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Pressable, Platform, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert, Pressable } from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
@@ -23,7 +23,8 @@ import { usePostDetailMutation } from "@/services/modules/post";
 import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
-const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
+import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
+const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector(state => state.auth.authData)
   const token = useSelector(state => state.auth.token)
@@ -41,7 +42,65 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
   }, 300);
   const commentBottomSheetRef = useRef(null);
+  const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
+  const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
+  const [refreshing, setRefreshing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+const {postFollowData} = route?.params;
+const followUserId = postFollowData?.userId;
+const myUserId = useSelector((state:any) => state.auth.authData._id);
+const FollowBody = {
+  followerId: followUserId,
+  followingId: myUserId
+}
 
+  const follow = async() => {
+      const result: any = await followSomeone({ body: FollowBody, token})
+      if(result?.data?.statusCode === 200){
+        setIsFollowing(true);
+        setRefreshing(false);
+        console.log('You have successfully followed this user');
+        console.log('result');
+      } else {
+        setRefreshing(false);
+        setIsFollowing(false);
+        if(result?.error?.data){
+          Alert.alert(result?.error?.data.message);
+        }
+        if(result?.error?.error){
+          logToCrashlytics('Error! Could not follow user', result?.error?.error); 
+          Alert.alert('Something went wrong!')
+        }
+        if(result.error && result.error.status === 401){
+          onTokenExpired(dispatch);
+        }
+      }
+    }
+  
+    /* unfollow a user */
+  
+    const unfollow = async() => {
+      const result: any = await unfollowSomeone({ body: FollowBody, token })
+      if(result?.data?.statusCode === 200){
+        setIsFollowing(false);
+        setRefreshing(false);
+        console.log('You have successfully unfollowed this user');
+        console.log('result');
+      } else {
+        setRefreshing(false);
+        setIsFollowing(false);
+        if(result?.error?.data){
+          Alert.alert(result?.error?.data.message);
+        }
+        if(result?.error?.error){
+          logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
+          Alert.alert('Something went wrong!')
+        }
+        if(result.error && result.error.status === 401){
+          onTokenExpired(dispatch);
+        }
+      }
+    }
   // Method to trigger text input focus in CommentBottomSheet
   const focusTextInputInCommentBottomSheet = () => {
     if (commentBottomSheetRef?.current?.handleTextInputFocus) {

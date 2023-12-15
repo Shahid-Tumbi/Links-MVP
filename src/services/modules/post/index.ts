@@ -1,13 +1,13 @@
-import { api } from '../../api';
+import { api } from "../../api";
 
 export type User = {
   id: string;
   name: string;
   userName: string;
   email: string;
-  phoneNumber : number;
+  phoneNumber: number;
   referrer: string;
-  otp:number
+  otp: number;
 };
 export const postApi = api.injectEndpoints({
   endpoints: build => ({
@@ -116,9 +116,8 @@ export const postApi = api.injectEndpoints({
         },      
       }),
     }),
-    
-    overrideExisting: true,
-  });
+  overrideExisting: true,
+});
 
 export const {
   usePostListMutation,
