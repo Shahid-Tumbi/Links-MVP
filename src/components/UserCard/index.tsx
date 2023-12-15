@@ -1,7 +1,7 @@
 import { useTheme } from '@/hooks';
 import { Colors } from '@/theme/Variables';
 import { Follow, Following, Menu } from '@/theme/svg';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users"
@@ -26,69 +26,63 @@ const UserCard = ({
         Gutters
     } = useTheme()
   const navigation = useNavigation();
+  const authData = useSelector((state:any)=> state.auth.authData)
 
   
-  //   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
-  //   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
-  //   const [refreshing, setRefreshing] = useState(false);
-  //   const [isFollowing, setIsFollowing] = useState(false);
-  //   const dispatch = useDispatch();
-  // const {postData} = route?.params;
-  // const followUserId = postData?.userId;
-  // const token = useSelector((state:any) => state.auth.token)
-  // const myUserId = useSelector((state:any) => state.auth.authData._id);
-  // const FollowBody = {
-  //   followerId: followUserId,
-  //   followingId: myUserId
-  // }
+    const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
+    const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
+    const [refreshing, setRefreshing] = useState(false);
+    const dispatch = useDispatch();
+    const token = useSelector((state:any) => state.auth.token)
+    const myUserId = useSelector((state:any) => state.auth.authData._id);
+    const FollowBody = {
+        followerId: myUserId,
+        followingId: id
+    }
 
-  //   const follow = async() => {
-  //       const result: any = await followSomeone({ body: FollowBody, token})
-  //       if(result?.data?.statusCode === 200){
-  //         setIsFollowing(true);
-  //         setRefreshing(false);
-  //         console.log('You have successfully followed this user');
-  //         console.log('result');
-  //       } else {
-  //         setRefreshing(false);
-  //         setIsFollowing(false);
-  //         if(result?.error?.data){
-  //           Alert.alert(result?.error?.data.message);
-  //         }
-  //         if(result?.error?.error){
-  //           logToCrashlytics('Error! Could not follow user', result?.error?.error); 
-  //           Alert.alert('Something went wrong!')
-  //         }
-  //         if(result.error && result.error.status === 401){
-  //           onTokenExpired(dispatch);
-  //         }
-  //       }
-  //     }
+    const follow = async() => {
+        
+        const result: any = await followSomeone({ body: FollowBody, token})
+        if(result?.data?.statusCode === 200){
+          setRefreshing(false);
+          setFollowing(true)
+        } else {
+          setRefreshing(false);
+          if(result?.error?.data){
+            Alert.alert(result?.error?.data.message);
+          }
+          if(result?.error?.error){
+            logToCrashlytics('Error! Could not follow user', result?.error?.error); 
+            Alert.alert('Something went wrong!')
+          }
+          if(result?.error?.error && result.error.status === 401){
+            onTokenExpired(dispatch);
+          }
+        }
+      }
     
-  //     /* unfollow a user */
+      /* unfollow a user */
     
-  //     const unfollow = async() => {
-  //       const result: any = await unfollowSomeone({ body: FollowBody, token })
-  //       if(result?.data?.statusCode === 200){
-  //         setIsFollowing(false);
-  //         setRefreshing(false);
-  //         console.log('You have successfully unfollowed this user');
-  //         console.log('result');
-  //       } else {
-  //         setRefreshing(false);
-  //         setIsFollowing(false);
-  //         if(result?.error?.data){
-  //           Alert.alert(result?.error?.data.message);
-  //         }
-  //         if(result?.error?.error){
-  //           logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
-  //           Alert.alert('Something went wrong!')
-  //         }
-  //         if(result.error && result.error.status === 401){
-  //           onTokenExpired(dispatch);
-  //         }
-  //       }
-  //     }
+      const unfollow = async() => {
+        
+        const result: any = await unfollowSomeone({ body: FollowBody, token })
+        if(result?.data?.statusCode === 200){
+          setRefreshing(false);
+          setFollowing(false)
+        } else {
+          setRefreshing(false);
+          if(result?.error?.data){
+            Alert.alert(result?.error?.data.message);
+          }
+          if(result?.error?.error){
+            logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
+            Alert.alert('Something went wrong!')
+          }
+          if(result?.error?.error && result.error.status === 401){
+            onTokenExpired(dispatch);
+          }
+        }
+      }
 
   const onPress = () => {
     
@@ -109,9 +103,10 @@ const UserCard = ({
                 </TouchableOpacity>
             </View>
             <View style={[Layout.flex02,Layout.row,Layout.justifyContentEnd]}>
-                <TouchableOpacity style={styles.followButton} onPress={() => setFollowing(!following)}>
-                    {following ? <Following /> : <Follow />}
-                </TouchableOpacity>
+                {authData?._id !== id && 
+                <TouchableOpacity style={styles.followButton} >
+                    {following ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
+                </TouchableOpacity> }
                 {menu ?
                 <TouchableOpacity style={styles.followButton} >
                     <Menu />    

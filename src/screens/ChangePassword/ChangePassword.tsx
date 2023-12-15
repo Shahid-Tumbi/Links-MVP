@@ -42,13 +42,14 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
         logToCrashlytics('On Change password api call')
         const userData: any = {
             id: authData?._id,
-            old_password:password,
+            old_password:currentPassword,
             new_password:newPassword
         };
         const result: any = await changePassword({userData,token});
         if (result?.data?.statusCode === 200) {
             logToCrashlytics('On change password api success')
             Alert.alert('Updated Successfully')
+            navigation.goBack()
             } else {
                 if (result?.error?.data) {
                     Alert.alert(result?.error?.data?.message)

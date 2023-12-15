@@ -20,7 +20,7 @@ import useTheme from "@/hooks/useTheme";
 import { Colors } from "@/theme/Variables";
 import { Constants } from "@/theme/Constants";
 import { SheetManager } from "react-native-actions-sheet";
-import { debounce } from "lodash";
+import { capitalize, debounce } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
@@ -182,7 +182,7 @@ const SinglePostItem = ({
               <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId})}>
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
-                  <Text style={styles.username}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || ''}</Text>
+                  <Text style={styles.username}>{capitalize(data?.user_info?.name) || ''}</Text>
                   {/* <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>{data?.score || '0000'}</Text> */}
                 </View>
                 <View style={[Gutters.tinyRMargin, carouselView && Layout.alignSelfEnd]}>
