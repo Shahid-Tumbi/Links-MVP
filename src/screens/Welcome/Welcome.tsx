@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Linking } from "react-native";
 import { Logo, ProceedButton } from "@/theme/svg";
 import { useTheme } from "@/hooks";
 import { useSelector } from "react-redux";
 import { ApplicationScreenProps } from "types/navigation";
+import { Constants } from "@/theme/Constants";
 
 const Welcome = ({ navigation, onPress }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -22,40 +23,48 @@ const Welcome = ({ navigation, onPress }: ApplicationScreenProps) => {
 
         <View style={styles.rulesBox}>
           <View style={[Layout.row]}>
-          <Text style={styles.bullet}>{"\u2022"}</Text>
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
+            <Text style={styles.bullet}>{"\u2022"}</Text>
+            <Text style={styles.text}>
+              Respect and privacy are fundamental in all interactions.
+            </Text>
           </View>
           <View style={[Layout.row]}>
-          <Text style={styles.bullet}>{"\u2022"}</Text>
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
+            <Text style={styles.bullet}>{"\u2022"}</Text>
+            <Text style={styles.text}>
+              Share valuable, legal content; avoid spam and self-promotion.
+            </Text>
           </View>
           <View style={[Layout.row]}>
-          <Text style={styles.bullet}>{"\u2022"}</Text>
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
+            <Text style={styles.bullet}>{"\u2022"}</Text>
+            <Text style={styles.text}>
+              Engage thoughtfully; avoid personal attacks and harassment.
+            </Text>
           </View>
           <View style={[Layout.row]}>
-          <Text style={styles.bullet}>{"\u2022"}</Text>
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
+            <Text style={styles.bullet}>{"\u2022"}</Text>
+            <Text style={styles.text}>
+              Embrace and celebrate diversity; no discrimination tolerated.
+            </Text>
           </View>
           <View style={[Layout.row]}>
-          <Text style={styles.bullet}>{"\u2022"}</Text>
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
+            <Text style={styles.bullet}>{"\u2022"}</Text>
+            <Text style={styles.text}>
+              Uphold authenticity, transparency, and responsible referral
+              practices.
+            </Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.proceedContainer}>
-        <Text style={styles.proceedText}>PROCEED</Text>
+      <View style={[Layout.row, Layout.alignItemsCenter, Gutters.largeTMargin]}>
+        <Text
+          style={[Fonts.textTiny]}
+          onPress={() => Linking.openURL(Constants.GUIDELINES_URL)}
+        >
+          {Constants.readGuidelines}
+        </Text>
+        <View style={{ flex: 1 }} />
+        <Text style={[styles.proceedText]}>PROCEED</Text>
         <ProceedButton
           style={styles.proceedButton}
           onPress={() => onPress("HomeFeed")}
@@ -114,13 +123,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    marginTop: 40
+    marginTop: 40,
   },
   proceedText: {
     color: "white",
     fontSize: 18,
     marginRight: 10,
-    
   },
   proceedButton: {},
 });
