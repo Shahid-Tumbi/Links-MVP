@@ -105,7 +105,7 @@ const UserCard = ({
             <View style={[Layout.flex08, Layout.alignItemsStart]}>
                 <TouchableOpacity onPress={onPress} >
                 <Text style={[styles.userName, Fonts.textWhite]}>{userName}</Text>
-                <Text style={styles.score}>{score}</Text>
+                {/* <Text style={styles.score}>{score}</Text> */}
                 </TouchableOpacity>
             </View>
             <View style={[Layout.flex02,Layout.row,Layout.justifyContentEnd]}>

@@ -58,5 +58,7 @@ export const Constants = {
     postLink:'Post Link',
     characters:'60 characters',
     logout:'Logout',
-    DEV_URL:'https://dev-api.wtfnewsapp.com'
+    DEV_URL:'https://dev-api.wtfnewsapp.com',
+    GUIDELINES_URL: 'https://storage.googleapis.com/communityguidelines/CommunityGuidelines.pdf',
+    readGuidelines: 'read the full guidelines here'
 }

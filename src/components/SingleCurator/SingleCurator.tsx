@@ -13,9 +13,9 @@ const SingleCurator = ({data}: any) => {
                 <View>
                 <Text style={styles.userName}>{data?.name.charAt(0).toUpperCase() + data?.name.slice(1) || ''}</Text>
                 </View>
-                <View>
+                {/* <View>
                 <Text style={styles.count}>0000</Text>
-                </View>
+                </View> */}
             </View>
         </Pressable>
         </View>

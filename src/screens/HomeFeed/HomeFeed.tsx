@@ -141,7 +141,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
                 Gutters.smallVMargin,
               ]}
             >
-              Top Feed
+              Your Feed
             </Text>
             <View  style={[Gutters.regularBMargin,{ height: Dimensions.get('window').height / 1.5}]}>
               <FlashList

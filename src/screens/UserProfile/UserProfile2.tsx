@@ -236,10 +236,10 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             <View style={styles.nameContainer}>
               <Text style={styles.name}>{userDetail?.name || ''}</Text>
             </View>
-            <View style={styles.infoContainer}>
+            {/* <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Credibility Score:</Text>
               <Text style={styles.infoText}>{userDetail?.score || '0000'}</Text>
-            </View>
+            </View> */}
             <View style={styles.stats}>
               <View style={styles.stat}>
                 <Text style={styles.statValue}>{userDetail?.totalFollowers || '0'}</Text>
