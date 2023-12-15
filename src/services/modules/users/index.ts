@@ -173,6 +173,16 @@ export const userApi = api.injectEndpoints({
         };
       },
     }),
+    changePassword: build.mutation<User, Partial<User>>({
+      query: ({userData,token}:any) => ({
+        url: `/users/change-password`,
+        method: "POST",
+        body: userData,
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      }),
+    }),
   }),
 
   overrideExisting: true,
@@ -193,5 +203,6 @@ export const {
   useGetFollowingListMutation,
   useUnfollowSomeoneMutation,
   useUserDetailMutation,
-  useGetCuratorSearchListMutation
+  useGetCuratorSearchListMutation,
+  useChangePasswordMutation
 } = userApi;

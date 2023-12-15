@@ -150,6 +150,7 @@ const FollowBody = {
             userName={capitalize(postData?.user_info?.name || userName)}
             score={postData?.user_info?.score || score}
             menu={true}
+            id={postData?.userId}
           />
         </View>
         <View style={[Layout.flex08, globalStyles.screenMargin]}>

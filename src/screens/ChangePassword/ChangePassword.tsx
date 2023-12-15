@@ -6,8 +6,8 @@ import { ApplicationScreenProps } from 'types/navigation';
 import { BackButton, Logo, RightArrow, True } from '@/theme/svg';
 import { globalStyles } from '@/theme/GlobalStyles';
 import { Loader, PasswordInput } from '@/components';
-import { useDispatch } from 'react-redux';
-import { useResetPasswordMutation } from '@/services/modules/users';
+import { useDispatch, useSelector } from 'react-redux';
+import { useChangePasswordMutation, useResetPasswordMutation } from '@/services/modules/users';
 import { logToCrashlytics, validatePassword } from '@/theme/Common';
 import { setAuthData, setToken } from '@/store/User';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -30,45 +30,35 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
     const [passVisible, setPassVisible] = useState(false)
     const [buttonError, setButtonError] = useState(false)
     const dispatch = useDispatch();
-    const [resetPassword, { isLoading }] = useResetPasswordMutation()
+    const [changePassword, { isLoading }] = useChangePasswordMutation()
+    const authData = useSelector((state:any)=>state.auth.authData)
+    const token = useSelector((state:any)=>state.auth.token)
+
 
     const makeVisible = () => {
         setPassVisible(!passVisible);
     };
     const doResetPassword = async () => {
-        logToCrashlytics('On reset password api call')
+        logToCrashlytics('On Change password api call')
         const userData: any = {
-            token: route.params.token,
-            password: newPassword
+            id: authData?._id,
+            old_password:password,
+            new_password:newPassword
         };
-        const result: any = await resetPassword(userData);
+        const result: any = await changePassword({userData,token});
         if (result?.data?.statusCode === 200) {
-            logToCrashlytics('reset password api call success')
-            dispatch(setToken(result?.data?.result?.token))
-            dispatch(setAuthData(result?.data?.result?.profile))
-            if (result?.data?.result?.profile.isPhoneVerified === false) {
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'OtpScreen' }]})
-                } else {
-                    await Promise.all([
-                        crashlytics().setUserId(result?.data?.result?.profile?._id),
-                        crashlytics().setAttributes({
-                          email: result?.data?.result?.profile?.email,
-                          username: result?.data?.result?.profile?.userName,
-                        }),
-                      ]);
-                    dispatch(verifiedUser(true))
-                }
+            logToCrashlytics('On change password api success')
+            Alert.alert('Updated Successfully')
             } else {
                 if (result?.error?.data) {
                     Alert.alert(result?.error?.data?.message)
                     setButtonError(true)
                 }
                 if (result?.error?.error) {
-                    logToCrashlytics('reset password api call error',result?.error?.error)
+                    logToCrashlytics('change password api call error',result?.error?.error)
                     Alert.alert('Something went wrong !!')
-                }        }
+                }        
+            }
     }
     const getConfirm = () => {
         logToCrashlytics('on confirm reset password')
@@ -97,7 +87,7 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
             setButtonError(true)
         }
         if (isValid) {
-            // doResetPassword()
+            doResetPassword()
         }
     }
   return (

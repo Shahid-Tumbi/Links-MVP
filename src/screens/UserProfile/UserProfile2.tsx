@@ -170,7 +170,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
         logToCrashlytics("Error! Could not follow user", result?.error?.error);
         Alert.alert("Something went wrong!");
       }
-      if (result.error && result.error.status === 401) {
+      if (result?.error?.error && result.error.status === 401) {
         onTokenExpired(dispatch);
       }
     }
@@ -198,7 +198,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
         );
         Alert.alert("Something went wrong!");
       }
-      if (result.error && result.error.status === 401) {
+      if (result?.error?.error && result.error.status === 401) {
         onTokenExpired(dispatch);
       }
     }

@@ -170,7 +170,7 @@ const SinglePostItem = ({
         <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { postData: data })}>
           <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
-            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data})}>
+            <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId})}>
               <Image
                 source={ {uri:data?.user_info?.profileImage || defaultAvatar} }
                 style={styles.image}
@@ -179,7 +179,7 @@ const SinglePostItem = ({
             </View>}
 
             <View style={[carouselView ? Layout.fill : Layout.flex08, Gutters.tinyVMargin, carouselView && Gutters.regularTMargin]}>
-              <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {postData: data})}>
+              <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId})}>
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
                   <Text style={styles.username}>{data?.user_info?.name.charAt(0).toUpperCase() + data?.user_info?.name.slice(1) || ''}</Text>
