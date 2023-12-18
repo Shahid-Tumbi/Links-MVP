@@ -1,5 +1,6 @@
 import { defaultAvatar } from "@/theme/Common";
 import { useNavigation } from "@react-navigation/native";
+import { capitalize } from "lodash";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 
@@ -11,7 +12,7 @@ const SingleCurator = ({data}: any) => {
             <Image source={{uri:data?.profileImage || defaultAvatar }} style={styles.userImage} />
             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View>
-                <Text style={styles.userName}>{data?.name.charAt(0).toUpperCase() + data?.name.slice(1) || ''}</Text>
+                <Text style={styles.userName}>{capitalize(data?.name) || ''}</Text>
                 </View>
                 {/* <View>
                 <Text style={styles.count}>0000</Text>

@@ -39,8 +39,6 @@ const CuratorList = () => {
   const getCuratorListMethod = async(page: any) => {
     setPage(page)
     const result: any = await getCuratorList({token})
-    console.log('making get curator call');
-    console.log(result);
     if(result?.data?.statusCode === 200){
       setRefreshing(false);
       logToCrashlytics('fetching curator list')
@@ -143,7 +141,7 @@ const CuratorList = () => {
           setFocused(false)}} onChange={(e) => setSearchQuery(e)}/>
       </View>
       <View style={[Gutters.regularHMargin,Layout.fill]}>
-        {focused ? <View>
+        {focused && searchQuery ? <View>
           <View style={[Layout.row,Layout.scrollSpaceBetween]}>
             <Text style={[Fonts.textRegular, Fonts.textBold, Fonts.textWhite]}>Recent</Text>
             <Text style={[Fonts.textRegular, Fonts.textBold,{color:Colors.blue}]}>See All</Text>

@@ -7,8 +7,9 @@ import { useNotificationListMutation } from '@/services/modules/notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { logToCrashlytics, onTokenExpired } from '@/theme/Common'
 import { ActivityIndicator } from 'react-native-paper'
-import { Colors } from '@/theme/Variables'
 import { ApplicationScreenProps } from 'types/navigation'
+import { Colors } from '@/theme/Variables'
+
 
 const Notifications = ({navigation, route}: ApplicationScreenProps) => {
   const {
@@ -25,7 +26,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
   const [limit, setLimit] = useState(15)
   const [notificationList, setNotificationList] = useState([])
   const [isRefresh, setIsRefresh] = useState(false)
-
+  const [empty, setEmpty] = useState(false)
   const getNotifiList = async (page: number) => {
     setPage(page)
     let body = {
@@ -41,8 +42,12 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
       const notifications = result?.data?.result?.rows || [];
       const categorizedNotifications = categorizeNotifications(notifications);
       
-      if (page === 1) {
+      if (page === 1) {        
+        if(notifications.length == 0 ){
+          setEmpty(true)
+        } else {
         setNotificationList(categorizedNotifications);
+        }
       } else {
         const mergedNotifications = [...notificationList];
       
@@ -77,9 +82,9 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
     getNotifiList(1)
   }, [])
   const onEndreach = () => {
+    
     getNotifiList(page + 1)
   }
-  
   const categorizeNotifications = (notificationList:any) => {
     const currentTime = new Date().getTime();
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
@@ -140,26 +145,29 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
           })}/>
           <FocusedNotificaionIcon />
         </View>
-        <SafeAreaView style={[Layout.fill]}>
+        <SafeAreaView style={[Layout.flex09]}>
+          { empty ? 
+          <View style={[Layout.center,Layout.flex09]}>
+            <Text style={[Fonts.textLarge,Fonts.textWhite]}>No new notification</Text>
+          </View> :
           <SectionList
             sections={notificationList}
             keyExtractor={(item, index) => item + index}
+            style={[Layout.fill]}
             renderItem={renderItem}
             onEndReached={({ distanceFromEnd })=>{
-              if(distanceFromEnd >= 0) {
                 onEndreach()
-              }
               }}
             onEndReachedThreshold={0.4}
             onRefresh={() =>{ 
               setIsRefresh(true)
               getNotifiList(1)}}
             refreshing={isRefresh}
-            renderSectionHeader={({section: {title}}) => (<View style={styles.New}>
+            renderSectionHeader={({section: {data,title}}) => (data.length > 0 && <View style={styles.New}>              
               <Text style={styles.NewText}>{title}</Text>
             </View>)}
             ListEmptyComponent={()=>isLoading ? <ActivityIndicator size={25} color={Colors.blue}/> :<Text>No new notification</Text>}
-          />
+          /> }
         </SafeAreaView>
     </View>
   )
@@ -172,6 +180,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex:1,
+    height :'100%',
     padding: 20,
     borderBottomWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.4)',

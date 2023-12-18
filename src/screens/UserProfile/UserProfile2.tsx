@@ -28,6 +28,7 @@ import {
   useUserDetailMutation,
 } from "@/services/modules/users";
 import { Loader } from "@/components";
+import { capitalize } from "lodash";
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -54,21 +55,15 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { id } = route?.params;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
   const FollowBody = {
-    followerId: id,
-    followingId: myUserId,
+    followerId: myUserId,
+    followingId: id,
   };
-  const ItemSeparator = () => <View style={styles.separator} />;
-  const renderProfileDynamic = ({ item, index }: any) => {
-    return (
-      <ProfileView data={item} number={index + 1} navigation={navigation} />
-    );
-  };
+ 
   const onSubmit = () => {
     setFollow(!Follow);
   };
   const getUserDetail =  async () => {
     const result: any = await UserDetail({id,token});
-    console.log(result);
     if (result?.data?.statusCode === 200) {
       setRefreshing(false);
       logToCrashlytics("fetching requested user posts");
@@ -114,7 +109,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
         ]);
       }
     } else {
-      console.log("in else block of getUserWisePostList");
       setRefreshing(false);
       if (result?.error?.data) {
         Alert.alert(result?.error?.data.message);
@@ -137,7 +131,9 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   }, []);
 
   const onComplete = () => {
-    getUserWisePostListMethod(page + 1);
+    if(userPostList.length >= limit){
+      getUserWisePostListMethod(page + 1);
+    }
   };
 
   const refreshFunction = () => {
@@ -158,8 +154,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     if (result?.data?.statusCode === 200) {
       setIsFollowing(true);
       setRefreshing(false);
-      console.log("You have successfully followed this user");
-      console.log("result");
     } else {
       setRefreshing(false);
       setIsFollowing(false);
@@ -183,8 +177,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     if (result?.data?.statusCode === 200) {
       setIsFollowing(false);
       setRefreshing(false);
-      console.log("You have successfully unfollowed this user");
-      console.log("result");
     } else {
       setRefreshing(false);
       setIsFollowing(false);
@@ -203,25 +195,31 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       }
     }
   };
-
+  const ItemSeparator = () => <View style={styles.separator} />;
+  const renderProfileDynamic = ({ item, index }: any) => {
+    return (
+      <ProfileView data={item} number={index + 1} navigation={navigation} />
+    );
+  };
   return (
     <View style={[globalStyles.container]}>
-      {isUserLoading ? <Loader state={isUserLoading} /> : null}
       <ScrollView>
         <View style={[globalStyles.screenMargin]}>
+      {isUserLoading ? <Loader state={isUserLoading} /> : null}
           <View style={[globalStyles.header]}>
             <BackButton
               style={[Gutters.tinyTMargin]}
               onPress={() => navigation.goBack()}
             />
+            {authData?._id !== id ?
             <TouchableOpacity onPress={() => onSubmit()}>
               {Follow ? (
-                <FollowIcon onPress={() => follow()} />
-              ) : (
                 <FollowedIcon onPress={() => unfollow()} />
+                ) : (
+                <FollowIcon onPress={() => follow()} />
               )}
               {/*isFollowing ? <FollowIcon> : <FollowedIcon /> */}
-            </TouchableOpacity>
+            </TouchableOpacity> : null }
           </View>
           <View style={styles.body}>
             <View>
@@ -234,7 +232,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
               <Text style={styles.referredBy}>Referred by Nikhil Kamath</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>{userDetail?.name || ''}</Text>
+              <Text style={styles.name}>{capitalize(userDetail?.name) || ''}</Text>
             </View>
             {/* <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>Credibility Score:</Text>
@@ -279,7 +277,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
               />
             }
             ListEmptyComponent={() =>
-              userPostList.length > 1 ? (
+              isLoading ? (
                 <ActivityIndicator size={25} color={Colors.blue} />
               ) : (
                 <Text style={[Fonts.textLarge, Fonts.textWhite]}>
