@@ -113,37 +113,39 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
     getPostList(2)
   }
   const onEndreach = () => {
-    getPostList(page+1)
+    if(topfeedList.length > limit - 1 ){
+      getPostList(page+1)
+    }
+  }
+  const ListHeaderComponent = () => {
+    return (
+      <>
+       { carouselList.length > 0 && <><Text style={styles.textStyle}>OUR TOP 10 LINKS</Text><FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}>
+          <CarouselMain data={carouselList} refreshing={refreshing} />
+        </FocusedInputContext.Provider><Text
+          style={[
+            Fonts.textLarge,
+            Fonts.textBold,
+            Fonts.textWhite,
+            Gutters.smallBMargin,
+          ]}
+        >
+            Your Feed
+          </Text></>
+      }
+      </>
+      )
   }
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
       {welcomeScreen ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
         <View style={[Gutters.smallTMargin, Layout.fill]}>
-          <View style={[Layout.row, Layout.justifyContentBetween]}>
+          <View style={[Layout.row, Layout.flex01,Layout.justifyContentBetween]}>
             <Logo />
             <NotificationIcon onPress={()=>navigation.navigate('Notifications')}/>
           </View>
-          <ScrollView style={[Gutters.regularTMargin]} keyboardShouldPersistTaps={'handled'} nestedScrollEnabled={true} refreshControl={
-            <RefreshControl
-            refreshing={refreshing}
-            onRefresh={()=>refereshFun()}
-          />}>
-            <Text style={styles.textStyle}>OUR TOP 10 LINKS</Text>
-            <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}>
-            <CarouselMain data={carouselList} />
-            </FocusedInputContext.Provider>
-            <Text
-              style={[
-                Fonts.textLarge,
-                Fonts.textBold,
-                Fonts.textWhite,
-                Gutters.smallVMargin,
-              ]}
-            >
-              Your Feed
-            </Text>
-            <View  style={[Gutters.regularBMargin,{ height: Dimensions.get('window').height / 1.5}]}>
+            <View  style={[Layout.flex09]}>
               <FlashList
                 data={topfeedList}
                 keyExtractor={(item, index) => index.toString()}
@@ -152,12 +154,14 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
                 onEndReached={onEndreach}
                 estimatedItemSize={50}
                 onEndReachedThreshold={0.4}
+                refreshing={refreshing}
+                onRefresh={()=>refereshFun()}
                 nestedScrollEnabled={true}
+                ListHeaderComponent={()=><ListHeaderComponent />  }
                 ListEmptyComponent={()=>isLoading ? <ActivityIndicator size={25} color={Colors.blue}  />:<Text style={[Fonts.textLarge,Fonts.textWhite]}>No data found </Text>}
                 
               />
               </View>
-          </ScrollView>
         </View>
       </View> }
 

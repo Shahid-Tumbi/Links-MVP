@@ -159,9 +159,11 @@ const SinglePostItem = ({
                 <Text style={carouselView ? styles.carouselBanner : styles.bannerText}>{data?.title || ''}</Text>
               </View>
             </ImageBackground>
-            {carouselView && <Image
+            {carouselView && <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId})}>
+              <Image
               source={{ uri: data?.user_info?.profileImage || defaultAvatar}}
-              style={styles.carouselProfile} />}
+              style={styles.carouselProfile} />
+              </TouchableOpacity>}
             {carouselView && <Text style={[styles.carouselNumbers]}>{number}</Text>}
           </>
         </TouchableWithoutFeedback>

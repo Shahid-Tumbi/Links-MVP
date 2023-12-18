@@ -8,8 +8,9 @@ const SingleCurator = ({data}: any) => {
     const navigation = useNavigation()
     return (
         <View style={styles.container}>
-        <Pressable style={styles.header} onPress={()=>navigation.navigate('UserProfile2', {id: data._id})}>
+        <Pressable style={styles.header} onPress={()=>navigation.navigate('UserProfile2', {id: data._id,isFollowed:data?.isFollowed})}>
             <Image source={{uri:data?.profileImage || defaultAvatar }} style={styles.userImage} />
+            <View style={styles.userContain}></View>
             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View>
                 <Text style={styles.userName}>{capitalize(data?.name) || ''}</Text>
@@ -37,7 +38,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         padding: 10,
-        backgroundColor: "gray",
+        marginVertical:10,
+        backgroundColor: "rgba(217, 217, 217, 0.2)",
         borderRadius: 10,
     },
     userName: {
@@ -47,10 +49,18 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: 'white',
     },
-    userImage: {
-        width: 50,
-        height: 50,
+    userContain: {
+        width: 70,
+        height: 40,
         borderRadius: 25,
+        marginRight: 10,
+    },
+    userImage: {
+        width: 70,
+        height: 70,
+        position:'absolute',
+        marginStart:10,
+        borderRadius: 45,
         marginRight: 10,
     },
     count: {

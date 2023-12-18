@@ -64,7 +64,7 @@ const TabNavigator = () => {
       {/* <Tab.Screen name="Message" component={MessageScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <MaterialCommunityIcons name={ 'comment-outline' } color={focused ? blueColor : color} size={size} />
           }}} /> */}
-      <Tab.Screen name="Profile" component={ProfileScreen}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
+      <Tab.Screen name="Profile" component={EditProfile}  options={{headerShown: false, tabBarShowLabel:false,tabBarIcon: ({ focused }) => {
            return <MaterialCommunityIcons name={ 'account-circle-outline' } color={focused ? blueColor : color} size={size} />
           }}} />
 

@@ -376,8 +376,8 @@ export const BellIcon = (props: SvgProps) => (
 )
 export const Follow = (props: SvgProps) => (
   <Svg
-    width={18}
-    height={17}
+    width={22}
+    height={22}
     fill="none"
     {...props}
   >
@@ -390,7 +390,7 @@ export const Follow = (props: SvgProps) => (
 export const Following = (props: SvgProps) => (
   <Svg
     width={22}
-    height={17}
+    height={22}
     fill="none"
     {...props}
   >

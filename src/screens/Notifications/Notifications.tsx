@@ -21,7 +21,7 @@ const Notifications = () => {
   const dispatch = useDispatch()
   const [getList, { isLoading }] = useNotificationListMutation()
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(15)
+  const [limit, setLimit] = useState(10)
   const [notificationList, setNotificationList] = useState([])
   const [isRefresh, setIsRefresh] = useState(false)
   const [empty, setEmpty] = useState(false)
@@ -80,8 +80,9 @@ const Notifications = () => {
     getNotifiList(1)
   }, [])
   const onEndreach = () => {
-    
-    getNotifiList(page + 1)
+    if(notificationList.length > 0){    
+      getNotifiList(page + 1)
+    }
   }
   const categorizeNotifications = (notificationList:any) => {
     const currentTime = new Date().getTime();
@@ -141,10 +142,6 @@ const Notifications = () => {
           <FocusedNotificaionIcon />
         </View>
         <SafeAreaView style={[Layout.flex09]}>
-          { empty ? 
-          <View style={[Layout.center,Layout.flex09]}>
-            <Text style={[Fonts.textLarge,Fonts.textWhite]}>No new notification</Text>
-          </View> :
           <SectionList
             sections={notificationList}
             keyExtractor={(item, index) => item + index}
@@ -161,8 +158,13 @@ const Notifications = () => {
             renderSectionHeader={({section: {data,title}}) => (data.length > 0 && <View style={styles.New}>              
               <Text style={styles.NewText}>{title}</Text>
             </View>)}
-            ListEmptyComponent={()=>isLoading ? <ActivityIndicator size={25} color={Colors.blue}/> :<Text>No new notification</Text>}
-          /> }
+            ListEmptyComponent={()=> 
+              isLoading && !empty ? 
+              <ActivityIndicator size={25} color={Colors.blue}/> 
+              :
+                <Text style={[Fonts.textCenter,Fonts.textLarge,Fonts.textWhite]}>No new notification</Text>
+              }
+          /> 
         </SafeAreaView>
     </View>
   )

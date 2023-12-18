@@ -32,7 +32,7 @@ import { capitalize } from "lodash";
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
-  const [Follow, setFollow] = useState(false);
+  const [Follow, setFollow] = useState(route?.params?.isFollowed || false);
   const [getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
