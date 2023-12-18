@@ -134,7 +134,10 @@ const CuratorList = () => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={[Layout.row, Gutters.regularMargin]}>
-        <Logo style={[Gutters.tinyTMargin]} />
+        <Logo style={[Gutters.tinyTMargin]} onPress={() => navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      })}/>
         <SearchBarComponent value={searchQuery} style={[Gutters.tinyLMargin]} onFocus={handleFocused} onBlur={()=>setFocused(false)} onCancel={()=>{
           setSearchQuery('') 
           setFocused(false)}} onChange={(e) => setSearchQuery(e)}/>
