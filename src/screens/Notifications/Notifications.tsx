@@ -7,9 +7,11 @@ import { useNotificationListMutation } from '@/services/modules/notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { logToCrashlytics, onTokenExpired } from '@/theme/Common'
 import { ActivityIndicator } from 'react-native-paper'
-import { Colors, FontSize } from '@/theme/Variables'
+import { ApplicationScreenProps } from 'types/navigation'
+import { Colors } from '@/theme/Variables'
 
-const Notifications = () => {
+
+const Notifications = ({navigation, route}: ApplicationScreenProps) => {
   const {
     Layout,
     Fonts,
@@ -137,7 +139,10 @@ const Notifications = () => {
   return (
     <View style={styles.root}>
         <View style={[Layout.row, Layout.justifyContentBetween, globalStyles.screenMargin,Gutters.regularTMargin, Layout.flex01]}>
-          <Logo />
+          <Logo onPress={() => navigation.reset({
+            index: 0,
+            routes: [{name: 'Main'}]
+          })}/>
           <FocusedNotificaionIcon />
         </View>
         <SafeAreaView style={[Layout.flex09]}>
