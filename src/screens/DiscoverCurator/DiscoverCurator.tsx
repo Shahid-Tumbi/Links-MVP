@@ -22,7 +22,7 @@ const CuratorList = () => {
   } = useTheme();
 
   const [getCuratorList, setCuratorList] = useGetCuratorListMutation();
-  const [getSearchList] = useGetCuratorSearchListMutation();
+  const [getSearchList,{searchLoader}] = useGetCuratorSearchListMutation();
   const authData = useSelector((state:any) => state.auth.authData)
   const token = useSelector((state:any) => state.auth.token)
   const [refreshing, setRefreshing] = useState(false);
@@ -68,23 +68,27 @@ const CuratorList = () => {
     getCuratorListMethod(1);
   }, []);
   useEffect(() => {
-   getSearchCurators(searchQuery)
+   getSearchCurators(searchQuery,1)
    
   }, [searchQuery]);
 
   const refreshFunction = () => {
     setRefreshing(true);
-    setDisplayCuratorList([]); //
+    setDisplayCuratorList([]);
+    setFilteredResults([]) //
     getCuratorListMethod(1);
+    getSearchCurators(searchQuery,1)
   }
 
   const onComplete = () => {
-    getCuratorListMethod(page + 1);
+    if(filteredResults.length > limit - 1){
+      getSearchCurators(searchQuery,page + 1);
+    }
   }
  
 
   const renderItem = ({ item }) => <SingleCurator {...item} />;
-  const renderFocusedItem = ({ item }) => <UserCard userAvatar={item?.profileImage || defaultAvatar} userName={item.name} score={item.count} menu={false} id={item?._id}/>;
+  const renderFocusedItem = ({ item }) => <UserCard userAvatar={item?.profileImage || defaultAvatar} userName={item.name} score={item.count} menu={false} id={item?._id} isFollowed={item?.isFollowed}/>;
   const renderProfileDynamic = ({item, index}: any) => <SingleCurator data={item} number={index+1} navigation={navigation} />;
 
   const ItemSeparator = () => <View style={styles.separator} />;
@@ -93,18 +97,20 @@ const CuratorList = () => {
     curator?.result?.rows[0]?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getSearchCurators =  async (searchQuery) => {
-    if(searchQuery){
-    setFocused(true)
+  const getSearchCurators =  async (searchQuery,page) => {
+    if(searchQuery?.trim().length > 0 ){
+      
+      setFocused(true)
+      setSearcgPage(page)
     const result: any = await getSearchList({string:searchQuery.toString(),token,page:searchpage,limit})
     if(result?.data?.statusCode === 200){
       setRefreshing(false);
       logToCrashlytics('fetching curator list')
-      // if(page === 1){
+      if(page === 1){
         setFilteredResults(result?.data?.result?.rows)
-      // } else {
-        // setFilteredResults(prevState => [...prevState, ...result?.data?.result?.rows]);
-      // }
+      } else {
+        setFilteredResults(prevState => [...prevState, ...result?.data?.result?.rows]);
+      }
       
     }else {
       setRefreshing(false);
@@ -126,9 +132,6 @@ const CuratorList = () => {
   const handleFocused = () => {
     // setFocused(true)
   }
-
- 
-  
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={[Layout.row, Gutters.regularMargin]}>
@@ -153,15 +156,11 @@ const CuratorList = () => {
               renderItem={renderFocusedItem}
               ItemSeparatorComponent={ItemSeparator}
               nestedScrollEnabled
-              // onEndReached={onComplete}
+              onEndReached={onComplete}
               onEndReachedThreshold={0.1}
-              ListEmptyComponent={ () => filteredCurators.length > 1 ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textSmall, Fonts.textWhite]}>No data found</Text>}
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={refreshing}
-              //     onRefresh={refreshFunction}
-              //   />
-              // }
+              ListEmptyComponent={ () => searchLoader ? <ActivityIndicator size={25} color={Colors.blue} /> : <Text style={[Fonts.textSmall, Fonts.textWhite]}>No data found</Text>}
+              refreshing={refreshing}
+              onRefresh={refreshFunction}
               
             />
           

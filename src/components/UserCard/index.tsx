@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logToCrashlytics, onTokenExpired } from '@/theme/Common';
 import { ApplicationScreenProps } from 'types/navigation';
 import { useNavigation } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native-paper';
 
 
 const UserCard = ({
@@ -17,21 +18,21 @@ const UserCard = ({
     userName,
     score,
     menu,
-    id
+    id,
+    isFollowed
 }:any, ) => {
-    const [following, setFollowing] = useState(false)
+  
     const {
         Fonts,
         Layout,
         Gutters
     } = useTheme()
-  const navigation = useNavigation();
-  const authData = useSelector((state:any)=> state.auth.authData)
-
-  
+    const navigation = useNavigation();
+    const authData = useSelector((state:any)=> state.auth.authData)
     const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
     const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
     const [refreshing, setRefreshing] = useState(false);
+    const [following, setFollowing] = useState(false)
     const dispatch = useDispatch();
     const token = useSelector((state:any) => state.auth.token)
     const myUserId = useSelector((state:any) => state.auth.authData._id);
@@ -39,9 +40,12 @@ const UserCard = ({
         followerId: myUserId,
         followingId: id
     }
+    useEffect(() => {
+      setFollowing(isFollowed);
+    }, [isFollowed]);    
 
     const follow = async() => {
-        
+        setRefreshing(true)
         const result: any = await followSomeone({ body: FollowBody, token})
         if(result?.data?.statusCode === 200){
           setRefreshing(false);
@@ -64,7 +68,7 @@ const UserCard = ({
       /* unfollow a user */
     
       const unfollow = async() => {
-        
+        setRefreshing(true)
         const result: any = await unfollowSomeone({ body: FollowBody, token })
         if(result?.data?.statusCode === 200){
           setRefreshing(false);
@@ -86,7 +90,7 @@ const UserCard = ({
 
   const onPress = () => {
     
-    navigation.navigate('UserProfile2', {id: id})
+    navigation.navigate('UserProfile2', {id: id,isFollowed:following})
   }
     return (
         <View style={styles.userContainer}>
@@ -104,9 +108,9 @@ const UserCard = ({
             </View>
             <View style={[Layout.flex02,Layout.row,Layout.justifyContentEnd]}>
                 {authData?._id !== id && 
-                <TouchableOpacity style={styles.followButton} >
-                    {following ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
-                </TouchableOpacity> }
+                <View style={styles.followButton} >
+                    {refreshing ? <ActivityIndicator size={18} style={{alignSelf:'center'}}/> : following ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
+                </View> }
                 {menu ?
                 <TouchableOpacity style={styles.followButton} >
                     <Menu />    
