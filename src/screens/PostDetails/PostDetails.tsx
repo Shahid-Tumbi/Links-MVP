@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert, Pressable } from "react-native";
+import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert, Pressable, Platform } from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
@@ -151,6 +151,7 @@ const FollowBody = {
             score={postData?.user_info?.score || score}
             menu={true}
             id={postData?.userId}
+            isFollowed={postData?.isFollowed}
           />
         </View>
         <View style={[Layout.flex08, globalStyles.screenMargin]}>
