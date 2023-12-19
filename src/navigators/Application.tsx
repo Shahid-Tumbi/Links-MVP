@@ -12,6 +12,7 @@ import { useFlipper } from '@react-navigation/devtools';
 import { ApplicationStackParamList } from '../../@types/navigation';
 import AuthNavigator from './Auth';
 import { useSelector } from 'react-redux';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Stack = createStackNavigator<ApplicationStackParamList>();
 
@@ -55,6 +56,7 @@ const ApplicationNavigator = () => {
     }   
   };
   useEffect( () => {
+    changeNavigationBarColor('#000000');
     Linking.getInitialURL().then((url) => {
       if(url) handleDeepLink({url});
     });
@@ -67,7 +69,7 @@ const ApplicationNavigator = () => {
   return (
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef} linking={linking}>
-        <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
+        <StatusBar backgroundColor='#000000' barStyle='light-content'/>
         <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled:true, gestureDirection:"horizontal", cardStyleInterpolator: CardStyleInterpolators.forNoAnimation }}>
           {/* <Stack.Screen name="Startup" component={Startup} /> */}
           { !isVerified ?  
