@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Linking, SafeAreaView, StatusBar } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -68,7 +68,7 @@ const ApplicationNavigator = () => {
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef} linking={linking}>
         <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled:true, gestureDirection:"horizontal", cardStyleInterpolator: CardStyleInterpolators.forNoAnimation }}>
           {/* <Stack.Screen name="Startup" component={Startup} /> */}
           { !isVerified ?  
             <Stack.Screen name="Auth" component={AuthNavigator} /> : 
