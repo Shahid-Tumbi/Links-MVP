@@ -163,6 +163,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
             renderSectionHeader={({section: {data,title}}) => (data.length > 0 && <View style={styles.New}>              
               <Text style={styles.NewText}>{title}</Text>
             </View>)}
+            renderSectionFooter={() => <View style={styles.sectionFooter} />}
             ListEmptyComponent={()=> 
               isLoading && !empty ? 
               <ActivityIndicator size={25} color={Colors.blue}/> 
@@ -184,7 +185,6 @@ const styles = StyleSheet.create({
     flex:1,
     height :'100%',
     padding: 20,
-    borderBottomWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.4)',
     alignItems: 'flex-start',
   },
@@ -227,6 +227,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 16,
+  },
+  sectionFooter: {
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
   },
 });
 
