@@ -201,7 +201,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   name: {
-    fontSize: 18,
+    flex: 0.95,
+    fontSize: 17,
     color: "white",
     fontWeight: "bold",
     marginStart:10
