@@ -92,7 +92,7 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
         }
     }
   return (
-    <ScrollView>
+    <ScrollView style={[globalStyles.container]}>
     <KeyboardAvoidingView style={[globalStyles.container]}>
             {/* {isLoading && <Loader state={isLoading} />} */}
             <View style={[globalStyles.screenMargin]}>
