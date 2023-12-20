@@ -363,6 +363,7 @@ const styles = StyleSheet.create({
     color: "#999",
     fontSize: 12,
     textAlign: "center",
+    marginLeft: 4,
   },
   statValue: {
     fontSize: 24,
