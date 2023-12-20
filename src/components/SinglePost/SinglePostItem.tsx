@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { defaultAvatar, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
+import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
 
 const SinglePostItem = ({
   data,
@@ -55,15 +56,16 @@ const SinglePostItem = ({
 
   const closeMenu = () => setVisible(false);
 
-  const focusedInput = React.useContext(FocusedInputContext);
+  const focusedInput = React.useContext(FocusedInputContext) || React.useContext(FocusedInputContextUserProfile) ;
+
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);
   const onUpvote = async () => {
     const result: any = await likePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
+      setUpvote(!upVote)
       setDownvote(false)
-      setUpvote(true)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -82,7 +84,7 @@ const SinglePostItem = ({
     const result: any = await dislikePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
       setUpvote(false)
-      setDownvote(true)
+      setDownvote(!downVote)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -138,7 +140,7 @@ const SinglePostItem = ({
                   <Text style={styles.topLeftCornerDate}>{moment(data?.postPublished || new Date()).format("DD MMM YYYY")}</Text>
                 </View>
                 <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}> 
-                  <MenuIcon />
+                  {/* <MenuIcon /> */}
                   {/* <Menu
                         style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
                         visible={visible}
@@ -261,29 +263,29 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   image: {
-    width: 70,
-    height: 70,
+    width: 55,
+    height: 55,
     bottom: 20,
     marginStart: 10,
     aspectRatio: 1,
     borderRadius: 60,
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: "white",
   },
   carouselProfile: {
-    width: 70,
-    height: 70,
-    bottom: 55,
+    width: 55,
+    height: 55,
+    bottom: 40,
     marginStart: 10,
     aspectRatio: 1,
     borderRadius: 60,
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: "white"
   },
   imageRadius: {
     borderRadius: 20,
     backgroundColor:'#00000066',
-    opacity:0.9
+    opacity:0.6
   },
   detailsContainer: {
     flexDirection: "row",
@@ -358,7 +360,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   imageOpacity: {
-    opacity: 0.7,
+    opacity: 0.6,
   },
   bullet: {
     fontSize: 12,

@@ -9,6 +9,7 @@ import { logToCrashlytics, onTokenExpired } from '@/theme/Common'
 import { ActivityIndicator } from 'react-native-paper'
 import { ApplicationScreenProps } from 'types/navigation'
 import { Colors } from '@/theme/Variables'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
 const Notifications = ({navigation, route}: ApplicationScreenProps) => {
@@ -115,7 +116,10 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
     ];
   };
   const renderItem = ({ item }) => {
-    return ( <View style={styles.container}>
+    const id = item?.postId;
+    return ( 
+      <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{id})}> 
+        <View style={styles.container}>
           <View style={[Layout.row]}>
           {item?.notificationType == 2 ?
             <UpvoteNotification /> :
@@ -135,6 +139,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
             </View>
           </View>
         </View>
+      </TouchableOpacity>
     )
   }
   return (
@@ -163,6 +168,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
             renderSectionHeader={({section: {data,title}}) => (data.length > 0 && <View style={styles.New}>              
               <Text style={styles.NewText}>{title}</Text>
             </View>)}
+            renderSectionFooter={() => <View style={styles.sectionFooter} />}
             ListEmptyComponent={()=> 
               isLoading && !empty ? 
               <ActivityIndicator size={25} color={Colors.blue}/> 
@@ -184,7 +190,6 @@ const styles = StyleSheet.create({
     flex:1,
     height :'100%',
     padding: 20,
-    borderBottomWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.4)',
     alignItems: 'flex-start',
   },
@@ -201,7 +206,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   name: {
-    fontSize: 18,
+    flex: 0.95,
+    fontSize: 17,
     color: "white",
     fontWeight: "bold",
     marginStart:10
@@ -226,6 +232,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 16,
+  },
+  sectionFooter: {
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
   },
 });
 

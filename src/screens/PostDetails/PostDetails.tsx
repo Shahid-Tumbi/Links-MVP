@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert, Pressable, Platform } from "react-native";
+import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert, Pressable, Platform, ScrollView } from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
@@ -135,7 +135,6 @@ const openActionSheet = debounce(() => {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       {isLoading ? <Loader state={isLoading} /> : null}
-      <View style={[Layout.flex09]}>
         <View style={[globalStyles.header, Gutters.regularRMargin, Gutters.regularTMargin]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
@@ -153,7 +152,7 @@ const openActionSheet = debounce(() => {
             isFollowed={postData?.isFollowed}
           />
         </View>
-        <View style={[Layout.flex08, globalStyles.screenMargin]}>
+        <ScrollView showsVerticalScrollIndicator={false} style={[globalStyles.screenMargin]}>
           <Text style={[Fonts.textRegular, Fonts.textWhite]}>
             {postData?.description || ""}
           </Text>
@@ -198,6 +197,10 @@ const openActionSheet = debounce(() => {
         </View>
       </View>
         <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount}/>        
+
+        </ScrollView>
+        <CommentBottomSheet ref={commentBottomSheetRef} />        
+
     </KeyboardAvoidingView>
 
   );
@@ -263,6 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#222222',
     flexDirection: 'column',
     padding: 20,
+    marginBottom:10
   },
   CommentHeader: {
     flexDirection: 'row',

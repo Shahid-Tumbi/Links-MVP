@@ -272,7 +272,7 @@ export const UpDownSelect  = (props: SvgProps) => (
 )
 export const FollowIcon = (props: SvgProps) => (
   <Svg
-  width={27}
+  width={32}
   height={25}
   fill="none"
   {...props}

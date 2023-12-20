@@ -1,4 +1,4 @@
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { useTheme } from '@/hooks';
 import { Constants } from '@/theme/Constants';
@@ -92,10 +92,11 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
         }
     }
   return (
-    <View style={[globalStyles.container]}>
+    <ScrollView>
+    <KeyboardAvoidingView style={[globalStyles.container]}>
             {/* {isLoading && <Loader state={isLoading} />} */}
             <View style={[globalStyles.screenMargin]}>
-                <View style={[globalStyles.header,Layout.flex01]}>
+                <View style={[globalStyles.header,Layout.flex01, {position: 'absolute', top: 0, left: 0, right: 0}]}>
                     <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
                     <View>
                         <Text style={[Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.changePassword}</Text>
@@ -193,7 +194,8 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
                     ) : null}
                 </KeyboardAvoidingView>
                 </View>
-                </View>
+    </KeyboardAvoidingView>
+    </ScrollView>
   )
 }
 
