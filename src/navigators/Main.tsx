@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -76,6 +76,8 @@ const TabNavigator = () => {
     enablePanDownToClose={true}
     handleIndicatorStyle={{backgroundColor: 'white', borderRadius: 10}}
     backgroundStyle={{ backgroundColor: 'black'}}
+    keyboardBlurBehavior='restore'
+    keyboardBehavior='interactive'
     onClose={() => {
       Keyboard.dismiss();
     }}
@@ -90,7 +92,7 @@ const TabNavigator = () => {
 // @refresh reset
 const MainNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true, gestureDirection: "horizontal", cardStyleInterpolator: CardStyleInterpolators.forNoAnimation }}>
        <Stack.Screen name="Tab" component={TabNavigator} />
        <Stack.Screen name="EditProfile" component={EditProfile} />
        <Stack.Screen name="HomeFeed" component={HomeFeed}/>      

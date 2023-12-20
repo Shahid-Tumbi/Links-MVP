@@ -24,13 +24,13 @@ const ErrorMessages = {
     empty: 'Please enter password',
     valid:
       'Password should contain at least 1 uppercase, 1 lowercase, 1 special character (Valid special characters: !@#$%^&*+-_=), 1 number, no whitespaces and should be at least 8 characters in length',
-    match: 're-enter password not matched with new password'
+    match: 'Passwords do not match'
   },
   confirmPassword: {
     empty: 'Please enter confirm password',
     valid:
       'Password should contain at least 1 uppercase, 1 lowercase, 1 special character (Valid special characters: !@#$%^&*+-_=), 1 number, no whitespaces and should be at least 8 characters in length',
-      match: 'Confirm Password does not matched with New Password',
+      match: 'Passwords do not match',
       same: 'Current Password and New Password are Same',
   },
   forgotPassword:{

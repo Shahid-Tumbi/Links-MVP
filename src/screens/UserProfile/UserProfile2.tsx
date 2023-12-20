@@ -55,6 +55,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [UserDetail, { isUserLoading }] = useUserDetailMutation();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [bottomsheetData,setBottomsheetData]= useState()
   const [userDetail, setUserDetail] : any= useState();
   const { id } = route?.params;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
@@ -206,6 +207,15 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     }
   };
   const ItemSeparator = () => <View style={styles.separator} />;
+
+  const commentBottomSheetRef = useRef(null);
+
+  const focusTextInputInCommentBottomSheet = (data:any) => {
+    if (commentBottomSheetRef?.current?.handleTextInputFocus) {
+      commentBottomSheetRef?.current?.handleTextInputFocus(data);
+    }
+  };
+
   const renderProfileDynamic = ({ item, index }: any) => {
     return (
       <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
