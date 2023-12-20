@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity, Platform, ScrollView } from "react-native";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { BackButton, True } from "@/theme/svg";
 import { Constants } from "@/theme/Constants";
@@ -54,6 +54,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
         }
     }
     return (
+        <ScrollView>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
             {isLoading && <Loader state={isLoading} />}
             <View style={[globalStyles.screenMargin]}>
@@ -136,6 +137,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                 </KeyboardAvoidingView>
             </View>
         </KeyboardAvoidingView>
+        </ScrollView>
     );
 };
 
