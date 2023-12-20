@@ -140,7 +140,7 @@ const SinglePostItem = ({
                   <Text style={styles.topLeftCornerDate}>{moment(data?.postPublished || new Date()).format("DD MMM YYYY")}</Text>
                 </View>
                 <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}> 
-                  <MenuIcon />
+                  {/* <MenuIcon /> */}
                   {/* <Menu
                         style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
                         visible={visible}
