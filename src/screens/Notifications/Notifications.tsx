@@ -118,7 +118,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
   const renderItem = ({ item }) => {
     const id = item?.postId;
     return ( 
-      <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{id})}> 
+      <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{id: id})}>
         <View style={styles.container}>
           <View style={[Layout.row]}>
           {item?.notificationType == 2 ?
