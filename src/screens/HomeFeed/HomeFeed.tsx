@@ -87,7 +87,6 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
     getPostList(2)
   },[])
   
-  
   const commentBottomSheetRef = useRef(null);
 
   // Method to trigger text input focus in CommentBottomSheet
@@ -116,6 +115,9 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
     if(topfeedList.length > limit - 1 ){
       getPostList(page+1)
     }
+  }
+  const incrementCommentCount = () => {
+    getPostList(1);
   }
   const ListHeaderComponent = () => {
     return (
@@ -165,7 +167,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
         </View>
       </View> }
 
-    <CommentBottomSheet ref={commentBottomSheetRef} data={bottomsheetData} />        
+    <CommentBottomSheet ref={commentBottomSheetRef} data={bottomsheetData} onCommentSubmit={incrementCommentCount} />        
     </KeyboardAvoidingView>
     
   );

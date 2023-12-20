@@ -171,7 +171,7 @@ const SinglePostItem = ({
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { postData: data })}>
+        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id })}>
           <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>

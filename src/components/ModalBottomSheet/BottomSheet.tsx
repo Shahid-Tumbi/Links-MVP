@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View, Text, Alert, Keyboard, TextInput, } from "react-native";
 import BottomSheet, { BottomSheetBackdrop, BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Image } from "react-native";
@@ -26,6 +26,8 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
   const [list, setList] = useState([])
   const [comment, setComment] = useState('')
   const [sheetIndex, setSheetIndex] = useState(-1);
+  const { onCommentSubmit } = props;
+
 
   const handleTextInputFocus = (data:any) => {
     setPostData(data)
@@ -81,6 +83,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
         }
         setList(prevList => [user, ...prevList])
         setComment('')
+        onCommentSubmit(postData?._id);
       } else {
         setRefreshing(false)
         if (result?.error?.data) {
@@ -115,6 +118,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
     ),
     []
   );
+
   return (
     <BottomSheet
       ref={sheetRef}

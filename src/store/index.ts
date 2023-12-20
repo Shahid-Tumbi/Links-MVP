@@ -17,6 +17,8 @@ import { api } from '../services/api';
 import theme from './theme';
 import authReducer from './User';
 
+
+
 const reducers = combineReducers({
   theme,
   auth: authReducer,

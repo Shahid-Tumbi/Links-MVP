@@ -23,6 +23,7 @@ import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
+
 import {
   useFollowSomeoneMutation,
   useGetFollowerListMutation,
@@ -33,6 +34,7 @@ import { Loader } from "@/components";
 import { capitalize } from "lodash";
 import { FocusedInputContext } from "../HomeFeed/HomeFeed";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
+
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -63,6 +65,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     followerId: myUserId,
     followingId: id,
   };
+
+ 
  
   const onSubmit = () => {
     setFollow(!Follow);
@@ -73,6 +77,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       setRefreshing(false);
       logToCrashlytics("fetching requested user posts");
       setUserDetail(result?.data?.result?.profile)
+
     } else {
       setRefreshing(false);
       if (result?.error?.data) {
@@ -159,6 +164,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     if (result?.data?.statusCode === 200) {
       setIsFollowing(true);
       setRefreshing(false);
+      getUserDetail()
     } else {
       setRefreshing(false);
       setIsFollowing(false);
@@ -182,6 +188,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     if (result?.data?.statusCode === 200) {
       setIsFollowing(false);
       setRefreshing(false);
+      getUserDetail()
     } else {
       setRefreshing(false);
       setIsFollowing(false);
@@ -262,7 +269,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             </View> */}
             <View style={styles.stats}>
               <View style={styles.stat}>
-                <Text style={styles.statValue}>{userDetail?.totalFollowers || '0'}</Text>
+                <Text style={styles.statValue}>{userDetail?.totalFollowers || followerCount || '0'}</Text>
                 <Text style={styles.statLabel}>Followers</Text>
               </View>
               <View style={styles.verticalLine}></View>
