@@ -21,7 +21,7 @@ import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
-import {UserState} from "@/store/User/UserSlice";
+
 import {
   useFollowSomeoneMutation,
   useGetFollowerListMutation,
@@ -30,7 +30,7 @@ import {
 } from "@/services/modules/users";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
-import { updateFollowerCount } from "@/store/User/UserSlice";
+
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -61,9 +61,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     followingId: id,
   };
 
-  const followerCount = useSelector((state: { user: UserState}) => 
-    state.user.users.find(user => user.id === id)?.followerCount
-  );
+ 
  
   const onSubmit = () => {
     setFollow(!Follow);
@@ -74,7 +72,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       setRefreshing(false);
       logToCrashlytics("fetching requested user posts");
       setUserDetail(result?.data?.result?.profile)
-      dispatch(updateFollowerCount({userId: id, newCount: result?.data?.result?.profile?.totalFollowers }))
+
     } else {
       setRefreshing(false);
       if (result?.error?.data) {
@@ -159,7 +157,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const follow = async () => {
     const result: any = await followSomeone({ body: FollowBody, token });
     if (result?.data?.statusCode === 200) {
-      dispatch(updateFollowerCount({userId: id, newCount: result?.data?.result?.profile?.totalFollowers}));
       setIsFollowing(true);
       setRefreshing(false);
       getUserDetail()
@@ -184,7 +181,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const unfollow = async () => {
     const result: any = await unfollowSomeone({ body: FollowBody, token });
     if (result?.data?.statusCode === 200) {
-      dispatch(updateFollowerCount({userId: id, newCount: result?.data?.result?.profile?.totalFollowers}));
       setIsFollowing(false);
       setRefreshing(false);
       getUserDetail()
