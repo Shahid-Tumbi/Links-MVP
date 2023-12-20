@@ -215,14 +215,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   };
   const ItemSeparator = () => <View style={styles.separator} />;
 
-  const commentBottomSheetRef = useRef(null);
-
-  const focusTextInputInCommentBottomSheet = (data:any) => {
-    if (commentBottomSheetRef?.current?.handleTextInputFocus) {
-      commentBottomSheetRef?.current?.handleTextInputFocus(data);
-    }
-  };
-
   const renderProfileDynamic = ({ item, index }: any) => {
     return (
       <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
@@ -269,7 +261,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             </View> */}
             <View style={styles.stats}>
               <View style={styles.stat}>
-                <Text style={styles.statValue}>{userDetail?.totalFollowers || followerCount || '0'}</Text>
+                <Text style={styles.statValue}>{userDetail?.totalFollowers || '0'}</Text>
                 <Text style={styles.statLabel}>Followers</Text>
               </View>
               <View style={styles.verticalLine}></View>

@@ -24,13 +24,13 @@ import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common"
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
 import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
-const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
+const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
   const authData = useSelector(state => state.auth.authData)
   const token = useSelector(state => state.auth.token)
-  const [postData,setPostData] = useState()
-  const [getDetail,{isLoading}] = usePostDetailMutation()
-  const dispatch= useDispatch()
+  const [postData, setPostData] = useState()
+  const [getDetail, { isLoading }] = usePostDetailMutation()
+  const dispatch = useDispatch()
   const userAvatar = defaultAvatar;
   const userName = "";
   const score = "0000 Score";
@@ -44,79 +44,32 @@ const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [refreshing, setRefreshing] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-const {postFollowData} = route?.params;
-const followUserId = postFollowData?.userId;
-const myUserId = useSelector((state:any) => state.auth.authData._id);
-const FollowBody = {
-  followerId: followUserId,
-  followingId: myUserId
-}
-const incrementCommentCount = (postId) => {
-  getpostDetail(postId);
-}
-const openActionSheet = debounce(() => {
-  return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
-}, 300);
-  const follow = async() => {
-      const result: any = await followSomeone({ body: FollowBody, token})
-      if(result?.data?.statusCode === 200){
-        setIsFollowing(true);
-        setRefreshing(false);
-        console.log('You have successfully followed this user');
-        console.log('result');
-      } else {
-        setRefreshing(false);
-        setIsFollowing(false);
-        if(result?.error?.data){
-          Alert.alert(result?.error?.data.message);
-        }
-        if(result?.error?.error){
-          logToCrashlytics('Error! Could not follow user', result?.error?.error); 
-          Alert.alert('Something went wrong!')
-        }
-        if(result.error && result.error.status === 401){
-          onTokenExpired(dispatch);
-        }
-      }
-    }
-  
-    /* unfollow a user */
-  
-    const unfollow = async() => {
-      const result: any = await unfollowSomeone({ body: FollowBody, token })
-      if(result?.data?.statusCode === 200){
-        setIsFollowing(false);
-        setRefreshing(false);
-        console.log('You have successfully unfollowed this user');
-        console.log('result');
-      } else {
-        setRefreshing(false);
-        setIsFollowing(false);
-        if(result?.error?.data){
-          Alert.alert(result?.error?.data.message);
-        }
-        if(result?.error?.error){
-          logToCrashlytics('Error! Could not unfollow user', result?.error?.error); 
-          Alert.alert('Something went wrong!')
-        }
-        if(result.error && result.error.status === 401){
-          onTokenExpired(dispatch);
-        }
-      }
-    }
+  const { postFollowData } = route?.params;
+  const followUserId = postFollowData?.userId;
+  const myUserId = useSelector((state: any) => state.auth.authData._id);
+  const FollowBody = {
+    followerId: followUserId,
+    followingId: myUserId
+  }
+  const incrementCommentCount = (postId) => {
+    getpostDetail(postId);
+  }
+  const openActionSheet = debounce(() => {
+    return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
+  }, 300);
   // Method to trigger text input focus in CommentBottomSheet
   const focusTextInputInCommentBottomSheet = () => {
     if (commentBottomSheetRef?.current?.handleTextInputFocus) {
       commentBottomSheetRef?.current?.handleTextInputFocus(postData);
     }
   };
-  const getpostDetail= async (postId)=>{
+  const getpostDetail = async (postId) => {
     logToCrashlytics('get post detail api call')
-    const result:any = await getDetail({id:postId,token});
+    const result: any = await getDetail({ id: postId, token });
     if (result?.data?.statusCode === 200) {
       setPostData(result?.data?.result)
     } else {
-      
+
       if (result?.error?.data) {
         Alert.alert(result?.error?.data?.message)
       }
@@ -129,9 +82,9 @@ const openActionSheet = debounce(() => {
       }
     }
   }
-  useEffect(()=>{    
-      getpostDetail(route?.params?.id)
-  },[])
+  useEffect(() => {
+    getpostDetail(route?.params?.id)
+  }, [])
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       {isLoading ? <Loader state={isLoading} /> : null}
@@ -194,14 +147,10 @@ const openActionSheet = debounce(() => {
               </Pressable>
             </View>
           </View>
-        </View>
-      </View>
-        <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount}/>        
-
         </ScrollView>
-        <CommentBottomSheet ref={commentBottomSheetRef} />        
+        <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount}/> 
 
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView >
 
   );
 };
@@ -266,15 +215,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#222222',
     flexDirection: 'column',
     padding: 20,
-    marginBottom:10
+    marginBottom: 10
   },
   CommentHeader: {
     flexDirection: 'row',
     marginBottom: 10,
   },
   CommentHeaderText: {
-    color:'white',
-    fontWeight:'bold',
+    color: 'white',
+    fontWeight: 'bold',
     fontSize: 20,
 
   },
@@ -321,7 +270,7 @@ const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: 'row',
     marginTop: 10,
-    marginLeft: 20, 
+    marginLeft: 20,
     // backgroundColor: "black",
   },
   commentAvatar: {
@@ -366,7 +315,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     marginTop: 10,
-    marginLeft: 20, 
+    marginLeft: 20,
   },
   headerAuthor: {
     fontSize: 12,
