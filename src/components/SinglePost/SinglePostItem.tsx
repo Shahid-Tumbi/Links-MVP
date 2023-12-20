@@ -261,23 +261,23 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   image: {
-    width: 70,
-    height: 70,
+    width: 55,
+    height: 55,
     bottom: 20,
     marginStart: 10,
     aspectRatio: 1,
     borderRadius: 60,
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: "white",
   },
   carouselProfile: {
-    width: 70,
-    height: 70,
-    bottom: 55,
+    width: 55,
+    height: 55,
+    bottom: 40,
     marginStart: 10,
     aspectRatio: 1,
     borderRadius: 60,
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: "white"
   },
   imageRadius: {
