@@ -39,12 +39,6 @@ const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const postLink = " ";
   const [commentCount, setCommentCount] = useState(0);
 
-  const incrementCommentCount = () => {
-    setCommentCount((prev) => prev + 1);
-  }
-  const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
-  }, 300);
   const commentBottomSheetRef = useRef(null);
   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
@@ -57,7 +51,12 @@ const FollowBody = {
   followerId: followUserId,
   followingId: myUserId
 }
-
+const incrementCommentCount = (postId) => {
+  getpostDetail(postId);
+}
+const openActionSheet = debounce(() => {
+  return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
+}, 300);
   const follow = async() => {
       const result: any = await followSomeone({ body: FollowBody, token})
       if(result?.data?.statusCode === 200){
@@ -111,9 +110,9 @@ const FollowBody = {
       commentBottomSheetRef?.current?.handleTextInputFocus(postData);
     }
   };
-  const getpostDetail= async ()=>{
+  const getpostDetail= async (postId)=>{
     logToCrashlytics('get post detail api call')
-    const result:any = await getDetail({id:route?.params?.id,token});
+    const result:any = await getDetail({id:postId,token});
     if (result?.data?.statusCode === 200) {
       setPostData(result?.data?.result)
     } else {
@@ -131,11 +130,7 @@ const FollowBody = {
     }
   }
   useEffect(()=>{    
-    if(route?.params?.id){
-      getpostDetail()
-    } else {
-      setPostData(route?.params?.postData)
-    }
+      getpostDetail(route?.params?.id)
   },[])
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
@@ -191,8 +186,7 @@ const FollowBody = {
           <View style={styles.CommentBox}>
             <View style={styles.CommentHeader}>
               <Text style={styles.CommentHeaderText}>Comments</Text>
-              <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || commentCount || '0'}</Text>
-              <Text>Number of comments: {commentCount}</Text>
+              <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
             </View>
             <View style={styles.ContentInCommentBox}>
               <Image source={{uri: authData?.profileImage || defaultAvatar}} style={styles.avatar}/>
@@ -203,7 +197,7 @@ const FollowBody = {
           </View>
         </View>
       </View>
-        <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount} commentCount={commentCount} />        
+        <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount}/>        
     </KeyboardAvoidingView>
 
   );
