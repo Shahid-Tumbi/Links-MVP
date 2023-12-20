@@ -54,10 +54,10 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
         }
     }
     return (
-        <View style={[globalStyles.container]}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
             {isLoading && <Loader state={isLoading} />}
             <View style={[globalStyles.screenMargin]}>
-                <View style={[globalStyles.header]}>
+                <View style={[globalStyles.header,{position: 'absolute', top: 0, left: 0, right: 0}]}>
                     <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
                     <View>
                         <Text style={[Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.editProfile}</Text>
@@ -135,7 +135,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                         </View>
                 </KeyboardAvoidingView>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
