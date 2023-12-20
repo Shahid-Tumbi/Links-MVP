@@ -37,7 +37,11 @@ const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const imageUrl = "";
   const postTitle = "";
   const postLink = " ";
+  const [commentCount, setCommentCount] = useState(0);
 
+  const incrementCommentCount = () => {
+    setCommentCount(commentCount + 1);
+  }
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
   }, 300);
@@ -187,7 +191,8 @@ const FollowBody = {
           <View style={styles.CommentBox}>
             <View style={styles.CommentHeader}>
               <Text style={styles.CommentHeaderText}>Comments</Text>
-              <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
+              <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || commentCount || '0'}</Text>
+              <Text>Number of comments: {commentCount}</Text>
             </View>
             <View style={styles.ContentInCommentBox}>
               <Image source={{uri: authData?.profileImage || defaultAvatar}} style={styles.avatar}/>
@@ -198,7 +203,7 @@ const FollowBody = {
           </View>
         </View>
       </View>
-        <CommentBottomSheet ref={commentBottomSheetRef} />        
+        <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount} commentCount={commentCount} />        
     </KeyboardAvoidingView>
 
   );

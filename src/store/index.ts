@@ -16,10 +16,13 @@ import { MMKV } from 'react-native-mmkv';
 import { api } from '../services/api';
 import theme from './theme';
 import authReducer from './User';
+import userReducer from './User/UserSlice';
+
 
 const reducers = combineReducers({
   theme,
   auth: authReducer,
+  user: userReducer,
   [api.reducerPath]: api.reducer,
 });
 

@@ -26,6 +26,8 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
   const [list, setList] = useState([])
   const [comment, setComment] = useState('')
   const [sheetIndex, setSheetIndex] = useState(-1);
+  const { commentCount } = props;
+
 
   const handleTextInputFocus = (data:any) => {
     setPostData(data)
@@ -81,6 +83,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
         }
         setList(prevList => [user, ...prevList])
         setComment('')
+        props.onCommentSubmit();
       } else {
         setRefreshing(false)
         if (result?.error?.data) {
