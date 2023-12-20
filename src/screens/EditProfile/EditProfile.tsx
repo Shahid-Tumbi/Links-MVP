@@ -54,7 +54,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
         }
     }
     return (
-        <ScrollView>
+        <ScrollView style={[globalStyles.container]}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
             {isLoading && <Loader state={isLoading} />}
             <View style={[globalStyles.screenMargin]}>
