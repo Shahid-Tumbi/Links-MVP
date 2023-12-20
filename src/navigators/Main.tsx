@@ -76,6 +76,8 @@ const TabNavigator = () => {
     enablePanDownToClose={true}
     handleIndicatorStyle={{backgroundColor: 'white', borderRadius: 10}}
     backgroundStyle={{ backgroundColor: 'black'}}
+    keyboardBlurBehavior='restore'
+    keyboardBehavior='interactive'
     onClose={() => {
       Keyboard.dismiss();
     }}

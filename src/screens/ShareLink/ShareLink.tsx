@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "react-native";
 import { onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
-import { URL } from "url";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 const cheerio = require('cheerio');
 const ShareLink = ({sheetRef}:any) => {
@@ -114,7 +114,7 @@ const ShareLink = ({sheetRef}:any) => {
         }}>Cancel</Text>
       <Text style={styles.banner}>{Constants.shareLink}</Text>
       <Text style={styles.subbanner}>{Constants.linkInterested}</Text>
-      <TextInput
+      <BottomSheetTextInput
         style={styles.LinkBar}
         placeholder="Enter or paste a link"
         placeholderTextColor={"white"}
@@ -138,7 +138,7 @@ const ShareLink = ({sheetRef}:any) => {
       </TouchableWithoutFeedback>
       <View style={styles.CommentContainer}>
         <Text style={styles.title}>{Constants.addYourComment}</Text>
-        <TextInput
+        <BottomSheetTextInput
           style={styles.input}
           placeholder="here"
           placeholderTextColor="#A0A0A0"
