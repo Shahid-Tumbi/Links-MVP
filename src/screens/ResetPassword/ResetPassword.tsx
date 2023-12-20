@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import { useTheme } from '../../hooks';
 import { ApplicationScreenProps } from '../../../@types/navigation';
 import { globalStyles } from '@/theme/GlobalStyles';
@@ -95,7 +95,7 @@ const ResetPassword = ({ navigation, route }: ApplicationScreenProps) => {
         }
     }
     return (
-        <View style={[globalStyles.container]}>
+        <ScrollView style={[globalStyles.container]}>
             <View style={[Layout.fill, Gutters.regularMargin]}>
             {isLoading ? <Loader state={isLoading} /> : null}
                 <View style={[Gutters.largeTMargin]}>
@@ -176,7 +176,7 @@ const ResetPassword = ({ navigation, route }: ApplicationScreenProps) => {
                 </View>
 
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
