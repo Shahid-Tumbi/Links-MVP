@@ -83,7 +83,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
         }
         setList(prevList => [user, ...prevList])
         setComment('')
-        onCommentSubmit();
+        onCommentSubmit(postData?._id);
       } else {
         setRefreshing(false)
         if (result?.error?.data) {
