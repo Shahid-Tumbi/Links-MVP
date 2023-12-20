@@ -131,7 +131,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
         <Image source={{ uri: postData?.user_info?.profileImage || defaultAvatar}} style={styles.commentAvatar} />
         <View style={styles.commentTextContainer}>
           <Text style={styles.headerAuthor}>{capitalize(postData?.user_info?.name)} started the conversation.</Text>
-          <Text style={styles.headerText}>{postData?.pinComment || ''}</Text>
+          <Text style={styles.headerText}>{list[0]?.is_pinned ? list[0]?.content : ''}</Text>
         </View>
       </View>
       <View style={styles.horizontalLine} />
@@ -141,7 +141,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
           data={list}
           keyExtractor={(item: any) => item._id.toString()}
           renderItem={({ item }: any) => (
-            <View style={styles.commentContainer}>
+           !item?.is_pinned && <View style={styles.commentContainer}>
               <Image source={{ uri: item?.user_info[0]?.profileImage || defaultAvatar}} style={styles.commentAvatar} />
               <View style={styles.commentTextContainer}>
                 <Text style={styles.commentAuthor}>{capitalize(item?.user_info[0]?.name)}</Text>
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   },
   commentTextContainer: {
     marginLeft: 10,
-    flexWrap: 'wrap',
+    flex:0.9,
   },
   commentAuthor: {
     fontSize: 16,
