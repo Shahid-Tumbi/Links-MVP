@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { defaultAvatar, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
+import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
 
 const SinglePostItem = ({
   data,
@@ -55,7 +56,8 @@ const SinglePostItem = ({
 
   const closeMenu = () => setVisible(false);
 
-  const focusedInput = React.useContext(FocusedInputContext);
+  const focusedInput = React.useContext(FocusedInputContext) || React.useContext(FocusedInputContextUserProfile) ;
+
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);

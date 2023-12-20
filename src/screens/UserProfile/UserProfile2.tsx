@@ -1,5 +1,5 @@
 import WhiteLine from "@/components/WhiteLine/WhiteLine";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -29,6 +29,8 @@ import {
 } from "@/services/modules/users";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
+import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
+export const FocusedInputContextUserProfile = React.createContext(null);
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -51,6 +53,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [UserDetail, { isUserLoading }] = useUserDetailMutation();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [bottomsheetData,setBottomsheetData]= useState()
   const [userDetail, setUserDetail] : any= useState();
   const { id } = route?.params;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
@@ -196,11 +199,22 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     }
   };
   const ItemSeparator = () => <View style={styles.separator} />;
+
+  const commentBottomSheetRef = useRef(null);
+
+  const focusTextInputInCommentBottomSheet = (data:any) => {
+    if (commentBottomSheetRef?.current?.handleTextInputFocus) {
+      commentBottomSheetRef?.current?.handleTextInputFocus(data);
+    }
+  };
+
   const renderProfileDynamic = ({ item, index }: any) => {
     return (
-      <ProfileView data={item} number={index + 1} navigation={navigation} />
-    );
-  };
+      <FocusedInputContextUserProfile.Provider value={focusTextInputInCommentBottomSheet}> 
+        <ProfileView data={item} number={index + 1} navigation={navigation} />
+      </FocusedInputContextUserProfile.Provider>
+    )}
+  
   return (
     <View style={[globalStyles.container]}>
       <ScrollView>
@@ -288,6 +302,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
           />
         </View>
       </ScrollView>
+
+      <CommentBottomSheet ref={commentBottomSheetRef} data={bottomsheetData} /> 
     </View>
   );
 };
