@@ -9,6 +9,7 @@ import { logToCrashlytics, onTokenExpired } from '@/theme/Common'
 import { ActivityIndicator } from 'react-native-paper'
 import { ApplicationScreenProps } from 'types/navigation'
 import { Colors } from '@/theme/Variables'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
 const Notifications = ({navigation, route}: ApplicationScreenProps) => {
@@ -115,7 +116,10 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
     ];
   };
   const renderItem = ({ item }) => {
-    return ( <View style={styles.container}>
+    const id = item?.postId;
+    return ( 
+      <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen',{id})}> 
+        <View style={styles.container}>
           <View style={[Layout.row]}>
           {item?.notificationType == 2 ?
             <UpvoteNotification /> :
@@ -135,6 +139,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
             </View>
           </View>
         </View>
+      </TouchableOpacity>
     )
   }
   return (
