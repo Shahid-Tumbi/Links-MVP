@@ -40,7 +40,7 @@ const PostDetailScreen = ({ navigation,route }: ApplicationScreenProps) => {
   const [commentCount, setCommentCount] = useState(0);
 
   const incrementCommentCount = () => {
-    setCommentCount(commentCount + 1);
+    setCommentCount((prev) => prev + 1);
   }
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
