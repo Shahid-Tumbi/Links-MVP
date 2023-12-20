@@ -162,6 +162,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       dispatch(updateFollowerCount({userId: id, newCount: result?.data?.result?.profile?.totalFollowers}));
       setIsFollowing(true);
       setRefreshing(false);
+      getUserDetail()
     } else {
       setRefreshing(false);
       setIsFollowing(false);
@@ -186,6 +187,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       dispatch(updateFollowerCount({userId: id, newCount: result?.data?.result?.profile?.totalFollowers}));
       setIsFollowing(false);
       setRefreshing(false);
+      getUserDetail()
     } else {
       setRefreshing(false);
       setIsFollowing(false);
