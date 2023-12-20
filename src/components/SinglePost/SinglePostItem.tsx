@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   imageRadius: {
     borderRadius: 20,
     backgroundColor:'#00000066',
-    opacity:0.9
+    opacity:0.6
   },
   detailsContainer: {
     flexDirection: "row",
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   imageOpacity: {
-    opacity: 0.7,
+    opacity: 0.6,
   },
   bullet: {
     fontSize: 12,
