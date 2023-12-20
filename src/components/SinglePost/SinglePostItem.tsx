@@ -64,8 +64,8 @@ const SinglePostItem = ({
   const onUpvote = async () => {
     const result: any = await likePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
+      setUpvote(!upVote)
       setDownvote(false)
-      setUpvote(true)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -84,7 +84,7 @@ const SinglePostItem = ({
     const result: any = await dislikePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
       setUpvote(false)
-      setDownvote(true)
+      setDownvote(!downVote)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)

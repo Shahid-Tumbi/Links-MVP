@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   RefreshControl,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import ProfileView from "../../components/SinglePost/SinglePostItem";
 import { globalStyles } from "@/theme/GlobalStyles";
@@ -29,8 +31,8 @@ import {
 } from "@/services/modules/users";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
+import { FocusedInputContext } from "../HomeFeed/HomeFeed";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
-export const FocusedInputContextUserProfile = React.createContext(null);
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -198,6 +200,12 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
       }
     }
   };
+  const commentBottomSheetRef = useRef(null);
+  const focusTextInputInCommentBottomSheet = (data:any) => {    
+    if (commentBottomSheetRef?.current?.handleTextInputFocus) {
+      commentBottomSheetRef?.current?.handleTextInputFocus(data);
+    }
+  };
   const ItemSeparator = () => <View style={styles.separator} />;
 
   const commentBottomSheetRef = useRef(null);
@@ -210,13 +218,13 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
 
   const renderProfileDynamic = ({ item, index }: any) => {
     return (
-      <FocusedInputContextUserProfile.Provider value={focusTextInputInCommentBottomSheet}> 
-        <ProfileView data={item} number={index + 1} navigation={navigation} />
-      </FocusedInputContextUserProfile.Provider>
-    )}
-  
+      <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
+      <ProfileView data={item} number={index + 1} navigation={navigation} />
+      </FocusedInputContext.Provider>
+    );
+  };
   return (
-    <View style={[globalStyles.container]}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
       <ScrollView>
         <View style={[globalStyles.screenMargin]}>
       {isUserLoading ? <Loader state={isUserLoading} /> : null}
@@ -302,9 +310,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
           />
         </View>
       </ScrollView>
-
-      <CommentBottomSheet ref={commentBottomSheetRef} data={bottomsheetData} /> 
-    </View>
+      <CommentBottomSheet ref={commentBottomSheetRef} />        
+    </KeyboardAvoidingView>
   );
 };
 
@@ -379,6 +386,7 @@ const styles = StyleSheet.create({
     color: "#999",
     fontSize: 12,
     textAlign: "center",
+    marginLeft: 4,
   },
   statValue: {
     fontSize: 24,
