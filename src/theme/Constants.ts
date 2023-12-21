@@ -11,7 +11,7 @@ export const Constants = {
     },
     email:'Email',
     password:'Password',
-    emailAddress:'Username/email ID',
+    emailAddress:'Email ID',
     fullName:"Full Name",
     phoneNo:'Phone Number',
     signin:'SIGN IN',
