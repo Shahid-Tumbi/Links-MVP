@@ -23,9 +23,9 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
       <View style={globalStyles.screenMargin}>
         <View style={globalStyles.header}>
           <Logo />
-          <View style={styles.loginContainer}>
+          {/* <View style={styles.loginContainer}>
             <Text style={[styles.login, Fonts.textTiny, Fonts.textWhite]} onPress={() => navigation.navigate("Login")}>{Constants.login}</Text>
-          </View>
+          </View> */}
         </View>
         <View style={[Gutters.largeTMargin]}>
           <Text style={[styles.getStarted, Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.getStarted}</Text>
@@ -37,7 +37,7 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
             <View style={styles.choossingComponent}>
               <Sun style={styles.groupIcon} />
               <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.curatorAccess}</Text>
-              <Text style={[styles.referralInvitesOnly, Fonts.textTiny]}>{Constants.refferalOnly}</Text>
+              <Text style={[styles.referralInvitesOnly, Fonts.textTiny]}>{Constants.referralOnly}</Text>
             </View>
             <ForwardArrow />
           </TouchableWithoutFeedback>
