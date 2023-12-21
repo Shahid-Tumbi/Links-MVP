@@ -71,7 +71,7 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     if (configData.firebase) {
       firebaseOtpSent(authData.countryCode, authData.phoneNumber).then((res: any) => {
        logToCrashlytics('Otp send through firebase')
-        if(resend){Alert.alert('Otp sent again on your number')}
+        if(resend){Alert.alert('Otp resent on your number')}
         setApiLoader(false)
         setConfirmObj(res)
       }).catch((err: any) => {
