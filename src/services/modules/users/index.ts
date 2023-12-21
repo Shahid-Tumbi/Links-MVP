@@ -183,6 +183,16 @@ export const userApi = api.injectEndpoints({
         },
       }),
     }),
+    uploadFile: build.mutation<User, Partial<User>>({
+      query: ({userData,token}:any) => ({
+        url: `/users/upload`,
+        method: "POST",
+        body: userData,
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      }),
+    }),
   }),
 
   overrideExisting: true,
@@ -204,5 +214,6 @@ export const {
   useUnfollowSomeoneMutation,
   useUserDetailMutation,
   useGetCuratorSearchListMutation,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useUploadFileMutation
 } = userApi;

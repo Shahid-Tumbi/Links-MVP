@@ -11,7 +11,7 @@ import UserCard from '@/components/UserCard';
 import { Colors } from '@/theme/Variables';
 import { useGetCuratorListMutation, useGetCuratorSearchListMutation } from '@/services/modules/users';
 import { useDispatch, useSelector } from 'react-redux';
-import { defaultAvatar, logToCrashlytics, onTokenExpired } from '@/theme/Common';
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from '@/theme/Common';
 
 const CuratorList = () => {
   const {
@@ -88,7 +88,7 @@ const CuratorList = () => {
  
 
   const renderItem = ({ item }) => <SingleCurator {...item} />;
-  const renderFocusedItem = ({ item }) => <UserCard userAvatar={item?.profileImage || defaultAvatar} userName={item.name} score={item.count} menu={false} id={item?._id} isFollowed={item?.isFollowed}/>;
+  const renderFocusedItem = ({ item }) => <UserCard userAvatar={item?.profileImage ? `${imageAssetUrl}${item?.profileImage}`  : defaultAvatar} userName={item.name} score={item.count} menu={false} id={item?._id} isFollowed={item?.isFollowed}/>;
   const renderProfileDynamic = ({item, index}: any) => <SingleCurator data={item} number={index+1} navigation={navigation} />;
 
   const ItemSeparator = () => <View style={styles.separator} />;

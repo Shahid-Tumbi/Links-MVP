@@ -1,4 +1,4 @@
-import { defaultAvatar } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl } from "@/theme/Common";
 import { useNavigation } from "@react-navigation/native";
 import { capitalize } from "lodash";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -9,7 +9,7 @@ const SingleCurator = ({data}: any) => {
     return (
         <View style={styles.container}>
         <Pressable style={styles.header} onPress={()=>navigation.navigate('UserProfile2', {id: data._id,isFollowed:data?.isFollowed})}>
-            <Image source={{uri:data?.profileImage || defaultAvatar }} style={styles.userImage} />
+            <Image source={{uri:data?.profileImage ?`${imageAssetUrl}${data?.profileImage}` : defaultAvatar }} style={styles.userImage} />
             <View style={styles.userContain}></View>
             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View>

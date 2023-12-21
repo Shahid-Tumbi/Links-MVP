@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Alert, Keyboard, TextInput, } from "react-nativ
 import BottomSheet, { BottomSheetBackdrop, BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Image } from "react-native";
 import { useCommentListMutation, useCommentPostMutation } from "@/services/modules/post";
-import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/hooks";
 import { Constants } from "@/theme/Constants";
@@ -78,7 +78,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
           ...result?.data?.result,
           user_info: [{
             name: authData?.name,
-            profileImage: authData?.profileImage
+            profileImage: `${imageAssetUrl}${authData?.profileImage}`
           }]
         }
         setList(prevList => [user, ...prevList])
@@ -132,7 +132,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
       backgroundStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
     >
       <View style={[styles.header]}>
-        <Image source={{ uri: postData?.user_info?.profileImage || defaultAvatar}} style={styles.commentAvatar} />
+        <Image source={{ uri: postData?.user_info?.profileImage ? `${imageAssetUrl}${postData?.user_info?.profileImage}` : defaultAvatar}} style={styles.commentAvatar} />
         <View style={styles.commentTextContainer}>
           <Text style={styles.headerAuthor}>{capitalize(postData?.user_info?.name)} started the conversation.</Text>
           <Text style={styles.headerText}>{list[0]?.is_pinned ? list[0]?.content : ''}</Text>
@@ -146,7 +146,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
           keyExtractor={(item: any) => item._id.toString()}
           renderItem={({ item }: any) => (
            !item?.is_pinned && <View style={styles.commentContainer}>
-              <Image source={{ uri: item?.user_info[0]?.profileImage || defaultAvatar}} style={styles.commentAvatar} />
+              <Image source={{ uri: postData?.user_info?.profileImage ?`${imageAssetUrl}${postData?.user_info?.profileImage}` : defaultAvatar}} style={styles.commentAvatar} />
               <View style={styles.commentTextContainer}>
                 <Text style={styles.commentAuthor}>{capitalize(item?.user_info[0]?.name)}</Text>
                 <Text style={styles.commentText}>{item?.content}</Text>
@@ -159,7 +159,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
         />
       </View>
       <View style={[styles.commentZone,styles.footerContainer]}>
-        <Image source={{ uri: authData?.profileImage || defaultAvatar}} style={styles.yourAvatar} />
+        <Image source={{ uri: authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.yourAvatar} />
         <TextInput
           ref={inputRef}
           style={styles.input}

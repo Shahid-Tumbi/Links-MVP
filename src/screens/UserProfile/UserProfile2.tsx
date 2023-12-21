@@ -21,7 +21,7 @@ import { ApplicationScreenProps } from "types/navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
 
 import {
@@ -246,7 +246,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             <View>
                 <Image
                 style={styles.avatarContainer}
-                source={{uri: userDetail?.profileImage || defaultAvatar}}  
+                source={{uri:userDetail?.profileImage ? `${imageAssetUrl}${userDetail?.profileImage}`  : defaultAvatar}}  
               />
             </View>
             <View style={styles.reference}>

@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
 import { Constants } from "@/theme/Constants";
 import { usePostDetailMutation } from "@/services/modules/post";
-import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
 import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
@@ -97,7 +97,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
             />
           </TouchableOpacity>
           <UserCard
-            userAvatar={postData?.user_info?.profileImage || userAvatar}
+            userAvatar={postData?.user_info?.profileImage ? `${imageAssetUrl}${postData?.user_info?.profileImage}` : userAvatar}
             userName={capitalize(postData?.user_info?.name || userName)}
             score={postData?.user_info?.score || score}
             menu={true}
@@ -141,7 +141,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
               <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
             </View>
             <View style={styles.ContentInCommentBox}>
-              <Image source={{uri: authData?.profileImage || defaultAvatar}} style={styles.avatar}/>
+              <Image source={{uri: authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.avatar}/>
               <Pressable onPress={focusTextInputInCommentBottomSheet} style={[styles.CommentInput]}>
                 <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
               </Pressable>

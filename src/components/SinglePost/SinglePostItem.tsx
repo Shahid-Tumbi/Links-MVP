@@ -26,7 +26,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import moment from "moment";
 import { useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
@@ -163,7 +163,7 @@ const SinglePostItem = ({
             </ImageBackground>
             {carouselView && <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>
               <Image
-              source={{ uri: data?.user_info?.profileImage || defaultAvatar}}
+              source={{ uri: data?.user_info?.profileImage ? `${imageAssetUrl}${data?.user_info?.profileImage}` : defaultAvatar}}
               style={styles.carouselProfile} />
               </TouchableOpacity>}
             {carouselView && <Text style={[styles.carouselNumbers]}>{number}</Text>}
@@ -176,7 +176,7 @@ const SinglePostItem = ({
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>
               <Image
-                source={ {uri:data?.user_info?.profileImage || defaultAvatar} }
+                source={ {uri:data?.user_info?.profileImage ? `${imageAssetUrl}${data?.user_info?.profileImage}` : defaultAvatar} }
                 style={styles.image}
               />
               </TouchableOpacity>

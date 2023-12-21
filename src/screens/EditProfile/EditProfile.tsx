@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity, Platform, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Alert, TouchableOpacity, Platform, ScrollView, PermissionsAndroid } from "react-native";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { BackButton, True } from "@/theme/svg";
 import { Constants } from "@/theme/Constants";
@@ -8,9 +8,11 @@ import { useTheme } from "@/hooks";
 import { CommonTextInput, Loader } from "@/components";
 import { Avatar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdateUserMutation } from "@/services/modules/users";
+import { useUpdateUserMutation, useUploadFileMutation } from "@/services/modules/users";
 import { clearToken, setAuthData } from "@/store/User";
-import { defaultAvatar, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import Permissions from 'react-native-permissions';
+import { launchImageLibrary } from "react-native-image-picker";
 
 const EditProfile = ({ navigation }: ApplicationScreenProps) => {
     logToCrashlytics('Edit profile screen')
@@ -25,14 +27,26 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
     const [userName, setUserName] = useState(authData?.userName)
     const [fullName, setFullName] = useState(authData?.name)
     const [bio, setBio] = useState(authData?.bio)
-    const [imageUri, setImageUri] = useState(authData?.profileImage || defaultAvatar)
-    const [updateUser, { isLoading }] = useUpdateUserMutation()
+    const [imageUri, setImageUri] = useState(authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar)
+    const [updateUser] = useUpdateUserMutation()
+    const [uploadFile, { isLoading }] = useUploadFileMutation()
     const dispatch = useDispatch()
+    
+    const [filePath, setFilePath]:any = useState();
+    let isReadGranted: string;
     const onSubmit = async () => {
+        let newImage;
+		if (filePath) {
+			uploadImage();
+			newImage = 'ProfileImage_' + `${authData._id}` + '.webp';
+		} 
         logToCrashlytics('On update profile api call')
-        const userData = {
+        let userData = {
             name: fullName,
-            bio: bio
+            bio: bio,
+        }
+        if (newImage) {
+            userData = { ...userData, ...{ profileImage: newImage } };
         }
         const result: any = await updateUser({ id: authData._id, body: userData , token })
         
@@ -52,7 +66,105 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                 onTokenExpired(dispatch)
               }
         }
+        
+    
+    };
+    async function uploadImage() {
+
+        var formdata = new FormData();
+        formdata.append('file[]', {
+            uri: filePath.uri,
+            type: filePath.type,
+            name:
+                filePath.fileName.slice('.', 0) +
+                'ProfileImage_' +
+                `${authData._id}` +
+                '.webp',
+        });
+
+       const uploadResult:any = await uploadFile({userData:formdata, token});
+       console.log(uploadResult);
+       
+       if (uploadResult?.data?.statusCode === 200) {
+            logToCrashlytics('On upload file api success')
+            
+        } else {
+            if (uploadResult?.error?.data) {
+                Alert.alert(uploadResult?.error?.data?.message)
+            }
+            if (uploadResult?.error?.error) {
+                logToCrashlytics('On upload file api error',uploadResult?.error?.error)
+                Alert.alert('Something went wrong !!')
+            }
+            if (uploadResult.error && uploadResult.error.status === 401) {
+                onTokenExpired(dispatch)
+            }
+        }
+           
     }
+    const reqPermission = async () => {
+		if (Platform.OS === 'android') {
+			isReadGranted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+			);
+		} else if (Platform.OS === 'ios') {
+			isReadGranted = await Permissions.request(
+				Permissions.PERMISSIONS.IOS.PHOTO_LIBRARY
+			);
+			switch (isReadGranted) {
+				case Permissions.RESULTS.UNAVAILABLE:
+					isReadGranted = Permissions.RESULTS.GRANTED;
+					break;
+				default:
+					break;
+			}
+			if (isReadGranted == Permissions.RESULTS.UNAVAILABLE) {
+				console.log('Shahid', isReadGranted);
+			}
+		}
+	};
+    const chooseFile = async (type:string) => {
+		let checkPermissionStatus=await Permissions.check(Permissions.PERMISSIONS.IOS.PHOTO_LIBRARY);
+		if(checkPermissionStatus==Permissions.RESULTS.BLOCKED){
+			await Permissions.openSettings()
+			return true;
+		}else{
+			if (isReadGranted === 'denied') {
+				reqPermission();
+			} else {
+				let options :any= {
+					mediaType: type,
+					maxWidth: 300,
+					maxHeight: 550,
+					quality: 1,
+				};
+				launchImageLibrary(options, (response:any) => {
+					console.log('Response = ', response);
+
+					if (response.assets) {
+						setFilePath(response.assets[0]);
+						// console.log("filePath",filePath)
+					} else if (response.didCancel) {
+						Alert.alert('User cancelled camera picker');
+						return;
+					} else if (response.errorCode == 'camera_unavailable') {
+						Alert.alert('Camera not available on device');
+						return;
+					} else if (response.errorCode == 'permission') {
+						Alert.alert('Permission not satisfied');
+						return;
+					} else if (response.errorCode == 'others') {
+						Alert.alert(response.errorMessage);
+						return;
+					}
+				});
+			}
+		}
+
+	};
+    useEffect(() => {
+		reqPermission();
+	}, []);
     return (
         <ScrollView style={[globalStyles.container]}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
@@ -67,7 +179,10 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                 </View>
                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.flex09, Gutters.largeTMargin]}>
                     <View style={[Layout.center]}>
-                        <Avatar.Image size={80} source={{ uri: imageUri }} />
+                        <TouchableOpacity
+									onPress={() => chooseFile('photo')}>
+                        <Avatar.Image size={80} source={{ uri: filePath?.uri ? filePath.uri : imageUri }} />
+                        </TouchableOpacity>
                         <Text style={[Fonts.textLarge, Fonts.textWhite, Gutters.tinyTMargin]}>{Constants.editPicture}</Text>
                     </View>
                     <View style={[Layout.row, Gutters.largeTMargin]}>
