@@ -37,7 +37,7 @@ const GetStartedScreen = ({ navigation }: ApplicationScreenProps) => {
             <View style={styles.choossingComponent}>
               <Sun style={styles.groupIcon} />
               <Text style={[styles.curatorAccess, Fonts.textRegular, Fonts.textWhite]}>{Constants.curatorAccess}</Text>
-              <Text style={[styles.referralInvitesOnly, Fonts.textTiny]}>{Constants.refferalOnly}</Text>
+              <Text style={[styles.referralInvitesOnly, Fonts.textTiny]}>{Constants.referralOnly}</Text>
             </View>
             <ForwardArrow />
           </TouchableWithoutFeedback>
