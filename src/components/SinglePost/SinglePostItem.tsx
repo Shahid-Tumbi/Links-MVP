@@ -9,7 +9,7 @@ import {
   Share,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DownvoteButton,
   Menu as MenuIcon,
@@ -24,9 +24,9 @@ import { capitalize, debounce } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
-import { useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
+import { useDislikePostMutation, useLikePostMutation, usePostDetailMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, imageAssetUrl, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
@@ -46,6 +46,8 @@ const SinglePostItem = ({
   const dispatch = useDispatch()
   const [upVote,setUpvote] =useState(data?.isLikedByUser)
   const [downVote,setDownvote] =useState(data?.isDislikedByUser)
+  const [postDetailData, setPostDetailData] = useState()
+  const [getDetail, { isDetailLoading }] = usePostDetailMutation()
   const postData = {
     userId: authData?._id,
     postId: data?._id,
@@ -57,6 +59,34 @@ const SinglePostItem = ({
   const closeMenu = () => setVisible(false);
 
   const focusedInput = React.useContext(FocusedInputContext) || React.useContext(FocusedInputContextUserProfile) ;
+  // const { onLikeDislikeSubmit } = props;
+
+  const getpostDetail = async (postId) => {
+    logToCrashlytics('get post detail api call')
+    const result: any = await getDetail({ id: postId, token });
+    if (result?.data?.statusCode === 200) {
+      setPostDetailData(result?.data?.result)
+    } else {
+
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('get post detail api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
+
+  useEffect(() => {
+    
+    getpostDetail(data?._id)
+    console.log('after getDetail');
+    console.log(postData);
+  }, [])
 
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
@@ -66,6 +96,8 @@ const SinglePostItem = ({
     if (result?.data?.statusCode === 200) {
       setUpvote(!upVote)
       setDownvote(false)
+      getpostDetail(postData?.postId)
+      // onLikeDislikeSubmit(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -85,6 +117,8 @@ const SinglePostItem = ({
     if (result?.data?.statusCode === 200) {
       setUpvote(false)
       setDownvote(!downVote)
+      getpostDetail(postData?.postId)
+      // onLikeDislikeSubmit(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)

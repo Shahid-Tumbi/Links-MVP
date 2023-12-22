@@ -12,7 +12,7 @@ import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { useDispatch, useSelector } from "react-redux";
 import { setWelcomeScreen } from "@/store/User";
 import { useUpdateUserMutation } from "@/services/modules/users";
-import { usePostListMutation } from "@/services/modules/post";
+import { usePostDetailMutation, usePostListMutation } from "@/services/modules/post";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors } from "@/theme/Variables";
 import { FlashList } from "@shopify/flash-list";
@@ -24,6 +24,8 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const welcomeScreen = useSelector((state:any) => state.auth.welcomeScreen)
   const authData = useSelector((state:any) => state.auth.authData)
   const token = useSelector((state:any) => state.auth.token)
+  const [postData, setPostData] = useState()
+  const [getDetail, { isDetailLoading }] = usePostDetailMutation()
   const [updateUser] = useUpdateUserMutation()
   const [postList, { isLoading }] = usePostListMutation()
   const [page,setPage]= useState(1)
@@ -54,6 +56,34 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
       }
     }
   };
+
+  const updateLikeAndDislikeCount = (postId) => {
+    getpostDetail(postId)
+  }
+
+  const getpostDetail = async (postId) => {
+    logToCrashlytics('get post detail api call')
+    const result: any = await getDetail({ id: postId, token });
+    if (result?.data?.statusCode === 200) {
+      setPostData(result?.data?.result)
+    } else {
+
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('get post detail api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
+
+  useEffect(() => {
+    getpostDetail(route?.params?.id)
+  }, [])
   const getPostList = async (page:any) => { 
     setPage(page)   
     const result:any = await postList({page,limit,token})
@@ -98,7 +128,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item,index }:any) => {return (
   <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
-    <ProfileView data={item} number={index+1} navigation={navigation}/>
+    <ProfileView data={item} number={index+1} navigation={navigation} onLikeDislikeSubmit={updateLikeAndDislikeCount}/>
   </FocusedInputContext.Provider>)}
 
   const onPress =() => {
