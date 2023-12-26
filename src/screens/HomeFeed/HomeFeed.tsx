@@ -57,9 +57,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
     }
   };
 
-  const updateLikeAndDislikeCount = (postId) => {
-    getpostDetail(postId)
-  }
+  
 
   const getpostDetail = async (postId) => {
     logToCrashlytics('get post detail api call')
@@ -82,7 +80,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   }
 
   useEffect(() => {
-    // console.log(postData);
+    console.log(route);
   }, [])
   const getPostList = async (page:any) => { 
     setPage(page)   
@@ -128,7 +126,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item,index }:any) => {return (
   <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
-    <ProfileView data={item} number={index+1} navigation={navigation} onLikeDislikeSubmit={updateLikeAndDislikeCount}/>
+    <ProfileView data={item} number={index+1} navigation={navigation} />
   </FocusedInputContext.Provider>)}
 
   const onPress =() => {

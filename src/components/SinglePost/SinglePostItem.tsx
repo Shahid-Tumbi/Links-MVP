@@ -34,7 +34,8 @@ import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfil
 const SinglePostItem = ({
   data,
   number,
-  carouselView
+  carouselView,
+  onLikeDislikeSubmit
 }: any, {props}: any) => {
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters } = useTheme();
@@ -59,7 +60,13 @@ const SinglePostItem = ({
   const closeMenu = () => setVisible(false);
 
   const focusedInput = React.useContext(FocusedInputContext) || React.useContext(FocusedInputContextUserProfile) ;
-  // const { onLikeDislikeSubmit } = props;
+
+  const updateLikeAndDislikeCount = (postId) => {
+    console.log('calling updateLikeAndDislikeCount');
+    getpostDetail(postId)
+
+  }
+  
 
   const getpostDetail = async (postId) => {
     logToCrashlytics('get post detail api call')
@@ -98,7 +105,7 @@ const SinglePostItem = ({
       setUpvote(!upVote)
       setDownvote(false)
       getpostDetail(postData?.postId)
-      // onLikeDislikeSubmit(postData?.postId)
+      onLikeDislikeSubmit(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -119,7 +126,7 @@ const SinglePostItem = ({
       setUpvote(false)
       setDownvote(!downVote)
       getpostDetail(postData?.postId)
-      // onLikeDislikeSubmit(postData?.postId)
+      onLikeDislikeSubmit(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
