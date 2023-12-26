@@ -35,7 +35,7 @@ const SinglePostItem = ({
   data,
   number,
   carouselView
-}: any) => {
+}: any, {props}: any) => {
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters } = useTheme();
   const authData = useSelector((state:any)=>state.auth.authData) 
@@ -84,8 +84,9 @@ const SinglePostItem = ({
   useEffect(() => {
     
     getpostDetail(data?._id)
-    console.log('after getDetail');
-    console.log(postData);
+    // console.log('after getDetail');
+    // console.log(postData);
+    // console.log(data);
   }, [])
 
   const openActionSheet = debounce(() => {

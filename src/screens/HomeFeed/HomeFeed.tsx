@@ -82,7 +82,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   }
 
   useEffect(() => {
-    getpostDetail(route?.params?.id)
+    // console.log(postData);
   }, [])
   const getPostList = async (page:any) => { 
     setPage(page)   
