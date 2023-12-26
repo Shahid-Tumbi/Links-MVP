@@ -41,12 +41,17 @@ const CarouselMain = ({data}: any, {props, ref}: any) => {
   }
 
   useEffect(() => {
-   console.log(data);
+   getpostDetail(data?._id)
   }, [])
+
+  const updatePostDetails = (postId) => {
+    getpostDetail(postId)
+  } 
+   
 
 
   return (<SafeAreaView>
-    <CarouselCards data={data}/>
+    <CarouselCards data={data} onLikeDislike={updatePostDetails}/>
     </SafeAreaView>
   )
   }
