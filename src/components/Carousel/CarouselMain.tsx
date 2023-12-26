@@ -1,6 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Alert, SafeAreaView, StyleSheet } from 'react-native'
 import CarouselCards from './CarouselCards'
+import LikeDislikeContext from '@/Context/UpdateLikeDislikeContext';
+
+
+
+export default function CarouselMain({data}:any) {
+  const updateLikeAndDislikeCount = useContext(LikeDislikeContext);
+  const handlePress = () => {
+    updateLikeAndDislikeCount(data._id);
+  }
+ 
+  return (
+    <SafeAreaView>
+      <CarouselCards data={data} onPress={handlePress}/>
+      </SafeAreaView>
+    
+  );
+}
 
 // import { usePostDetailMutation } from '@/services/modules/post'
 // import { logToCrashlytics, onTokenExpired } from '@/theme/Common'
@@ -10,22 +27,13 @@ import CarouselCards from './CarouselCards'
 // const dispatch = useDispatch()
 // const authData = useSelector((state:any)=>state.auth.authData) 
 // const token = useSelector((state:any)=>state.auth.token)
+// const CarouselMain = ({data}: any, {props, ref}: any) => {
+//   const [updatedData, setUpdatedData] = useState(null);
 
-// export default function CarouselMain({data}:any) {
-//   return (
-//     <SafeAreaView>
-//       <CarouselCards data={data}/>
-//       </SafeAreaView>
-    
-//   );
-// }
-const CarouselMain = ({data}: any, {props, ref}: any) => {
-  const [updatedData, setUpdatedData] = useState(null);
-
-  const handleUpdateLikeAndDislikeCount = (postId) => {
-    const updatedValue = updateLikeAndDislikeCount(postId);
-    setUpdatedData(updatedValue);
-  }
+//   const handleUpdateLikeAndDislikeCount = (postId) => {
+//     const updatedValue = updateLikeAndDislikeCount(postId);
+//     setUpdatedData(updatedValue);
+//   }
 
   // const getpostDetail = async (postId) => {
   //   logToCrashlytics('get post detail api call')
@@ -57,13 +65,13 @@ const CarouselMain = ({data}: any, {props, ref}: any) => {
    //onLikeDislike={updatePostDetails}
 
 
-  return (<SafeAreaView>
-    <CarouselCards data={updatedData}/> 
-    </SafeAreaView>
-  )
-  }
+//   return (<SafeAreaView>
+//     <CarouselCards data={updatedData}/> 
+//     </SafeAreaView>
+//   )
+//   }
 
-export default CarouselMain;
+// export default CarouselMain;
 
 // const styles = StyleSheet.create({
 //   container: {

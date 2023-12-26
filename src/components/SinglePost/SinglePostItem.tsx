@@ -30,6 +30,7 @@ import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
+import { LikeDislikeContext } from '../../Context/UpdateLikeDislikeContext';
 
 const SinglePostItem = ({
   data,
@@ -167,6 +168,7 @@ const SinglePostItem = ({
     }
   }
   return (
+    <LikeDislikeContext.Provider value = {updateLikeAndDislikeCount}>
     <PaperProvider><View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
         <TouchableWithoutFeedback onPress={openActionSheet}>
@@ -276,6 +278,7 @@ const SinglePostItem = ({
       </View>
     </View>
     </PaperProvider>
+    </LikeDislikeContext.Provider>
   );
 };
 
