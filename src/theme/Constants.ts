@@ -60,5 +60,9 @@ export const Constants = {
     logout:'Logout',
     DEV_URL:'https://dev-api.wtfnewsapp.com',
     GUIDELINES_URL: 'https://storage.googleapis.com/communityguidelines/CommunityGuidelines.pdf',
-    readGuidelines: 'read the full guidelines here'
+    readGuidelines: 'read the full guidelines here',
+    folderPath: {
+        profile:'UserProfilePictures',
+        post:'PostImages'
+    }
 }

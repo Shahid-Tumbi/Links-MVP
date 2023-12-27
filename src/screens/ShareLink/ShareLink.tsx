@@ -16,14 +16,15 @@ import { widthPercentageToDP } from "react-native-responsive-screen";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import LinearGradient from "react-native-linear-gradient";
-import { debounce } from "lodash";
+import { debounce, random } from "lodash";
 import { Constants } from "@/theme/Constants";
 import { useAddPostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "react-native";
-import { onTokenExpired } from "@/theme/Common";
+import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { useUploadFileMutation } from "@/services/modules/users";
 
 const cheerio = require('cheerio');
 const ShareLink = ({sheetRef}:any) => {
@@ -37,49 +38,89 @@ const ShareLink = ({sheetRef}:any) => {
   const [link,setLink]=useState('')
   const [pinComment,setPinComment]=useState('')
   const [image,setImage]=useState('')
+  const [title,setTitle]=useState('')
+  const [description,setDescription]=useState('')
+  const [content,setContent]=useState('')
   const [loader,setLoader]=useState(false)
   const dispatch = useDispatch()
   const authData = useSelector((state:any)=>state.auth.authData) 
   const token = useSelector((state:any)=>state.auth.token) 
   const [addPost, { isLoading }] = useAddPostMutation();
+  const [uploadFile] = useUploadFileMutation()
+  
   const fetchOGImage = async (targetUrl: string) => {
     try {
       setLoader(true)
       const response = await fetch(targetUrl);
       const htmlContent = await response.text();
-      
       const $ = cheerio.load(htmlContent);
-      const image = $("meta[property='og:image']").attr('content');
-      
-      if (image) {
-        setLoader(false)
-        setImage(image);
+      const content = $('p').text();
+      const title = $("meta[property='og:title']").attr("content");
+      const description = $("meta[property='og:description']").attr("content");
+      const image = $("meta[property='og:image']").attr("content");
+      if (!title || !description || !image) {
+        Alert.alert('No OG title, description, or image found in the HTML');
       } else {
         setLoader(false)
-        // Handle case where OG image meta tag is not found
-        console.log('OG Image meta tag not found');
+        setImage(image);
+        setTitle(title)
+        setDescription(description)
+        setContent(content)
       }
     } catch (error) {
       setLoader(false)
       console.error('Error fetching OG image:', error);
     }
   };
+  async function uploadImage(postImage:string) {
+    var formdata = new FormData();
+    formdata.append('file[]', {
+        uri: image,
+        type: 'image/webp',
+        name: postImage,
+    });
+   const uploadResult:any = await uploadFile({userData:formdata, token,folderPath:Constants.folderPath.post});
+   if (uploadResult?.data?.statusCode === 200) {
+        logToCrashlytics('On upload file api success')
+        
+    } else {
+        if (uploadResult?.error?.data) {
+            Alert.alert(uploadResult?.error?.data?.message)
+        }
+        if (uploadResult?.error?.error) {
+            logToCrashlytics('On upload file api error',uploadResult?.error?.error)
+            // Alert.alert('Something went wrong !!')
+        }
+        if (uploadResult.error && uploadResult.error.status === 401) {
+            onTokenExpired(dispatch)
+        }
+    }
+}
   const submitPost = async () =>{
 
     if (link == '' ) {
       setError('plese enter a Link')
     }else {
-
       const postData = {
         userId: authData._id,
         link,
-        pinComment
+        pinComment,
+        title,
+        description,
+        image:'PostImage_' + `${new Date().getTime()}` + '.webp',
+        content
       }
       const result: any = await addPost({ body: postData, token })
       if (result?.data?.statusCode === 200) {
+        if(image){
+          uploadImage(postData.image)
+        }
         setLink('')
         setPinComment('')
         setImage('')
+        setContent('')
+        setDescription('')
+        setTitle('')
         setError('')
         Alert.alert('Link posted successfully')
         sheetRef?.current?.close()
@@ -102,7 +143,7 @@ const ShareLink = ({sheetRef}:any) => {
       }
     }
   }
-  const debounceFun = debounce((e)=>{return fetchOGImage(e)},400)
+  const debounceFun = debounce((e)=>{return fetchOGImage(e)},600)
   return (
     <KeyboardAvoidingView style={styles.container}>
       <Text style={styles.cancelButton} onPress={()=>{

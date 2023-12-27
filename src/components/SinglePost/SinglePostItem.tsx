@@ -26,7 +26,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import moment from "moment";
 import { useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, imageAssetUrl, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
@@ -130,7 +130,7 @@ const SinglePostItem = ({
         <TouchableWithoutFeedback onPress={openActionSheet}>
           <>
             <ImageBackground
-              source={data?.image ? { uri: data?.image } : require("../../../assets/pexels-daniel-absi-952670.jpg")}
+              source={data?.image ? { uri: `${postImageAssetUrl}${data?.image}` } : require("../../../assets/pexels-daniel-absi-952670.jpg")}
               style={carouselView ? styles.carouselImage : styles.backImage}
               imageStyle={[styles.imageRadius, !carouselView && styles.imageOpacity]}>
               <View style={styles.UpperOverlayText}>
@@ -163,7 +163,7 @@ const SinglePostItem = ({
             </ImageBackground>
             {carouselView && <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>
               <Image
-              source={{ uri: data?.user_info?.profileImage ? `${imageAssetUrl}${data?.user_info?.profileImage}` : defaultAvatar}}
+              source={{ uri: data?.user_info?.profileImage ? `${profileAssetUrl}${data?.user_info?.profileImage}` : defaultAvatar}}
               style={styles.carouselProfile} />
               </TouchableOpacity>}
             {carouselView && <Text style={[styles.carouselNumbers]}>{number}</Text>}
@@ -176,7 +176,7 @@ const SinglePostItem = ({
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>
               <Image
-                source={ {uri:data?.user_info?.profileImage ? `${imageAssetUrl}${data?.user_info?.profileImage}` : defaultAvatar} }
+                source={ {uri:data?.user_info?.profileImage ? `${profileAssetUrl}${data?.user_info?.profileImage}` : defaultAvatar} }
                 style={styles.image}
               />
               </TouchableOpacity>
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   },
   imageRadius: {
     borderRadius: 20,
-    backgroundColor:'#00000066',
+    backgroundColor:'#003566',
     opacity:0.6
   },
   detailsContainer: {
