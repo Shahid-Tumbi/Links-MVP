@@ -47,6 +47,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const { postFollowData } = route?.params;
   const followUserId = postFollowData?.userId;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
+  const [isFollowed, setIsFollowed] = useState(false);
   const FollowBody = {
     followerId: followUserId,
     followingId: myUserId
@@ -103,6 +104,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
             menu={true}
             id={postData?.userId}
             isFollowed={postData?.isFollowed}
+            setIsFollowed={setIsFollowed}
           />
         </View>
         <ScrollView showsVerticalScrollIndicator={false} style={[globalStyles.screenMargin]}>

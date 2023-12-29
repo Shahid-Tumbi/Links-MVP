@@ -19,7 +19,8 @@ const UserCard = ({
     score,
     menu,
     id,
-    isFollowed
+    isFollowed,
+    setIsFollowed
 }:any, ) => {
   
     const {
@@ -50,6 +51,7 @@ const UserCard = ({
         if(result?.data?.statusCode === 200){
           setRefreshing(false);
           setFollowing(true)
+          setIsFollowed(true);
         } else {
           setRefreshing(false);
           if(result?.error?.data){
@@ -73,6 +75,7 @@ const UserCard = ({
         if(result?.data?.statusCode === 200){
           setRefreshing(false);
           setFollowing(false)
+          setIsFollowed(false);
         } else {
           setRefreshing(false);
           if(result?.error?.data){
@@ -109,7 +112,7 @@ const UserCard = ({
             <View style={[Layout.flex02,Layout.row,Layout.justifyContentEnd]}>
                 {authData?._id !== id && 
                 <View style={styles.followButton} >
-                    {refreshing ? <ActivityIndicator size={18} style={{alignSelf:'center'}}/> : following ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
+                    {refreshing ? <ActivityIndicator size={18} style={{alignSelf:'center'}}/> : isFollowed ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
                 </View> }
                 {menu ?
                 <TouchableOpacity style={styles.followButton} >
