@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Alert, Keyboard, TextInput, } from "react-native";
+import { StyleSheet, View, Text, Alert, Keyboard, TextInput, TouchableOpacity, } from "react-native";
 import BottomSheet, { BottomSheetBackdrop, BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Image } from "react-native";
 import { useCommentListMutation, useCommentPostMutation } from "@/services/modules/post";
@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/hooks";
 import { Constants } from "@/theme/Constants";
 import { capitalize } from "lodash";
+import { Icon } from "react-native-paper";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const CommentBottomSheet = React.forwardRef((props: any, ref) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -170,7 +172,11 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
             setComment(text)
           }}
           onSubmitEditing={() => onComment()} />
+           <TouchableOpacity style={styles.roundButton} onPress={() => onComment()}>
+           <FontAwesome name="paper-plane" size={24} color="white" />
+      </TouchableOpacity>
       </View>
+     
     </BottomSheet>
   );
 });
@@ -205,6 +211,7 @@ const styles = StyleSheet.create({
   },
   commentZone: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginBottom:20
   },
   yourAvatar: {
@@ -215,13 +222,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray'
   },
   input: {
+    flex: 1,
     borderRadius: 10,
     fontSize: 16,
     lineHeight: 20,
     padding: 8,
     backgroundColor: 'rgba(36, 36, 36, 1)',
-    width: '70%',
+    // width: '70%',
     marginLeft: 10,
+    marginRight: 5,
     color: 'white'
   },
   header: {
@@ -246,6 +255,23 @@ const styles = StyleSheet.create({
   BS: {
     flex: 1,
   },
+  roundButton: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 25,
+    backgroundColor: '#333333',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  }
 });
 
 export default CommentBottomSheet;
