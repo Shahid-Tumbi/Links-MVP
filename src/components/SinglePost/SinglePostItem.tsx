@@ -51,6 +51,7 @@ const SinglePostItem = ({
     postId: data?._id,
   }
   const [visible, setVisible] = React.useState(false);
+  // console.log(data);
 
   const openMenu = () => setVisible(true);
 
@@ -171,7 +172,7 @@ const SinglePostItem = ({
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id })}>
+        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id, isFollowed:data?.isFollowed })}>
           <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>

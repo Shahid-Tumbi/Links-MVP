@@ -17,6 +17,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Colors } from "@/theme/Variables";
 import { FlashList } from "@shopify/flash-list";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
 export const FocusedInputContext = React.createContext(null);
 const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -124,6 +125,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
       <>
        { carouselList.length > 0 && <><Text style={styles.textStyle}>OUR TOP 10 LINKS</Text><FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}>
           <CarouselMain data={carouselList} refreshing={refreshing} />
+
         </FocusedInputContext.Provider><Text
           style={[
             Fonts.textLarge,
@@ -133,7 +135,9 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
           ]}
         >
             Your Feed
-          </Text></>
+          </Text>
+          
+          </>
       }
       </>
       )

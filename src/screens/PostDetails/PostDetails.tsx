@@ -44,10 +44,16 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [refreshing, setRefreshing] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const { postFollowData } = route?.params;
+  const { postFollowData } = route?.params?.isFollowed;
   const followUserId = postFollowData?.userId;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
   const [isFollowed, setIsFollowed] = useState(false);
+
+  useEffect(() => {
+    console.log(postData);
+    console.log(postFollowData);
+    setIsFollowed(postFollowData);
+  }, [postFollowData])
   const FollowBody = {
     followerId: followUserId,
     followingId: myUserId

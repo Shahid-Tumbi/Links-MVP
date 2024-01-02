@@ -21,7 +21,7 @@ const UserCard = ({
     id,
     isFollowed,
     setIsFollowed
-}:any, ) => {
+}:any, {route}: ApplicationScreenProps ) => {
   
     const {
         Fonts,
@@ -33,7 +33,7 @@ const UserCard = ({
     const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
     const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
     const [refreshing, setRefreshing] = useState(false);
-    const [following, setFollowing] = useState(false)
+    const [following, setFollowing] = useState(isFollowed)
     const dispatch = useDispatch();
     const token = useSelector((state:any) => state.auth.token)
     const myUserId = useSelector((state:any) => state.auth.authData._id);
@@ -93,7 +93,7 @@ const UserCard = ({
 
   const onPress = () => {
     
-    navigation.navigate('UserProfile2', {id: id,isFollowed:following})
+    navigation.navigate('UserProfile2', {id: id,isFollowed:route?.params?.isFollowed}) 
   }
     return (
         <View style={styles.userContainer}>
@@ -112,7 +112,7 @@ const UserCard = ({
             <View style={[Layout.flex02,Layout.row,Layout.justifyContentEnd]}>
                 {authData?._id !== id && 
                 <View style={styles.followButton} >
-                    {refreshing ? <ActivityIndicator size={18} style={{alignSelf:'center'}}/> : isFollowed ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
+                    {refreshing ? <ActivityIndicator size={18} style={{alignSelf:'center'}}/> : following ? <Following onPress={() => unfollow()}/> : <Follow onPress={() => follow()}/>}
                 </View> }
                 {menu ?
                 <TouchableOpacity style={styles.followButton} >
