@@ -94,9 +94,6 @@ const SinglePostItem = ({
   useEffect(() => {
     
     getpostDetail(data?._id)
-    // console.log('after getDetail');
-    // console.log(postData);
-    // console.log(data);
   }, [])
 
   const openActionSheet = debounce(() => {
@@ -113,8 +110,6 @@ const SinglePostItem = ({
         setDislikes(dislikes-1)
       }
       getpostDetail(postData?.postId)
-      
-      // onLikeDislikeSubmit(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -136,8 +131,6 @@ const SinglePostItem = ({
     if (result?.data?.statusCode === 200) {
       setUpvote(false)
       setDownvote(true)
-      
-      // onLikeDislikeSubmit(postData?.postId)
       setDislikes((prev) => prev + 1)
       if(upVote){
         setLikes(likes - 1)

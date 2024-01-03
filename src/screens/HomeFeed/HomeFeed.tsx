@@ -58,30 +58,6 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   };
 
   
-
-  const getpostDetail = async (postId) => {
-    logToCrashlytics('get post detail api call')
-    const result: any = await getDetail({ id: postId, token });
-    if (result?.data?.statusCode === 200) {
-      setPostData(result?.data?.result)
-    } else {
-
-      if (result?.error?.data) {
-        Alert.alert(result?.error?.data?.message)
-      }
-      if (result?.error?.error) {
-        logToCrashlytics('get post detail api error', result?.error?.error)
-        Alert.alert('Something went wrong !!')
-      }
-      if (result.error && result.error.status === 401) {
-        onTokenExpired(dispatch)
-      }
-    }
-  }
-
-  useEffect(() => {
-    console.log(route);
-  }, [])
   const getPostList = async (page:any) => { 
     setPage(page)   
     const result:any = await postList({page,limit,token})
