@@ -162,6 +162,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
       </View>
       <View style={[styles.commentZone,styles.footerContainer]}>
         <Image source={{ uri: authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.yourAvatar} />
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10}}>
         <TextInput
           ref={inputRef}
           style={styles.input}
@@ -175,6 +176,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
            <TouchableOpacity style={styles.roundButton} onPress={() => onComment()}>
            <FontAwesome name="paper-plane" size={24} color="white" />
       </TouchableOpacity>
+      </View>
       </View>
      
     </BottomSheet>
