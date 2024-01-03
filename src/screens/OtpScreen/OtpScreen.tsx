@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Text, Dimensions, TextInput, KeyboardAvoidingView, Alert, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Dimensions, TextInput, KeyboardAvoidingView, Alert, TouchableOpacity, Pressable, Keyboard } from "react-native";
 import { globalStyles } from "@/theme/GlobalStyles";
 import { Logo, RightArrow } from "@/theme/svg";
 import { Constants } from "@/theme/Constants";
@@ -215,11 +215,11 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
     }
   }
   return (
-    <KeyboardAvoidingView style={[Layout.fill, { backgroundColor: Colors.primary }]}>
+    <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       <View style={[globalStyles.screenMargin]}>
         {isLoading || apiLoader ? <Loader state={isLoading} /> : null}
 
-        <View style={[Gutters.largeTMargin, Layout.flex08]}>
+        <Pressable style={[Gutters.largeTMargin, Layout.flex08]} onPress={()=>Keyboard.dismiss()}>
           <Logo />
           <Text style={[Fonts.textVeryLarge, styles.getStarted, Fonts.textWhite]}>{Constants.otpVerification}</Text>
           <Text style={[globalStyles.titleSub]}>{Constants.enterCode}</Text>
@@ -261,7 +261,7 @@ const OtpScreen = ({ navigation, route }: ApplicationScreenProps) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </Pressable>
       </View>
     </KeyboardAvoidingView>
   );

@@ -175,6 +175,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
               :
                 <Text style={[Fonts.textCenter,Fonts.textLarge,Fonts.textWhite]}>No new notification</Text>
               }
+              stickySectionHeadersEnabled={false}
           /> 
         </SafeAreaView>
     </View>

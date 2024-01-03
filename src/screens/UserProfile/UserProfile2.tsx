@@ -223,7 +223,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     );
   };
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
+    <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       <ScrollView>
         <View style={[globalStyles.screenMargin]}>
       {isUserLoading ? <Loader state={isUserLoading} /> : null}
