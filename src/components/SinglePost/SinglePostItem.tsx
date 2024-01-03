@@ -9,7 +9,7 @@ import {
   Share,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DownvoteButton,
   Menu as MenuIcon,
@@ -24,18 +24,20 @@ import { capitalize, debounce } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
-import { useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
+import { useCommentPostMutation, useDislikePostMutation, useLikePostMutation, usePostDetailMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, imageAssetUrl, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
+import { LikeDislikeContext } from '../../Context/UpdateLikeDislikeContext';
 
 const SinglePostItem = ({
   data,
   number,
-  carouselView
-}: any) => {
+  carouselView,
+  onLikeDislikeSubmit
+}: any, {props}: any) => {
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters } = useTheme();
   const authData = useSelector((state:any)=>state.auth.authData) 
@@ -46,6 +48,10 @@ const SinglePostItem = ({
   const dispatch = useDispatch()
   const [upVote,setUpvote] =useState(data?.isLikedByUser)
   const [downVote,setDownvote] =useState(data?.isDislikedByUser)
+  const [postDetailData, setPostDetailData] = useState()
+  const [getDetail, { isDetailLoading }] = usePostDetailMutation()
+  const [likes, setLikes] = useState(data?.likes)
+  const [dislikes, setDislikes] = useState(data?.dislikes)
   const postData = {
     userId: authData?._id,
     postId: data?._id,
@@ -58,14 +64,52 @@ const SinglePostItem = ({
 
   const focusedInput = React.useContext(FocusedInputContext) || React.useContext(FocusedInputContextUserProfile) ;
 
+  const updateLikeAndDislikeCount = (postId) => {
+    console.log('calling updateLikeAndDislikeCount');
+    getpostDetail(postId)
+
+  }
+  
+
+  const getpostDetail = async (postId) => {
+    logToCrashlytics('get post detail api call')
+    const result: any = await getDetail({ id: postId, token });
+    if (result?.data?.statusCode === 200) {
+      setPostDetailData(result?.data?.result)
+    } else {
+
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('get post detail api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
+
+  useEffect(() => {
+    
+    getpostDetail(data?._id)
+  }, [])
+
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);
   const onUpvote = async () => {
+    if(!upVote) {
     const result: any = await likePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
-      setUpvote(!upVote)
+      setUpvote(true)
       setDownvote(false)
+      setLikes((prev) => prev + 1 )
+      if(downVote){
+        setDislikes(dislikes-1)
+      }
+      getpostDetail(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -80,11 +124,18 @@ const SinglePostItem = ({
     }
     
   }
+}
   const onDownvote = async () => {
+    if(!downVote) {
     const result: any = await dislikePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
       setUpvote(false)
-      setDownvote(!downVote)
+      setDownvote(true)
+      setDislikes((prev) => prev + 1)
+      if(upVote){
+        setLikes(likes - 1)
+      }
+      getpostDetail(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -98,6 +149,7 @@ const SinglePostItem = ({
       
     }
   }
+}
   const onShare = async () => {
     try {
     const shareResult = await Share.share({
@@ -124,7 +176,9 @@ const SinglePostItem = ({
       Alert.alert(error.message);
     }
   }
+
   return (
+  
     <PaperProvider><View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
         <TouchableWithoutFeedback onPress={openActionSheet}>
@@ -198,7 +252,7 @@ const SinglePostItem = ({
                 {data?.description || ''}
               </Text>
               {carouselView && <Text style={styles.likeUpvotes}>
-                {data?.likes || '0'} upvotes <Text style={styles.bullet}>{"\u2022"}</Text> {data?.dislikes || '0'} downvotes <Text style={styles.bullet}>{"\u2022"}</Text> {data?.totalComments || '0'} comments
+                {likes || '0'} upvotes <Text style={styles.bullet}>{"\u2022"}</Text> {dislikes || '0'} downvotes <Text style={styles.bullet}>{"\u2022"}</Text> {data?.totalComments || '0'} comments
               </Text>}
             </View>
           </View>
