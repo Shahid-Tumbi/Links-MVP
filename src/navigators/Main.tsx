@@ -17,6 +17,7 @@ import CommentScreen from '@/screens/CommentScreen/CommentScreen';
 import ChangePassword from '@/screens/ChangePassword/ChangePassword';
 import { useSelector } from 'react-redux';
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import PostMenu from '@/components/SinglePost/PostMenu';
 
 // import HomeFeed from '@/screens/HomeFeed/HomeFeed';
 // import ShareLink from '@/screens/ShareLink/ShareLink';
@@ -44,7 +45,7 @@ const TabNavigator = () => {
   return <KeyboardAvoidingView style={{flex:1}}>
     <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
-      <Tab.Screen name="HomeScreen" component={HomeFeed} options={{headerShown: false, tabBarShowLabel:false,
+      <Tab.Screen name="HomeScreen" component={PostMenu} options={{headerShown: false, tabBarShowLabel:false,
 
         tabBarIcon: ({ focused, size }) => {
            return <Octicons name={ 'home' } color={focused ? blueColor : color} size={size} />

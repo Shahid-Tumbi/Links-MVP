@@ -139,9 +139,9 @@ const SinglePostItem = ({
                   <Text style={styles.bullet}>.</Text>
                   <Text style={styles.topLeftCornerDate}>{moment(data?.postPublished || new Date()).format("DD MMM YYYY")}</Text>
                 </View>
-                <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}> 
-                  {/* <MenuIcon /> */}
-                  {/* <Menu
+                <View> 
+                  <MenuIcon />
+                  <Menu
                         style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
                         visible={visible}
                         onDismiss={closeMenu}
@@ -154,7 +154,7 @@ const SinglePostItem = ({
                         <Menu.Item trailingIcon={'alert'} onPress={() => {closeMenu()}} title="Report" />
                         <Divider />
                         <Menu.Item titleStyle={{color:'red'}} theme={{ colors: { primary: 'green' } }}  trailingIcon={'delete'} onPress={() => {closeMenu()}} title="Delete" />
-                  </Menu> */}
+                  </Menu> 
                 </View>
               </View>
               <View style={styles.banner}>
