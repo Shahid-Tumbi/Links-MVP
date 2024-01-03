@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: 'rgba(36, 36, 36, 1)',
     // width: '70%',
-    marginLeft: 10,
+    marginLeft: 5,
     marginRight: 5,
     color: 'white'
   },
