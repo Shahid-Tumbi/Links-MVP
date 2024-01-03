@@ -10,6 +10,7 @@ import { Constants } from "@/theme/Constants";
 import { capitalize } from "lodash";
 import { Icon } from "react-native-paper";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { ShareButton } from "@/theme/svg";
 
 const CommentBottomSheet = React.forwardRef((props: any, ref) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
@@ -174,7 +175,8 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
           }}
           onSubmitEditing={() => onComment()} />
            <TouchableOpacity style={styles.roundButton} onPress={() => onComment()}>
-           <FontAwesome name="paper-plane" size={24} color="white" />
+           {/* <FontAwesome name="paper-plane" size={24} color="white" /> */}
+           <ShareButton />
       </TouchableOpacity>
       </View>
       </View>
