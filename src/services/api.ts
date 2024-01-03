@@ -9,7 +9,8 @@ import {
 const baseQuery = fetchBaseQuery({
   // baseUrl: process.env.API_URL,
   baseUrl: 'https://dev-api.wtfnewsapp.com/v1',
-  // baseUrl: 'http://192.168.1.1:4024/v1',
+  // baseUrl: 'http://192.168.1.153:4024/v1',
+
 
 });
 
