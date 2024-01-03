@@ -173,7 +173,9 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
           onChangeText={(text) => {
             setComment(text)
           }}
-          onSubmitEditing={() => onComment()} />
+          onSubmitEditing={() => onComment()}
+          multiline={true}
+         />
            <TouchableOpacity style={styles.roundButton} onPress={() => onComment()}>
            {/* <FontAwesome name="paper-plane" size={24} color="white" /> */}
            <ShareButton />
