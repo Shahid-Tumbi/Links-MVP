@@ -8,7 +8,6 @@ import {
 import { Startup } from '../screens';
 import { useTheme } from '../hooks';
 import MainNavigator from './Main';
-import { useFlipper } from '@react-navigation/devtools';
 import { ApplicationStackParamList } from '../../@types/navigation';
 import AuthNavigator from './Auth';
 import { useSelector } from 'react-redux';
@@ -24,7 +23,6 @@ const ApplicationNavigator = () => {
 
   const navigationRef = useNavigationContainerRef();
 
-  useFlipper(navigationRef);
   const linking = {
     prefixes: [
       'wtfnewsapp://',

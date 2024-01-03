@@ -8,6 +8,7 @@ import {
   Alert,
   Share,
   Pressable,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -30,7 +31,6 @@ import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
-import { LikeDislikeContext } from '../../Context/UpdateLikeDislikeContext';
 
 const SinglePostItem = ({
   data,
@@ -154,8 +154,7 @@ const SinglePostItem = ({
     try {
     const shareResult = await Share.share({
       message:
-        `Please check this out ${Constants.DEV_URL}/shared-post/id=${data?._id}`,
-        url:data?.link
+        `Please check this out ${Constants.DEV_URL}/shared-post/id=${data?._id}`
     });   
     const result: any = await sharePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
@@ -178,8 +177,7 @@ const SinglePostItem = ({
   }
 
   return (
-  
-    <PaperProvider><View style={styles.container}>
+    <PaperProvider><View style={[styles.container,{backgroundColor:!carouselView ? Colors.primary : ''}]}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
         <TouchableWithoutFeedback onPress={openActionSheet}>
           <>
@@ -294,7 +292,7 @@ const SinglePostItem = ({
 const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
-
+    paddingBottom:10
   },
   backImage: {
     width: '100%',
@@ -311,7 +309,8 @@ const styles = StyleSheet.create({
     fontSize: 96,
     fontWeight: '400',
     alignSelf: 'flex-end',
-    bottom: 180,
+    bottom: Platform.OS === 'ios' ? 155 : 165,
+    marginEnd:10,
     textShadowColor: 'rgba(255, 219, 31, 1)',
     textShadowRadius: 2,
     color: 'black'

@@ -54,6 +54,11 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
       } catch (error:any) {
         logToCrashlytics('Check Notification permission error',error)
       }
+    } else {
+      const authorizationStatus = await messaging().requestPermission();
+      if (authorizationStatus) {
+        console.log('Permission status:', authorizationStatus);
+      }
     }
   };
 
@@ -143,7 +148,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
       )
   }
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
+    <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       {welcomeScreen ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
         <View style={[Gutters.smallTMargin, Layout.fill]}>
