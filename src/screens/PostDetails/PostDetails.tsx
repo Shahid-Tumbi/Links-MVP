@@ -86,7 +86,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     getpostDetail(route?.params?.id)
   }, [])
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
+    <KeyboardAvoidingView behavior={'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       {isLoading ? <Loader state={isLoading} /> : null}
         <View style={[globalStyles.header, Gutters.regularRMargin, Gutters.regularTMargin]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>

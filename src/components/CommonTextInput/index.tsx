@@ -44,6 +44,7 @@ const CommonTextInput = ({
           onBlur={() => setIsFocused(false)}
           underlineColor="transparent"
           activeUnderlineColor="transparent"
+          selectionColor={Colors.white}
           onChangeText={(e) => {            
             updateMasterState(e);
           }}

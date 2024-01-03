@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Linking, SafeAreaView, StatusBar } from 'react-native';
+import { Linking, Platform, SafeAreaView, StatusBar,useColorScheme } from 'react-native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import {
   NavigationContainer,
@@ -8,7 +8,6 @@ import {
 import { Startup } from '../screens';
 import { useTheme } from '../hooks';
 import MainNavigator from './Main';
-import { useFlipper } from '@react-navigation/devtools';
 import { ApplicationStackParamList } from '../../@types/navigation';
 import AuthNavigator from './Auth';
 import { useSelector } from 'react-redux';
@@ -23,8 +22,8 @@ const ApplicationNavigator = () => {
   const isVerified = useSelector((state:any) => state.auth.isVerified)
 
   const navigationRef = useNavigationContainerRef();
-
-  useFlipper(navigationRef);
+  const colorScheme = useColorScheme();
+  const isDarkTheme = colorScheme === 'dark'; 
   const linking = {
     prefixes: [
       'wtfnewsapp://',
@@ -41,6 +40,21 @@ const ApplicationNavigator = () => {
       },
     },
   };
+  const setStatusBarStyle = () => {
+    if (Platform.OS === 'ios') {
+      if (isDarkTheme) {
+        StatusBar.setBarStyle('light-content');
+      } else {
+        StatusBar.setBarStyle('dark-content');
+      }
+    } else if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor('#000000'); // Change the status bar color for dark theme
+        StatusBar.setBarStyle('light-content');
+    }
+  };
+  useEffect(() => {
+    setStatusBarStyle(); // Set the initial status bar style
+  }, [isDarkTheme]); // Re-run when the theme changes
   const handleDeepLink = ({ url }:any) => {
     if (url.includes('/reset-password')) {
       const tokenIndex = url.indexOf('token=');
@@ -69,7 +83,7 @@ const ApplicationNavigator = () => {
   return (
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef} linking={linking}>
-        <StatusBar backgroundColor='#000000' barStyle='light-content'/>
+        <StatusBar backgroundColor='#000000' />
         <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled:true, gestureDirection:"horizontal", cardStyleInterpolator: CardStyleInterpolators.forNoAnimation }}>
           {/* <Stack.Screen name="Startup" component={Startup} /> */}
           { !isVerified ?  
