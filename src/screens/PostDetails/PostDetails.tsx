@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
 import { Constants } from "@/theme/Constants";
 import { usePostDetailMutation } from "@/services/modules/post";
-import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, logToCrashlytics, onTokenExpired, postImageAssetUrl } from "@/theme/Common";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
 import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
@@ -97,7 +97,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
             />
           </TouchableOpacity>
           <UserCard
-            userAvatar={postData?.user_info?.profileImage ? `${imageAssetUrl}${postData?.user_info?.profileImage}` : userAvatar}
+            userAvatar={postData?.user_info?.profileImage ? `${profileAssetUrl}${postData?.user_info?.profileImage}` : userAvatar}
             userName={capitalize(postData?.user_info?.name || userName)}
             score={postData?.user_info?.score || score}
             menu={true}
@@ -120,7 +120,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
             style={styles.container}
             onPress={openActionSheet}
           >
-            <Image source={postData?.image ? { uri: postData?.image } : require("../../../assets/pexels-daniel-absi-952670.jpg") } style={styles.image} />
+            <Image source={postData?.image ? { uri:  `${postImageAssetUrl}${postData?.image}` } : require("../../../assets/pexels-daniel-absi-952670.jpg") } style={styles.image} />
             <View style={styles.titleContainer}>
               <Text style={styles.title}>{postData?.title || postTitle}</Text>
               <View style={[Layout.row, Layout.alignItemsCenter, Gutters.tinyRMargin]}>
@@ -141,7 +141,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
               <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
             </View>
             <View style={styles.ContentInCommentBox}>
-              <Image source={{uri: authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.avatar}/>
+              <Image source={{uri: authData?.profileImage ? `${profileAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.avatar}/>
               <Pressable onPress={focusTextInputInCommentBottomSheet} style={[styles.CommentInput]}>
                 <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
               </Pressable>

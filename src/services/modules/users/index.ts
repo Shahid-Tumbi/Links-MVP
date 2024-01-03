@@ -183,9 +183,9 @@ export const userApi = api.injectEndpoints({
         },
       }),
     }),
-    uploadFile: build.mutation<User, Partial<User>>({
-      query: ({userData,token}:any) => ({
-        url: `/users/upload`,
+    uploadFile: build.mutation<User, Partial<User>>({      
+      query: ({userData,token,folderPath}:any) => ({
+        url: `/users/upload?folderName=${folderPath}`,
         method: "POST",
         body: userData,
         headers: {
