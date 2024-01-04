@@ -75,6 +75,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     const result: any = await getDetail({ id: postId, token });
     if (result?.data?.statusCode === 200) {
       setPostData(result?.data?.result)
+    
     } else {
 
       if (result?.error?.data) {
