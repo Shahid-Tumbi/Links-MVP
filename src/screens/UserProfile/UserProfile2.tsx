@@ -19,7 +19,7 @@ import { BackButton, FollowIcon, FollowedIcon } from "@/theme/svg";
 import { useTheme } from "@/hooks";
 import { ApplicationScreenProps } from "types/navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useGetUserWisePostListMutation } from "@/services/modules/post";
+import { useDeletePostMutation, useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
@@ -59,6 +59,8 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [bottomsheetData,setBottomsheetData]= useState()
   const [userDetail, setUserDetail] : any= useState();
+  const [ deletePostData, { isDeleting}] = useDeletePostMutation();
+  const [ postData, setPostData] = useState();
   const { id } = route?.params;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
   const FollowBody = {
@@ -71,6 +73,26 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const onSubmit = () => {
     setFollow(!Follow);
   };
+
+
+  const deletePost = async(postId) => {
+    const result: any = await deletePostData({id: postId, token})
+    if (result?.data?.statusCode === 200) {
+      setPostData(result?.data?.result)
+    } else {
+
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('get post detail api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
   const getUserDetail =  async () => {
     const result: any = await UserDetail({id,token});
     if (result?.data?.statusCode === 200) {

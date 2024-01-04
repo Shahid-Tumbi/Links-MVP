@@ -45,6 +45,17 @@ export const postApi = api.injectEndpoints({
           }
         },      
       }),
+      DeletePost: build.mutation({
+        query: ({id, token}:any) => {
+          return {
+            url:`/posts/delete/${id}`,
+            method:'DELETE',
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+      }
+    }),
       likePost: build.mutation({
         query: ({ body,token }:any) => {
           return {
@@ -128,5 +139,6 @@ export const {
   useSharePostMutation,
   useCommentPostMutation,
   useCommentListMutation,
-  useGetUserWisePostListMutation
+  useGetUserWisePostListMutation,
+  useDeletePostMutation
 } = postApi;

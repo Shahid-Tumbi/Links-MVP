@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { Menu as MenuIcon } from '@/theme/svg';
@@ -13,7 +13,7 @@ const PostMenu = () => {
 
   return (
     <PaperProvider>
-    <View>
+    <View style={styles.MenuContainer}>
        <MenuIcon />
                   <Menu
                         style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
@@ -31,7 +31,19 @@ const PostMenu = () => {
                   </Menu> 
     </View>
     </PaperProvider>
+   
   )
 }
 
+const styles = StyleSheet.create({
+    MenuContainer: {
+        marginTop: 150
+    }
+})
+
 export default PostMenu;
+
+
+
+
+
