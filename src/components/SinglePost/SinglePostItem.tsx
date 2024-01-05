@@ -24,17 +24,19 @@ import { capitalize, debounce } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
-import { useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
+import { useDeletePostMutation, useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { defaultAvatar, imageAssetUrl, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
+import PopoverButton from "./PopoverButton";
 
 const SinglePostItem = ({
   data,
   number,
-  carouselView
+  carouselView,
+  getPostList
 }: any) => {
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters } = useTheme();
@@ -46,6 +48,8 @@ const SinglePostItem = ({
   const dispatch = useDispatch()
   const [upVote,setUpvote] =useState(data?.isLikedByUser)
   const [downVote,setDownvote] =useState(data?.isDislikedByUser)
+  const [ deletePostData, { isDeleting}] = useDeletePostMutation();
+  const [ postDeleteData, setPostData] = useState();
   const postData = {
     userId: authData?._id,
     postId: data?._id,
@@ -124,6 +128,26 @@ const SinglePostItem = ({
       Alert.alert(error.message);
     }
   }
+
+  const deletePost = async(postId) => {
+    const result: any = await deletePostData({id: postId, token})
+    if (result?.data?.statusCode === 200) {
+      setPostData(result?.data?.result)
+      getPostList(1);
+    } else {
+
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('get post detail api error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
   return (
     <PaperProvider><View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
@@ -139,22 +163,24 @@ const SinglePostItem = ({
                   <Text style={styles.bullet}>.</Text>
                   <Text style={styles.topLeftCornerDate}>{moment(data?.postPublished || new Date()).format("DD MMM YYYY")}</Text>
                 </View>
-                <View> 
-                  <MenuIcon />
+                <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}> 
+                  {/* <MenuIcon /> */}
                   <Menu
                         style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
                         visible={visible}
                         onDismiss={closeMenu}
                         statusBarHeight={-150 }
                         anchor={<TouchableOpacity><MenuIcon onPress={openMenu}/></TouchableOpacity>}>
-                        <Menu.Item trailingIcon={'content-copy'} onPress={() => {closeMenu()}} title="Follow" />
-                        <Divider />
-                        <Menu.Item trailingIcon={'eye-off-outline'} onPress={() => {closeMenu()}} title="Hide" />
-                        <Divider />
-                        <Menu.Item trailingIcon={'alert'} onPress={() => {closeMenu()}} title="Report" />
-                        <Divider />
-                        <Menu.Item titleStyle={{color:'red'}} theme={{ colors: { primary: 'green' } }}  trailingIcon={'delete'} onPress={() => {closeMenu()}} title="Delete" />
+                        
+                        
+                    
+                        <Menu.Item titleStyle={{color:'red'}} theme={{ colors: { primary: 'green' } }}  trailingIcon={'delete'} onPress={() => {
+                          deletePost(data._id);
+                          closeMenu();
+                        }
+                       } title="Delete" />
                   </Menu> 
+                  {/* <PopoverButton /> */}
                 </View>
               </View>
               <View style={styles.banner}>

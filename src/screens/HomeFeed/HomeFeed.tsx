@@ -98,7 +98,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item,index }:any) => {return (
   <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
-    <ProfileView data={item} number={index+1} navigation={navigation}/>
+    <ProfileView data={item} number={index+1} navigation={navigation} getPostList={getPostList}/>
   </FocusedInputContext.Provider>)}
 
   const onPress =() => {
