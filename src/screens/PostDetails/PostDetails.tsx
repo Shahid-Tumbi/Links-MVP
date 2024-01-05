@@ -1,5 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, KeyboardAvoidingView, Alert, Pressable, Platform, ScrollView } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  KeyboardAvoidingView,
+  Alert,
+  Pressable,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
 import { Colors } from "@/theme/Variables";
@@ -20,17 +36,25 @@ import { useDispatch, useSelector } from "react-redux";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
 import { Constants } from "@/theme/Constants";
 import { usePostDetailMutation } from "@/services/modules/post";
-import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import {
+  defaultAvatar,
+  imageAssetUrl,
+  logToCrashlytics,
+  onTokenExpired,
+} from "@/theme/Common";
 import { Loader } from "@/components";
 import { capitalize } from "lodash";
-import { useFollowSomeoneMutation, useUnfollowSomeoneMutation } from "@/services/modules/users";
+import {
+  useFollowSomeoneMutation,
+  useUnfollowSomeoneMutation,
+} from "@/services/modules/users";
 const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
-  const authData = useSelector(state => state.auth.authData)
-  const token = useSelector(state => state.auth.token)
-  const [postData, setPostData] = useState()
-  const [getDetail, { isLoading }] = usePostDetailMutation()
-  const dispatch = useDispatch()
+  const authData = useSelector((state) => state.auth.authData);
+  const token = useSelector((state) => state.auth.token);
+  const [postData, setPostData] = useState();
+  const [getDetail, { isLoading }] = usePostDetailMutation();
+  const dispatch = useDispatch();
   const userAvatar = defaultAvatar;
   const userName = "";
   const score = "0000 Score";
@@ -46,16 +70,24 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const { postFollowData } = route?.params;
   const followUserId = postFollowData?.userId;
+  const [recentComments, setRecentComments] = useState([]);
+
   const myUserId = useSelector((state: any) => state.auth.authData._id);
   const FollowBody = {
     followerId: followUserId,
-    followingId: myUserId
-  }
+    followingId: myUserId,
+  };
+
+  /* postData gives postDetail API response */
+  /* route.params.id gives postId */
+
   const incrementCommentCount = (postId) => {
     getpostDetail(postId);
-  }
+  };
   const openActionSheet = debounce(() => {
-    return SheetManager.show("NewsSheet", { payload: { linkUrl: postData.link, summary: postData?.gpt_summary } });
+    return SheetManager.show("NewsSheet", {
+      payload: { linkUrl: postData.link, summary: postData?.gpt_summary },
+    });
   }, 300);
   // Method to trigger text input focus in CommentBottomSheet
   const focusTextInputInCommentBottomSheet = () => {
@@ -64,94 +96,156 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     }
   };
   const getpostDetail = async (postId) => {
-    logToCrashlytics('get post detail api call')
+    logToCrashlytics("get post detail api call");
     const result: any = await getDetail({ id: postId, token });
     if (result?.data?.statusCode === 200) {
-      setPostData(result?.data?.result)
+      setPostData(result?.data?.result);
     } else {
-
       if (result?.error?.data) {
-        Alert.alert(result?.error?.data?.message)
+        Alert.alert(result?.error?.data?.message);
       }
       if (result?.error?.error) {
-        logToCrashlytics('get post detail api error', result?.error?.error)
-        Alert.alert('Something went wrong !!')
+        logToCrashlytics("get post detail api error", result?.error?.error);
+        Alert.alert("Something went wrong !!");
       }
       if (result.error && result.error.status === 401) {
-        onTokenExpired(dispatch)
+        onTokenExpired(dispatch);
       }
     }
-  }
+  };
   useEffect(() => {
-    getpostDetail(route?.params?.id)
-  }, [])
+    getpostDetail(route?.params?.id);
+  }, []);
   return (
-    <KeyboardAvoidingView behavior={'height'} style={[Layout.fill, { backgroundColor: Colors.primary }]}>
+    <KeyboardAvoidingView
+      behavior={"height"}
+      style={[Layout.fill, { backgroundColor: Colors.primary }]}
+    >
       {isLoading ? <Loader state={isLoading} /> : null}
-        <View style={[globalStyles.header, Gutters.regularRMargin, Gutters.regularTMargin]}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <MaterialCommunityIcons
-              name={"chevron-left"}
-              color={Colors.white}
-              size={28}
-            />
-          </TouchableOpacity>
-          <UserCard
-            userAvatar={postData?.user_info?.profileImage ? `${imageAssetUrl}${postData?.user_info?.profileImage}` : userAvatar}
-            userName={capitalize(postData?.user_info?.name || userName)}
-            score={postData?.user_info?.score || score}
-            menu={true}
-            id={postData?.userId}
-            isFollowed={postData?.isFollowed}
+      <View
+        style={[
+          globalStyles.header,
+          Gutters.regularRMargin,
+          Gutters.regularTMargin,
+        ]}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons
+            name={"chevron-left"}
+            color={Colors.white}
+            size={28}
           />
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false} style={[globalStyles.screenMargin]}>
-          <Text style={[Fonts.textRegular, Fonts.textWhite]}>
-            {postData?.description || ""}
-          </Text>
-          <Text style={[Fonts.textTiny, Fonts.textGray]}>
-            {`${postData?.readingTime || '0'} min read`}
-            <View>
-              <Text style={{ color: Colors.textGray400 }}> .</Text>
-            </View>{" "}
-            {moment(postData?.createdAt).format("MMMM YYYY")}
-          </Text>
-          <TouchableWithoutFeedback
-            style={styles.container}
-            onPress={openActionSheet}
-          >
-            <Image source={postData?.image ? { uri: postData?.image } : require("../../../assets/pexels-daniel-absi-952670.jpg") } style={styles.image} />
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>{postData?.title || postTitle}</Text>
-              <View style={[Layout.row, Layout.alignItemsCenter, Gutters.tinyRMargin]}>
-                <View style={[Gutters.tinyTMargin]}>
-                  <UrlLink />
-                </View>
-                <Text style={[Fonts.textTiny, Fonts.textGray]}>{postData?.link || postLink}</Text>
+        </TouchableOpacity>
+        <UserCard
+          userAvatar={
+            postData?.user_info?.profileImage
+              ? `${imageAssetUrl}${postData?.user_info?.profileImage}`
+              : userAvatar
+          }
+          userName={capitalize(postData?.user_info?.name || userName)}
+          score={postData?.user_info?.score || score}
+          menu={true}
+          id={postData?.userId}
+          isFollowed={postData?.isFollowed}
+        />
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={[globalStyles.screenMargin]}
+      >
+        <Text style={[Fonts.textRegular, Fonts.textWhite]}>
+          {postData?.description || ""}
+        </Text>
+        <Text style={[Fonts.textTiny, Fonts.textGray]}>
+          {`${postData?.readingTime || "0"} min read`}
+          <View>
+            <Text style={{ color: Colors.textGray400 }}> .</Text>
+          </View>{" "}
+          {moment(postData?.createdAt).format("MMMM YYYY")}
+        </Text>
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={openActionSheet}
+        >
+          <Image
+            source={
+              postData?.image
+                ? { uri: postData?.image }
+                : require("../../../assets/pexels-daniel-absi-952670.jpg")
+            }
+            style={styles.image}
+          />
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{postData?.title || postTitle}</Text>
+            <View
+              style={[Layout.row, Layout.alignItemsCenter, Gutters.tinyRMargin]}
+            >
+              <View style={[Gutters.tinyTMargin]}>
+                <UrlLink />
               </View>
-              <LinearGradient
-                colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-                style={styles.titleGradient}
+              <Text style={[Fonts.textTiny, Fonts.textGray]}>
+                {postData?.link || postLink}
+              </Text>
+            </View>
+            <LinearGradient
+              colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
+              style={styles.titleGradient}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <View style={styles.CommentBox}>
+          <View style={styles.CommentHeader}>
+            <Text style={styles.CommentHeaderText}>Comments</Text>
+            <Text style={styles.CommentHeaderNumber}>
+              {postData?.totalComments || "0"}
+            </Text>
+          </View>
+          <View style={styles.ContentInCommentBox}>
+            <View>
+              {recentComments.map((comment: any) => (
+                <View key={comment._id} style={styles.comment}>
+                  <Image
+                    source={{
+                      uri: comment.user_info[0]?.profileImage
+                        ? `${imageAssetUrl}${comment.user_info[0]?.profileImage}`
+                        : defaultAvatar,
+                    }}
+                    style={styles.commentAvatar}
+                  />
+                  <View style={styles.commentTextContainer}>
+                    <Text style={styles.commentAuthor}>
+                      {comment.user_info[0]?.name}
+                    </Text>
+                    <Text style={styles.commentText}>{comment.content}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+            <View>
+              <Image
+                source={{
+                  uri: authData?.profileImage
+                    ? `${imageAssetUrl}${authData?.profileImage}`
+                    : defaultAvatar,
+                }}
+                style={styles.avatar}
               />
-            </View>
-          </TouchableWithoutFeedback>
-          <View style={styles.CommentBox}>
-            <View style={styles.CommentHeader}>
-              <Text style={styles.CommentHeaderText}>Comments</Text>
-              <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
-            </View>
-            <View style={styles.ContentInCommentBox}>
-              <Image source={{uri: authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.avatar}/>
-              <Pressable onPress={focusTextInputInCommentBottomSheet} style={[styles.CommentInput]}>
+              <Pressable
+                onPress={focusTextInputInCommentBottomSheet}
+                style={[styles.CommentInput]}
+              >
                 <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
               </Pressable>
             </View>
           </View>
-        </ScrollView>
-        <CommentBottomSheet ref={commentBottomSheetRef} onCommentSubmit={incrementCommentCount}/> 
-
-    </KeyboardAvoidingView >
-
+        </View>
+      </ScrollView>
+      <CommentBottomSheet
+        ref={commentBottomSheetRef}
+        onCommentSubmit={incrementCommentCount}
+        onNewComment={setRecentComments}
+      />
+    </KeyboardAvoidingView>
   );
 };
 
@@ -210,34 +304,32 @@ const styles = StyleSheet.create({
   CommentBox: {
     height: 150,
     borderRadius: 20,
-    width: widthPercentageToDP('90%'),
+    width: widthPercentageToDP("90%"),
     marginTop: 20,
-    backgroundColor: '#222222',
-    flexDirection: 'column',
+    backgroundColor: "#222222",
+    flexDirection: "column",
     padding: 20,
-    marginBottom: 10
+    marginBottom: 10,
   },
   CommentHeader: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 10,
   },
   CommentHeaderText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 20,
-
   },
   CommentHeaderNumber: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 15,
     marginTop: 5,
-    marginLeft: 5
-
+    marginLeft: 5,
   },
   ContentInCommentBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 10,
   },
   CommentInput: {
@@ -248,12 +340,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     padding: 8,
-    backgroundColor: 'rgba(151, 151, 151, 0.25)',
+    backgroundColor: "rgba(151, 151, 151, 0.25)",
   },
   avatar: {
     height: 50,
     width: 50,
-    borderRadius: 25
+    borderRadius: 25,
   },
   BScontainer: {
     flex: 1,
@@ -268,38 +360,43 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
   },
   commentContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     marginLeft: 20,
     // backgroundColor: "black",
+  },
+  comment: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: 10,
   },
   commentAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
+    marginRight: 10,
   },
   commentTextContainer: {
     marginLeft: 10,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   commentAuthor: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white'
+    fontWeight: "bold",
+    color: "white",
   },
   commentText: {
     fontSize: 15,
-    color: 'white'
+    color: "white",
   },
   commentZone: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   yourAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
     marginLeft: 30,
-
   },
   input: {
     marginTop: 8,
@@ -308,26 +405,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     padding: 8,
-    backgroundColor: 'rgba(151, 151, 151, 0.25)',
-    width: widthPercentageToDP('70%'),
+    backgroundColor: "rgba(151, 151, 151, 0.25)",
+    width: widthPercentageToDP("70%"),
     marginLeft: 10,
   },
   header: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     marginLeft: 20,
   },
   headerAuthor: {
     fontSize: 12,
-    color: 'white'
+    color: "white",
   },
   headerText: {
     fontSize: 15,
-    color: 'white'
+    color: "white",
   },
   horizontalLine: {
     height: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     marginTop: 5, // Adjust the margin as needed
     marginBottom: 10, // Adjust the margin as needed
   },
@@ -335,9 +432,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   list: {
-    backgroundColor: 'black',
-  }
-
+    backgroundColor: "black",
+  },
 });
 
 export default PostDetailScreen;
