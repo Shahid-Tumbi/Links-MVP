@@ -200,28 +200,30 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
               {postData?.totalComments || "0"}
             </Text>
           </View>
-          <View style={styles.ContentInCommentBox}>
-            <View>
+          {/* <View style={styles.RecentComments}> */}
+            <View style={styles.recentCommentsContainer}>
               {recentComments.map((comment: any) => (
-                <View key={comment._id} style={styles.comment}>
+                <View key={comment._id} style={{flexDirection: 'row', marginVertical: 10}}>
                   <Image
                     source={{
                       uri: comment.user_info[0]?.profileImage
                         ? `${imageAssetUrl}${comment.user_info[0]?.profileImage}`
                         : defaultAvatar,
                     }}
-                    style={styles.commentAvatar}
+                    style={{width: 40, height: 40, borderRadius: 20}}
                   />
-                  <View style={styles.commentTextContainer}>
+                  <View style={{marginLeft: 10}}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.commentAuthor}>
                       {comment.user_info[0]?.name}
                     </Text>
                     <Text style={styles.commentText}>{comment.content}</Text>
+                    </View>
                   </View>
                 </View>
               ))}
             </View>
-            <View>
+            <View style={styles.commentInputContainer}>
               <Image
                 source={{
                   uri: authData?.profileImage
@@ -237,7 +239,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
                 <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
               </Pressable>
             </View>
-          </View>
+          {/* </View> */}
         </View>
       </ScrollView>
       <CommentBottomSheet
@@ -250,6 +252,16 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
 };
 
 const styles = StyleSheet.create({
+  RecentComments: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  recentCommentsContainer: {
+    // flex: 1,
+  },
+  commentInputContainer: {
+    alignItems: 'flex-end'
+  },
   container: {
     backgroundColor: "white",
     borderTopLeftRadius: 10,
