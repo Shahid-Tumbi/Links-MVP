@@ -9,7 +9,7 @@ import {
   Share,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DownvoteButton,
   Menu as MenuIcon,
@@ -24,13 +24,14 @@ import { capitalize, debounce } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
-import { useDeletePostMutation, useDislikePostMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
+import { useDeletePostMutation, useDislikePostMutation, useGetUserWisePostListMutation, useLikePostMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, imageAssetUrl, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
 import PopoverButton from "./PopoverButton";
+import { useUserDetailMutation } from "@/services/modules/users";
 
 const SinglePostItem = ({
   data,
@@ -39,7 +40,7 @@ const SinglePostItem = ({
   getPostList
 }: any) => {
   const navigation = useNavigation()
-  const { Fonts, Layout, Gutters } = useTheme();
+  const { Fonts, Layout, Gutters, darkMode } = useTheme();
   const authData = useSelector((state:any)=>state.auth.authData) 
   const token = useSelector((state:any)=>state.auth.token)
   const [likePost] = useLikePostMutation();
@@ -50,10 +51,19 @@ const SinglePostItem = ({
   const [downVote,setDownvote] =useState(data?.isDislikedByUser)
   const [ deletePostData, { isDeleting}] = useDeletePostMutation();
   const [ postDeleteData, setPostData] = useState();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [UserDetail, { isUserLoading }] = useUserDetailMutation();
+  const [userDetail, setUserDetail] : any= useState();
+  const [refreshing, setRefreshing] = useState(false);
+  const [userPostList, setUserPostList] = useState([]);
+  const [getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const postData = {
     userId: authData?._id,
     postId: data?._id,
   }
+ /* data here is same as postDetail */
+ 
   const [visible, setVisible] = React.useState(false);
 
   const openMenu = () => setVisible(true);
@@ -132,10 +142,11 @@ const SinglePostItem = ({
   const deletePost = async(postId) => {
     const result: any = await deletePostData({id: postId, token})
     if (result?.data?.statusCode === 200) {
+      setRefreshing(false);
       setPostData(result?.data?.result)
-      getPostList(1);
+      getUserWisePostList(1);
     } else {
-
+      setRefreshing(false);
       if (result?.error?.data) {
         Alert.alert(result?.error?.data?.message)
       }
@@ -148,6 +159,76 @@ const SinglePostItem = ({
       }
     }
   }
+
+  const getUserDetail =  async () => {
+    const result: any = await UserDetail({id: data?.userId,token});
+    if (result?.data?.statusCode === 200) {
+      setRefreshing(false);
+      logToCrashlytics("fetching requested user posts");
+      setUserDetail(result?.data?.result?.profile)
+
+    } else {
+      setRefreshing(false);
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data.message);
+      }
+      if (result?.error?.error) {
+        logToCrashlytics(
+          "Error fetching user posts. Please try again, or try again later.",
+          result?.error?.error
+        );
+        Alert.alert("Something went wrong!!");
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch);
+      }
+    }
+  }
+  useEffect(()=>{
+    getUserDetail()
+  },[])
+
+  const getUserWisePostListMethod = async (page: any) => {
+    setPage(page);
+    const result: any = await getUserWisePostList({
+      page,
+      limit,
+      token,
+      userId:data?.userId,
+    });
+    if (result?.data?.statusCode === 200) {
+      setRefreshing(false);
+      logToCrashlytics("fetching requested user posts");
+      if (page === 1) {
+        setUserPostList(result?.data?.result?.rows);
+      } else {
+        setUserPostList((prevState) => [
+          ...prevState,
+          ...result?.data?.result?.rows,
+        ]);
+      }
+    } else {
+      setRefreshing(false);
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data.message);
+      }
+      if (result?.error?.error) {
+        logToCrashlytics(
+          "Error fetching user posts. Please try again, or try again later.",
+          result?.error?.error
+        );
+        Alert.alert("Something went wrong!!");
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUserWisePostListMethod(1);
+
+  }, []);
   return (
     <PaperProvider><View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>
@@ -165,21 +246,42 @@ const SinglePostItem = ({
                 </View>
                 <View style={[Layout.flex03, Layout.alignItemsEnd, Gutters.tinyRMargin]}> 
                   {/* <MenuIcon /> */}
+                  {authData?._id === data?.userId && (
                   <Menu
-                        style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
+                        // style={{backgroundColor:'rgba(255, 255, 255, 1)'}}
+                        theme={{ colors: { primary: darkMode ? 'rgb(220, 184, 255)' : 'rgb(220, 184, 255)' } }}
+                        contentStyle={{
+                          borderRadius: 25,
+                          backgroundColor: darkMode ? 'black' : 'black',
+                          padding: 8,
+                          elevation: 4, // Apply elevation for shadow on Android
+                        }}
                         visible={visible}
                         onDismiss={closeMenu}
-                        statusBarHeight={-150 }
+                        statusBarHeight={20} //was -150
                         anchor={<TouchableOpacity><MenuIcon onPress={openMenu}/></TouchableOpacity>}>
                         
                         
                     
-                        <Menu.Item titleStyle={{color:'red'}} theme={{ colors: { primary: 'green' } }}  trailingIcon={'delete'} onPress={() => {
-                          deletePost(data._id);
-                          closeMenu();
+                        <Menu.Item titleStyle={{ color: darkMode ? 'rgb(231, 225, 229)' : 'rgb(231, 225, 229)' }} trailingIcon={'delete'} onPress={() => {
+                         Alert.alert(
+                          'Confirm Action',
+                          'Are you sure you want to delete this post?',
+                          [
+                            {
+                              text: 'No',
+                              style: 'cancel',
+                              onPress: closeMenu,
+                            },
+                            { text: 'Yes', onPress: () => deletePost(data?._id) },
+                          ],
+                          { cancelable: false }
+                        );
                         }
-                       } title="Delete" />
-                  </Menu> 
+                       } title="Delete" 
+                       style={{ borderRadius: 25, margin: 8 }}
+                       />
+                  </Menu> )}
                   {/* <PopoverButton /> */}
                 </View>
               </View>
