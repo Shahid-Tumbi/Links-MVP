@@ -18,7 +18,7 @@ import { useTheme } from "@/hooks";
 import LinearGradient from "react-native-linear-gradient";
 import { debounce, random } from "lodash";
 import { Constants } from "@/theme/Constants";
-import { useAddPostMutation } from "@/services/modules/post";
+import { useAddPostMutation, useGetVideoDetailMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "react-native";
 import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
@@ -47,25 +47,53 @@ const ShareLink = ({sheetRef}:any) => {
   const token = useSelector((state:any)=>state.auth.token) 
   const [addPost, { isLoading }] = useAddPostMutation();
   const [uploadFile] = useUploadFileMutation()
+  const [getVideoInfo] = useGetVideoDetailMutation()
   
   const fetchOGImage = async (targetUrl: string) => {
     try {
-      setLoader(true)
-      const response = await fetch(targetUrl);
-      const htmlContent = await response.text();
-      const $ = cheerio.load(htmlContent);
-      const content = $('p').text();
-      const title = $("meta[property='og:title']").attr("content");
-      const description = $("meta[property='og:description']").attr("content");
-      const image = $("meta[property='og:image']").attr("content");
-      if (!title || !description || !image) {
-        Alert.alert('No OG title, description, or image found in the HTML');
+      if(targetUrl.includes('youtube.com') || targetUrl.includes('youtu.be')){
+        setLoader(true)
+        const result:any = await getVideoInfo({body:{url:targetUrl},token});
+        
+        if (result?.data?.statusCode === 200) {
+          setLoader(false)
+          logToCrashlytics('On get video info call api success')
+          setImage(result?.data?.result?.image);
+          setTitle(result?.data?.result?.title)
+          setDescription(result?.data?.result?.description)
+          setContent(result?.data?.result?.content)
+          
+        } else {
+          setLoader(false)
+            if (result?.error?.data) {
+                Alert.alert(result?.error?.data?.message)
+            }
+            if (result?.error?.error) {
+                logToCrashlytics('On get video info call api error',result?.error?.error)
+                Alert.alert('Something went wrong !!')
+            }
+            if (result.error && result.error.status === 401) {
+                onTokenExpired(dispatch)
+            }
+        }
       } else {
-        setLoader(false)
-        setImage(image);
-        setTitle(title)
-        setDescription(description)
-        setContent(content)
+        setLoader(true)
+        const response = await fetch(targetUrl);
+        const htmlContent = await response.text();
+        const $ = cheerio.load(htmlContent);
+        const content = $('p').text();
+        const title = $("meta[property='og:title']").attr("content");
+        const description = $("meta[property='og:description']").attr("content");
+        const image = $("meta[property='og:image']").attr("content");
+        if (!title || !description || !image) {
+          Alert.alert('No OG title, description, or image found in the HTML');
+        } else {
+          setLoader(false)
+          setImage(image);
+          setTitle(title)
+          setDescription(description)
+          setContent(content)
+        }
       }
     } catch (error) {
       setLoader(false)

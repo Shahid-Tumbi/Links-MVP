@@ -30,6 +30,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
   const [comment, setComment] = useState('')
   const [sheetIndex, setSheetIndex] = useState(-1);
   const { onCommentSubmit } = props;
+  const pinnedComment = list.find(item => item?.is_pinned);
 
 
   const handleTextInputFocus = (data:any) => {
@@ -77,14 +78,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
       if (result?.data?.statusCode === 200) {
         setRefreshing(false)
         logToCrashlytics('on comment submit api call')
-        let user = {
-          ...result?.data?.result,
-          user_info: [{
-            name: authData?.name,
-            profileImage: `${profileAssetUrl}${authData?.profileImage}`
-          }]
-        }
-        setList(prevList => [user, ...prevList])
+        getList(1,postData?._id)
         setComment('')
         onCommentSubmit(postData?._id);
       } else {
@@ -138,7 +132,7 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
         <Image source={{ uri: postData?.user_info?.profileImage ? `${profileAssetUrl}${postData?.user_info?.profileImage}` : defaultAvatar}} style={styles.commentAvatar} />
         <View style={styles.commentTextContainer}>
           <Text style={styles.headerAuthor}>{capitalize(postData?.user_info?.name)} started the conversation.</Text>
-          <Text style={styles.headerText}>{list[0]?.is_pinned ? list[0]?.content : ''}</Text>
+          <Text style={styles.headerText}>{pinnedComment ? pinnedComment?.content : ''}</Text>
         </View>
       </View>
       <View style={styles.horizontalLine} />

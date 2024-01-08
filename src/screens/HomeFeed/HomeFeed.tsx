@@ -151,7 +151,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
     <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       {welcomeScreen ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
-        <View style={[Gutters.smallTMargin, Layout.fill]}>
+        <View style={[Gutters.tinyTMargin, Layout.fill]}>
           <View style={[Layout.row, Layout.flex01,Layout.justifyContentBetween]}>
             <Logo />
             <NotificationIcon onPress={()=>navigation.navigate('Notifications')}/>

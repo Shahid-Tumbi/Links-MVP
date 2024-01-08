@@ -1,4 +1,4 @@
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View, ScrollView } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { useTheme } from '@/hooks';
 import { Constants } from '@/theme/Constants';
@@ -97,7 +97,9 @@ const ChangePassword = ({navigation}: ApplicationScreenProps) => {
             {/* {isLoading && <Loader state={isLoading} />} */}
             <View style={[globalStyles.screenMargin]}>
                 <View style={[globalStyles.header,Layout.flex01, {position: 'absolute', top: 0, left: 0, right: 0}]}>
-                    <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <BackButton style={[Gutters.tinyTMargin]} />
+                    </TouchableOpacity>
                     <View>
                         <Text style={[Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.changePassword}</Text>
                     </View>

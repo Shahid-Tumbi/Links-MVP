@@ -228,10 +228,11 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
         <View style={[globalStyles.screenMargin]}>
       {isUserLoading ? <Loader state={isUserLoading} /> : null}
           <View style={[globalStyles.header]}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <BackButton
               style={[Gutters.tinyTMargin]}
-              onPress={() => navigation.goBack()}
             />
+            </TouchableOpacity>
             {authData?._id !== id ?
             <TouchableOpacity onPress={() => onSubmit()}>
               {Follow ? (

@@ -12,6 +12,7 @@ import { ApplicationStackParamList } from '../../@types/navigation';
 import AuthNavigator from './Auth';
 import { useSelector } from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import { Colors } from '@/theme/Variables';
 
 const Stack = createStackNavigator<ApplicationStackParamList>();
 
@@ -45,7 +46,7 @@ const ApplicationNavigator = () => {
       if (isDarkTheme) {
         StatusBar.setBarStyle('light-content');
       } else {
-        StatusBar.setBarStyle('dark-content');
+        StatusBar.setBarStyle('light-content');
       }
     } else if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor('#000000'); // Change the status bar color for dark theme
@@ -81,7 +82,7 @@ const ApplicationNavigator = () => {
   },[])
 
   return (
-    <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
+    <SafeAreaView style={[Layout.fill, { backgroundColor: Colors.primary }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef} linking={linking}>
         <StatusBar backgroundColor='#000000' />
         <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled:true, gestureDirection:"horizontal", cardStyleInterpolator: CardStyleInterpolators.forNoAnimation }}>
