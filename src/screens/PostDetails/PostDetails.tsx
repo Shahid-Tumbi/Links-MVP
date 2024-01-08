@@ -190,44 +190,53 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.CommentBox}>
- <View style={styles.CommentHeader}>
- <Text style={styles.CommentHeaderText}>Comments</Text>
- <Text style={styles.CommentHeaderNumber}>{postData?.totalComments || '0'}</Text>
- </View>
- <ScrollView>
- {recentComments.map((comment: any) => {
-  const truncatedComment = comment.content.split(' ').slice(0, 10).join(' ') + '...';
-  return (
-    <View key={comment._id} style={styles.commentRow}>
-      <Image
-        source={{
-          uri: comment.user_info[0]?.profileImage
-            ? `${profileAssetUrl}${comment.user_info[0]?.profileImage}`
-            : defaultAvatar,
-        }}
-        style={styles.profilePic}
-      />
-      <View style={styles.commentInfo}>
-        <Text style={styles.username}>
-          {comment.user_info[0]?.name}
-        </Text>
-        <Text style={styles.commentText}>{truncatedComment}</Text>
-      </View>
-    </View>
-  )
- })}
- </ScrollView>
- <View style={styles.ContentInCommentBox}>
- <Image source={{uri: authData?.profileImage ? `${profileAssetUrl}${authData?.profileImage}` : defaultAvatar}} style={styles.avatar}/>
- <Pressable onPress={focusTextInputInCommentBottomSheet} style={[styles.CommentInput]}>
-  <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
- </Pressable>
- </View>
-</View>
-
-
-
-
+          <View style={styles.CommentHeader}>
+            <Text style={styles.CommentHeaderText}>Comments</Text>
+            <Text style={styles.CommentHeaderNumber}>
+              {postData?.totalComments || "0"}
+            </Text>
+          </View>
+          <ScrollView>
+            {recentComments.map((comment: any) => {
+              const truncatedComment =
+                comment.content.split(" ").slice(0, 10).join(" ") + " ...";
+              return (
+                <View key={comment._id} style={styles.commentRow}>
+                  <Image
+                    source={{
+                      uri: comment.user_info[0]?.profileImage
+                        ? `${profileAssetUrl}${comment.user_info[0]?.profileImage}`
+                        : defaultAvatar,
+                    }}
+                    style={styles.profilePic}
+                  />
+                  <View style={styles.commentInfo}>
+                    <Text style={styles.username}>
+                      {comment.user_info[0]?.name}
+                    </Text>
+                    <Text style={styles.commentText}>{truncatedComment}</Text>
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>
+          <View style={styles.ContentInCommentBox}>
+            <Image
+              source={{
+                uri: authData?.profileImage
+                  ? `${profileAssetUrl}${authData?.profileImage}`
+                  : defaultAvatar,
+              }}
+              style={styles.avatar}
+            />
+            <Pressable
+              onPress={focusTextInputInCommentBottomSheet}
+              style={[styles.CommentInput]}
+            >
+              <Text style={[Fonts.textWhite]}> {Constants.addComments}</Text>
+            </Pressable>
+          </View>
+        </View>
       </ScrollView>
       <CommentBottomSheet
         ref={commentBottomSheetRef}
@@ -337,29 +346,29 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   commentRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
     marginBottom: 10,
-    },
-    profilePic: {
-    width: 40, 
-    height: 40, 
+  },
+  profilePic: {
+    width: 40,
+    height: 40,
     borderRadius: 20,
     marginRight: 10,
-    },
-    commentInfo: {
+  },
+  commentInfo: {
     flex: 1,
-    },
-    username: {
-    color: 'white',
+  },
+  username: {
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
-    },
-    commentText: {
-    color: 'white',
+    fontWeight: "bold",
+  },
+  commentText: {
+    color: "white",
     fontSize: 14,
-    },
+  },
 });
 
 export default PostDetailScreen;
