@@ -20,7 +20,9 @@ const CarouselCards = ({data}:any) => {
         itemWidth={ITEM_WIDTH}
         onSnapToItem={(index) => setIndex(index)}
         useScrollView={true}
-        contentContainerCustomStyle={{ paddingHorizontal: 30 }}
+        contentContainerCustomStyle= {{ paddingHorizontal: 30}}
+        inactiveSlideOpacity={0.1} 
+        inactiveSlideScale={0.9}
       />
     </View>
   )

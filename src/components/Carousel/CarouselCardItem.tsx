@@ -18,7 +18,7 @@ const CarouselCardItem = ({ item, index, data }) => {
     >
       <SinglePostItem data={item} number={index + 1} carouselView={true} />
       {previousItem && (
-        <View style={styles.previousItemContainer}>
+        <View style={[styles.previousItemContainer, { transform: [{ translateX: -ITEM_WIDTH * 0.3 }] }]}>
           <SinglePostItem
             data={previousItem}
             number={index}
@@ -27,7 +27,7 @@ const CarouselCardItem = ({ item, index, data }) => {
         </View>
       )}
       {nextItem && (
-        <View style={styles.nextItemContainer}>
+        <View style={[styles.nextItemContainer, { transform: [{ translateX: ITEM_WIDTH * 0.3 }] }]}>
           <SinglePostItem
             data={nextItem}
             number={index + 2}
@@ -83,10 +83,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     // left: 0,
-    left: -ITEM_WIDTH * 0.3, // Adjust the value as needed
+    left: -ITEM_WIDTH * 0.3, 
     width: ITEM_WIDTH * 0.3,
     // width: ITEM_WIDTH / 3,
     // height: ITEM_WIDTH,
+    marginLeft: 20,
+    marginRight: 20,
     height: '100%',
     overflow: "hidden",
     zIndex: -1,
@@ -95,12 +97,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     // right: 0,
-    right: -ITEM_WIDTH * 0.3 , 
+    right: -ITEM_WIDTH * 0.3, 
     // width: ITEM_WIDTH / 3,
     width: ITEM_WIDTH * 0.3,
     // height: ITEM_WIDTH,
     height: '100%',
     overflow: "hidden",
+    marginLeft: 20,
+    marginRight: 20,
     zIndex: -1,
   },
 });
