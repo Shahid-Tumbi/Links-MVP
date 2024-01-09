@@ -15,7 +15,7 @@ const CarouselCards = ({data}:any) => {
         layout="default"
         ref={isCarousel}
         data={data}
-        renderItem={CarouselCardItem}
+        renderItem={({ item, index }) => <CarouselCardItem item={item} index={index} data={data} />}
         sliderWidth={SLIDER_WIDTH}
         itemWidth={ITEM_WIDTH}
         onSnapToItem={(index) => setIndex(index)}
