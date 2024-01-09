@@ -7,7 +7,7 @@ export const SLIDER_WIDTH = Dimensions.get("window").width + 80;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 
 const CarouselCardItem = ({ item, index, data }) => {
-  // const previousItem = index > 0 ? data[index - 1] : null;
+  const previousItem = index > 0 ? data[index - 1] : null;
   const nextItem = index < data.length - 1 ? data[index + 1] : null;
 
   return (
@@ -17,7 +17,7 @@ const CarouselCardItem = ({ item, index, data }) => {
       key={index}
     >
       <SinglePostItem data={item} number={index + 1} carouselView={true} />
-      {/* {previousItem && (
+      {previousItem && (
         <View style={styles.previousItemContainer}>
           <SinglePostItem
             data={previousItem}
@@ -25,7 +25,7 @@ const CarouselCardItem = ({ item, index, data }) => {
             carouselView={true}
           />
         </View>
-      )} */}
+      )}
       {nextItem && (
         <View style={styles.nextItemContainer}>
           <SinglePostItem
