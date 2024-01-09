@@ -12,7 +12,7 @@ const CarouselCards = ({data}:any) => {
   return (
     <View>
       <Carousel
-        layout="default"
+        layout={'default'}
         ref={isCarousel}
         data={data}
         renderItem={({ item, index }) => <CarouselCardItem item={item} index={index} data={data} />}
@@ -20,6 +20,7 @@ const CarouselCards = ({data}:any) => {
         itemWidth={ITEM_WIDTH}
         onSnapToItem={(index) => setIndex(index)}
         useScrollView={true}
+        contentContainerCustomStyle={{ paddingHorizontal: 30 }}
       />
     </View>
   )

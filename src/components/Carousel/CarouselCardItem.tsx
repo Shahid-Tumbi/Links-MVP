@@ -7,7 +7,7 @@ export const SLIDER_WIDTH = Dimensions.get("window").width + 80;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 
 const CarouselCardItem = ({ item, index, data }) => {
-  const previousItem = index > 0 ? data[index - 1] : null;
+  // const previousItem = index > 0 ? data[index - 1] : null;
   const nextItem = index < data.length - 1 ? data[index + 1] : null;
 
   return (
@@ -17,7 +17,7 @@ const CarouselCardItem = ({ item, index, data }) => {
       key={index}
     >
       <SinglePostItem data={item} number={index + 1} carouselView={true} />
-      {previousItem && (
+      {/* {previousItem && (
         <View style={styles.previousItemContainer}>
           <SinglePostItem
             data={previousItem}
@@ -25,7 +25,7 @@ const CarouselCardItem = ({ item, index, data }) => {
             carouselView={true}
           />
         </View>
-      )}
+      )} */}
       {nextItem && (
         <View style={styles.nextItemContainer}>
           <SinglePostItem
@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: ITEM_WIDTH,
     paddingBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    // paddingHorizontal: 30,
   },
   image: {
     width: ITEM_WIDTH,
@@ -79,18 +82,26 @@ const styles = StyleSheet.create({
   previousItemContainer: {
     position: "absolute",
     top: 0,
-    left: 0,
-    width: ITEM_WIDTH / 2,
-    height: ITEM_WIDTH,
+    // left: 0,
+    left: -ITEM_WIDTH * 0.3, // Adjust the value as needed
+    width: ITEM_WIDTH * 0.3,
+    // width: ITEM_WIDTH / 3,
+    // height: ITEM_WIDTH,
+    height: '100%',
     overflow: "hidden",
+    zIndex: -1,
   },
   nextItemContainer: {
     position: "absolute",
     top: 0,
-    right: 0,
-    width: ITEM_WIDTH / 2,
-    height: ITEM_WIDTH,
+    // right: 0,
+    right: -ITEM_WIDTH * 0.3 , 
+    // width: ITEM_WIDTH / 3,
+    width: ITEM_WIDTH * 0.3,
+    // height: ITEM_WIDTH,
+    height: '100%',
     overflow: "hidden",
+    zIndex: -1,
   },
 });
 
