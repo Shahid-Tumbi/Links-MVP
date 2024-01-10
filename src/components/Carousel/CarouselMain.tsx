@@ -1,21 +1,11 @@
-import React from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
-import CarouselCards from './CarouselCards'
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, SafeAreaView, StyleSheet } from "react-native";
+import CarouselCards from "./CarouselCards";
 
-export default function CarouselMain({data}:any) {
+export default function CarouselMain({ data }: any) {
   return (
-    <SafeAreaView>
-      <CarouselCards data={data}/>
-      </SafeAreaView>
-    
+    <SafeAreaView style={{ flex: 1 }}>
+      <CarouselCards data={data} />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 50
-  },
-});

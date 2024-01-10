@@ -21,7 +21,7 @@ import { ApplicationScreenProps } from "types/navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useGetUserWisePostListMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
 
 import {
@@ -223,15 +223,16 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     );
   };
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
+    <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       <ScrollView>
         <View style={[globalStyles.screenMargin]}>
       {isUserLoading ? <Loader state={isUserLoading} /> : null}
           <View style={[globalStyles.header]}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <BackButton
               style={[Gutters.tinyTMargin]}
-              onPress={() => navigation.goBack()}
             />
+            </TouchableOpacity>
             {authData?._id !== id ?
             <TouchableOpacity onPress={() => onSubmit()}>
               {Follow ? (
@@ -246,7 +247,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             <View>
                 <Image
                 style={styles.avatarContainer}
-                source={{uri:userDetail?.profileImage ? `${imageAssetUrl}${userDetail?.profileImage}`  : defaultAvatar}}  
+                source={{uri:userDetail?.profileImage ? `${profileAssetUrl}${userDetail?.profileImage}`  : defaultAvatar}}  
               />
             </View>
             <View style={styles.reference}>

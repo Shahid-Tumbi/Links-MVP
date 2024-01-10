@@ -10,7 +10,7 @@ import { Avatar } from "react-native-paper";
 import ThreeDotLoader from "@/components/ThreeDotLoader/ThreeDotLoader";
 import { Path, Svg } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { defaultAvatar, imageAssetUrl, logToCrashlytics } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, logToCrashlytics } from "@/theme/Common";
 
 const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
     logToCrashlytics('Profile screen')
@@ -45,7 +45,7 @@ const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
                     page == 1 ?
                         <View style={[Gutters.largeTMargin, Layout.flex05, Layout.center]}>
                             <Text style={[styles.title]}>{`Hey, ${authData?.name}`}</Text>
-                            <Avatar.Image size={135} source={{ uri:authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : imageUri }} style={[Gutters.regularTMargin]} />
+                            <Avatar.Image size={135} source={{ uri:authData?.profileImage ? `${profileAssetUrl}${authData?.profileImage}` : imageUri }} style={[Gutters.regularTMargin]} />
                             <Text style={[Fonts.textRegular, Gutters.largeTMargin]}>{Constants.analyseProfile}</Text>
                             <ThreeDotLoader />
                         </View>
@@ -64,7 +64,7 @@ const ProfileScreen = ({ navigation }: ApplicationScreenProps) => {
                                 ]}>
                                     <Path d="M0 31.5002C151.284 -9.07657 236.954 -10.3224 391.5 31.5002" stroke="white" stroke-opacity="0.6" />
                                 </Svg>
-                                <Avatar.Image size={90} source={{ uri: authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : imageUri }} style={[styles.profile]} />
+                                <Avatar.Image size={90} source={{ uri: authData?.profileImage ? `${profileAssetUrl}${authData?.profileImage}` : imageUri }} style={[styles.profile]} />
 
                             </View>
                             <View style={[Layout.fill, Layout.center]}>

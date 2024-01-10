@@ -115,6 +115,18 @@ export const postApi = api.injectEndpoints({
           }
         },      
       }),
+      getVideoDetail: build.mutation({
+        query: ({body,token}:any) => {
+          return {
+            url:`/posts/getVideoInfo/extraction`,
+            method:'POST',
+            body:body,
+            headers:{
+              Authorization: token ? `Bearer ${token}` : '',
+            }
+          }
+        },      
+      }),
     }),
   overrideExisting: true,
 });
@@ -128,5 +140,6 @@ export const {
   useSharePostMutation,
   useCommentPostMutation,
   useCommentListMutation,
-  useGetUserWisePostListMutation
+  useGetUserWisePostListMutation,
+  useGetVideoDetailMutation
 } = postApi;

@@ -12,7 +12,7 @@ import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { useDispatch, useSelector } from "react-redux";
 import { setWelcomeScreen } from "@/store/User";
 import { useUpdateUserMutation } from "@/services/modules/users";
-import { usePostListMutation } from "@/services/modules/post";
+import { usePostDetailMutation, usePostListMutation } from "@/services/modules/post";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors } from "@/theme/Variables";
 import { FlashList } from "@shopify/flash-list";
@@ -25,6 +25,8 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const welcomeScreen = useSelector((state:any) => state.auth.welcomeScreen)
   const authData = useSelector((state:any) => state.auth.authData)
   const token = useSelector((state:any) => state.auth.token)
+  const [postData, setPostData] = useState()
+  const [getDetail, { isDetailLoading }] = usePostDetailMutation()
   const [updateUser] = useUpdateUserMutation()
   const [postList, { isLoading }] = usePostListMutation()
   const [page,setPage]= useState(1)
@@ -53,8 +55,15 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
       } catch (error:any) {
         logToCrashlytics('Check Notification permission error',error)
       }
+    } else {
+      const authorizationStatus = await messaging().requestPermission();
+      if (authorizationStatus) {
+        console.log('Permission status:', authorizationStatus);
+      }
     }
   };
+
+  
   const getPostList = async (page:any) => { 
     setPage(page)   
     const result:any = await postList({page,limit,token})
@@ -99,7 +108,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item,index }:any) => {return (
   <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
-    <ProfileView data={item} number={index+1} navigation={navigation}/>
+    <ProfileView data={item} number={index+1} navigation={navigation} />
   </FocusedInputContext.Provider>)}
 
   const onPress =() => {
@@ -143,10 +152,10 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
       )
   }
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[globalStyles.container]}>
+    <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       {welcomeScreen ? <Welcome navigation={navigation} route={route} onPress={onPress} /> : 
       <View style={[globalStyles.screenMargin]}>
-        <View style={[Gutters.smallTMargin, Layout.fill]}>
+        <View style={[Gutters.tinyTMargin, Layout.fill]}>
           <View style={[Layout.row, Layout.flex01,Layout.justifyContentBetween]}>
             <Logo />
             <NotificationIcon onPress={()=>navigation.navigate('Notifications')}/>

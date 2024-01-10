@@ -30,7 +30,7 @@ const NewsSheet = (props: any) => {
     const scrollHeight = event.nativeEvent.contentSize.height;
     const windowHeight = event.nativeEvent.layoutMeasurement.height;
     const progress = (offsetY / (scrollHeight - windowHeight)) * 100;
-    setScrollPosition(progress);
+    if(progress) setScrollPosition(progress);
   };
   const hideActionSheet = () => {
     SheetManager.hide("NewsSheet");
@@ -97,7 +97,7 @@ const NewsSheet = (props: any) => {
 };
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get("screen").height - 250,
+    height: Dimensions.get("screen").height - 200,
     backgroundColor: "rgba(0,0,0,0.8)",
   },
   header: {

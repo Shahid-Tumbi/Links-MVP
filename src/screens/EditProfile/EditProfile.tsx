@@ -10,7 +10,7 @@ import { Avatar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation, useUploadFileMutation } from "@/services/modules/users";
 import { clearToken, setAuthData } from "@/store/User";
-import { defaultAvatar, imageAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import Permissions from 'react-native-permissions';
 import { launchImageLibrary } from "react-native-image-picker";
 
@@ -27,7 +27,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
     const [userName, setUserName] = useState(authData?.userName)
     const [fullName, setFullName] = useState(authData?.name)
     const [bio, setBio] = useState(authData?.bio)
-    const [imageUri, setImageUri] = useState(authData?.profileImage ? `${imageAssetUrl}${authData?.profileImage}` : defaultAvatar)
+    const [imageUri, setImageUri] = useState(authData?.profileImage ? `${profileAssetUrl}${authData?.profileImage}` : defaultAvatar)
     const [updateUser] = useUpdateUserMutation()
     const [uploadFile, { isLoading }] = useUploadFileMutation()
     const dispatch = useDispatch()
@@ -82,7 +82,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                 '.webp',
         });
 
-       const uploadResult:any = await uploadFile({userData:formdata, token});
+       const uploadResult:any = await uploadFile({userData:formdata, token,folderPath:Constants.folderPath.profile});
        console.log(uploadResult);
        
        if (uploadResult?.data?.statusCode === 200) {
@@ -171,7 +171,9 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
             {isLoading && <Loader state={isLoading} />}
             <View style={[globalStyles.screenMargin]}>
                 <View style={[globalStyles.header,{position: 'absolute', top: 0, left: 0, right: 0}]}>
-                    <BackButton style={[Gutters.tinyTMargin]} onPress={() => navigation.goBack()} />
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <BackButton style={[Gutters.tinyTMargin]}  />
+                    </TouchableOpacity>
                     <View>
                         <Text style={[Fonts.textVeryLarge, Fonts.textWhite]}>{Constants.editProfile}</Text>
                     </View>
@@ -231,6 +233,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
                                 updateMasterState={(value: string) => {
                                     setBio(value);
                                 }}
+                                style={[{height: Platform.OS == 'ios' && 33 }]}
                             />
                         </View>
                     </View>

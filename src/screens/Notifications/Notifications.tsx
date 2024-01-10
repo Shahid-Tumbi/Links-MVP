@@ -144,12 +144,14 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
   }
   return (
     <View style={styles.root}>
-        <View style={[Layout.row, Layout.justifyContentBetween, globalStyles.screenMargin,Gutters.regularTMargin, Layout.flex01]}>
+        <View style={[ globalStyles.screenMargin, Layout.flex01]}>
+          <View style={[Layout.row, Layout.justifyContentBetween,Gutters.tinyTMargin]}>
           <Logo onPress={() => navigation.reset({
             index: 0,
             routes: [{name: 'Main'}]
           })}/>
           <FocusedNotificaionIcon />
+          </View>
         </View>
         <SafeAreaView style={[Layout.flex09]}>
           <SectionList
@@ -175,6 +177,7 @@ const Notifications = ({navigation, route}: ApplicationScreenProps) => {
               :
                 <Text style={[Fonts.textCenter,Fonts.textLarge,Fonts.textWhite]}>No new notification</Text>
               }
+              stickySectionHeadersEnabled={false}
           /> 
         </SafeAreaView>
     </View>
