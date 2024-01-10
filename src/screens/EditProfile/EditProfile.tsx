@@ -53,7 +53,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
         if (result?.data?.statusCode === 200) {
             logToCrashlytics('On update profile api success')
             dispatch(setAuthData(result?.data?.result))
-            Alert.alert('Updated Successfully')
+            Alert.alert('Updated your profile picture successfully!')
         } else {
             if (result?.error?.data) {
                 Alert.alert(result?.error?.data?.message)
