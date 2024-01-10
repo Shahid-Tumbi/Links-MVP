@@ -10,9 +10,11 @@ import { useTheme } from '../hooks';
 import MainNavigator from './Main';
 import { ApplicationStackParamList } from '../../@types/navigation';
 import AuthNavigator from './Auth';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import { Colors } from '@/theme/Variables';
+import ReceiveSharingIntent from 'react-native-receive-sharing-intent';
+import { setSharedLink, setSheetOpen } from '@/store/User';
 
 const Stack = createStackNavigator<ApplicationStackParamList>();
 
@@ -21,7 +23,7 @@ const ApplicationNavigator = () => {
   const { Layout, darkMode, NavigationTheme } = useTheme();
   const { colors } = NavigationTheme;
   const isVerified = useSelector((state:any) => state.auth.isVerified)
-
+  const dispatch = useDispatch()
   const navigationRef = useNavigationContainerRef();
   const colorScheme = useColorScheme();
   const isDarkTheme = colorScheme === 'dark'; 
@@ -53,6 +55,23 @@ const ApplicationNavigator = () => {
         StatusBar.setBarStyle('light-content');
     }
   };
+  useEffect(()=>{
+    ReceiveSharingIntent.getReceivedFiles((files: any[]) => {
+      let weblinks = files.map(obj => obj.weblink);
+      if(weblinks[0]){
+        dispatch(setSharedLink(weblinks[0]))
+        dispatch(setSheetOpen(true))
+      }
+    }, 
+    (error) =>{
+      console.log(error);
+    }, 
+    'wtfnewsapp'
+    );
+    return () =>{   
+      ReceiveSharingIntent.clearReceivedFiles() 
+    }
+  },[])
   useEffect(() => {
     setStatusBarStyle(); // Set the initial status bar style
   }, [isDarkTheme]); // Re-run when the theme changes

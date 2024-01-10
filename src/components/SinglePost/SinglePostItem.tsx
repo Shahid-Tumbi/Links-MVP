@@ -27,7 +27,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import moment from "moment";
 import { useCommentPostMutation, useDislikePostMutation, useLikePostMutation, usePostDetailMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl, logToCrashlytics } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
@@ -48,7 +48,6 @@ const SinglePostItem = ({
   const dispatch = useDispatch()
   const [upVote,setUpvote] =useState(data?.isLikedByUser)
   const [downVote,setDownvote] =useState(data?.isDislikedByUser)
-  const [postDetailData, setPostDetailData] = useState()
   const [getDetail, { isDetailLoading }] = usePostDetailMutation()
   const [likes, setLikes] = useState(data?.likes)
   const [dislikes, setDislikes] = useState(data?.dislikes)
@@ -71,30 +70,6 @@ const SinglePostItem = ({
   }
   
 
-  const getpostDetail = async (postId) => {
-    logToCrashlytics('get post detail api call')
-    const result: any = await getDetail({ id: postId, token });
-    if (result?.data?.statusCode === 200) {
-      setPostDetailData(result?.data?.result)
-    } else {
-
-      if (result?.error?.data) {
-        Alert.alert(result?.error?.data?.message)
-      }
-      if (result?.error?.error) {
-        logToCrashlytics('get post detail api error', result?.error?.error)
-        Alert.alert('Something went wrong !!')
-      }
-      if (result.error && result.error.status === 401) {
-        onTokenExpired(dispatch)
-      }
-    }
-  }
-
-  useEffect(() => {
-    
-    getpostDetail(data?._id)
-  }, [])
 
   const openActionSheet = debounce(() => {
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
@@ -109,7 +84,6 @@ const SinglePostItem = ({
       if(downVote){
         setDislikes(dislikes-1)
       }
-      getpostDetail(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)
@@ -135,7 +109,6 @@ const SinglePostItem = ({
       if(upVote){
         setLikes(likes - 1)
       }
-      getpostDetail(postData?.postId)
     } else {
       if (result.error && result.error.status === 401) {
         onTokenExpired(dispatch)

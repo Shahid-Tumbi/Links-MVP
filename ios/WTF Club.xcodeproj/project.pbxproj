@@ -14,6 +14,9 @@
 		640019289C50738B03EE4EBB /* libPods-WTF Club-WTF ClubTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A67DDF01C40F96FB5066BF /* libPods-WTF Club-WTF ClubTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F28C1C72B3D643C00E1701A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F28C1C62B3D643C00E1701A /* GoogleService-Info.plist */; };
+		9FBD4BF02B4D54EF005F9049 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBD4BEF2B4D54EF005F9049 /* ShareViewController.swift */; };
+		9FBD4BF32B4D54EF005F9049 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9FBD4BF12B4D54EF005F9049 /* MainInterface.storyboard */; };
+		9FBD4BF72B4D54EF005F9049 /* WTF Links.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9FBD4BED2B4D54EC005F9049 /* WTF Links.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C55FD2BC81EB1B666613405D /* libPods-WTF Club.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB45E0B1D6642A92E9BC38 /* libPods-WTF Club.a */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +28,28 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = LinksByNK;
 		};
+		9FBD4BF52B4D54EF005F9049 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9FBD4BEC2B4D54EB005F9049;
+			remoteInfo = "WTF Links";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9FBD4BF82B4D54F0005F9049 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9FBD4BF72B4D54EF005F9049 /* WTF Links.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* WTF ClubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WTF ClubTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -42,6 +66,11 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LinksByNK/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9F1C739B2B3D952F0078B72B /* LinksByNK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = LinksByNK.entitlements; path = LinksByNK/LinksByNK.entitlements; sourceTree = "<group>"; };
 		9F28C1C62B3D643C00E1701A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9FBD4BED2B4D54EC005F9049 /* WTF Links.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "WTF Links.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FBD4BEF2B4D54EF005F9049 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		9FBD4BF22B4D54EF005F9049 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		9FBD4BF42B4D54EF005F9049 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FBD4BFC2B4D72AF005F9049 /* WTF Links.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "WTF Links.entitlements"; sourceTree = "<group>"; };
 		D4A67DDF01C40F96FB5066BF /* libPods-WTF Club-WTF ClubTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WTF Club-WTF ClubTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCAA471548BCAA93F130CD2D /* Pods-WTF Club-WTF ClubTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WTF Club-WTF ClubTests.debug.xcconfig"; path = "Target Support Files/Pods-WTF Club-WTF ClubTests/Pods-WTF Club-WTF ClubTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E7885A65ABFC175B67B720D6 /* Pods-WTF Club.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WTF Club.release.xcconfig"; path = "Target Support Files/Pods-WTF Club/Pods-WTF Club.release.xcconfig"; sourceTree = "<group>"; };
@@ -63,6 +92,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C55FD2BC81EB1B666613405D /* libPods-WTF Club.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FBD4BEA2B4D54EB005F9049 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +160,7 @@
 				13B07FAE1A68108700A75B9A /* WTF Club */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* LinksByNKTests */,
+				9FBD4BEE2B4D54EE005F9049 /* WTF Links */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -138,8 +175,20 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* WTF Club.app */,
 				00E356EE1AD99517003FC87E /* WTF ClubTests.xctest */,
+				9FBD4BED2B4D54EC005F9049 /* WTF Links.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9FBD4BEE2B4D54EE005F9049 /* WTF Links */ = {
+			isa = PBXGroup;
+			children = (
+				9FBD4BFC2B4D72AF005F9049 /* WTF Links.entitlements */,
+				9FBD4BEF2B4D54EF005F9049 /* ShareViewController.swift */,
+				9FBD4BF12B4D54EF005F9049 /* MainInterface.storyboard */,
+				9FBD4BF42B4D54EF005F9049 /* Info.plist */,
+			);
+			path = "WTF Links";
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -191,15 +240,34 @@
 				C73B25A72577D503D642B008 /* [CP] Copy Pods Resources */,
 				3F9BDB5436308466A9789F86 /* [CP-User] [RNFB] Core Configuration */,
 				F020A299C1C5E89F6CAC3C92 /* [CP-User] [RNFB] Crashlytics Configuration */,
+				9FBD4BF82B4D54F0005F9049 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9FBD4BF62B4D54EF005F9049 /* PBXTargetDependency */,
 			);
 			name = "WTF Club";
 			productName = LinksByNK;
 			productReference = 13B07F961A680F5B00A75B9A /* WTF Club.app */;
 			productType = "com.apple.product-type.application";
+		};
+		9FBD4BEC2B4D54EB005F9049 /* WTF Links */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9FBD4BFB2B4D54F0005F9049 /* Build configuration list for PBXNativeTarget "WTF Links" */;
+			buildPhases = (
+				9FBD4BE92B4D54EB005F9049 /* Sources */,
+				9FBD4BEA2B4D54EB005F9049 /* Frameworks */,
+				9FBD4BEB2B4D54EB005F9049 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "WTF Links";
+			productName = "WTF Links";
+			productReference = 9FBD4BED2B4D54EC005F9049 /* WTF Links.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -207,6 +275,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -215,6 +284,9 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
+					};
+					9FBD4BEC2B4D54EB005F9049 = {
+						CreatedOnToolsVersion = 14.2;
 					};
 				};
 			};
@@ -233,6 +305,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* WTF Club */,
 				00E356ED1AD99517003FC87E /* WTF ClubTests */,
+				9FBD4BEC2B4D54EB005F9049 /* WTF Links */,
 			);
 		};
 /* End PBXProject section */
@@ -252,6 +325,14 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				9F28C1C72B3D643C00E1701A /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FBD4BEB2B4D54EB005F9049 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FBD4BF32B4D54EF005F9049 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +533,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9FBD4BE92B4D54EB005F9049 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FBD4BF02B4D54EF005F9049 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -460,7 +549,23 @@
 			target = 13B07F861A680F5B00A75B9A /* WTF Club */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
+		9FBD4BF62B4D54EF005F9049 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9FBD4BEC2B4D54EB005F9049 /* WTF Links */;
+			targetProxy = 9FBD4BF52B4D54EF005F9049 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9FBD4BF12B4D54EF005F9049 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9FBD4BF22B4D54EF005F9049 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
@@ -518,6 +623,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 49C07015D5F373394B84C9E5 /* Pods-WTF Club.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -551,6 +657,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E7885A65ABFC175B67B720D6 /* Pods-WTF Club.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -648,20 +755,14 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_CFLAGS = "$(inherited)  ";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -732,23 +833,103 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_CFLAGS = "$(inherited)  ";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9FBD4BF92B4D54F0005F9049 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "WTF Links/WTF Links.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4LFYK9VUHQ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "WTF Links/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "WTF Links share";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.linksbynk.WTF-Links";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		9FBD4BFA2B4D54F0005F9049 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "WTF Links/WTF Links.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4LFYK9VUHQ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "WTF Links/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "WTF Links share";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.linksbynk.WTF-Links";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -778,6 +959,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9FBD4BFB2B4D54F0005F9049 /* Build configuration list for PBXNativeTarget "WTF Links" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9FBD4BF92B4D54F0005F9049 /* Debug */,
+				9FBD4BFA2B4D54F0005F9049 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
