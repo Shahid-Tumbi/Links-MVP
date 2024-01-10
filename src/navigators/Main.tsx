@@ -18,9 +18,6 @@ import ChangePassword from '@/screens/ChangePassword/ChangePassword';
 import { useSelector } from 'react-redux';
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
-// import HomeFeed from '@/screens/HomeFeed/HomeFeed';
-// import ShareLink from '@/screens/ShareLink/ShareLink';
-// import PostDetails from '@/screens/PostDetails/PostDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
