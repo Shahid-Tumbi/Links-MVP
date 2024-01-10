@@ -6,9 +6,7 @@ import LinearGradient from "react-native-linear-gradient";
 export const SLIDER_WIDTH = Dimensions.get("window").width + 80;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 
-const CarouselCardItem = ({ item, index, data }) => {
-  const previousItem = index > 0 ? data[index - 1] : null;
-  const nextItem = index < data.length - 1 ? data[index + 1] : null;
+const CarouselCardItem = ({ item, index }) => {
 
   return (
     <LinearGradient
@@ -17,24 +15,6 @@ const CarouselCardItem = ({ item, index, data }) => {
       key={index}
     >
       <SinglePostItem data={item} number={index + 1} carouselView={true} />
-      {previousItem && (
-        <View style={[styles.previousItemContainer, { transform: [{ translateX: -ITEM_WIDTH * 0.3 }] }]}>
-          <SinglePostItem
-            data={previousItem}
-            number={index}
-            carouselView={true}
-          />
-        </View>
-      )}
-      {nextItem && (
-        <View style={[styles.nextItemContainer, { transform: [{ translateX: ITEM_WIDTH * 0.3 }] }]}>
-          <SinglePostItem
-            data={nextItem}
-            number={index + 2}
-            carouselView={true}
-          />
-        </View>
-      )}
     </LinearGradient>
   );
 };
@@ -44,68 +24,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: ITEM_WIDTH,
     paddingBottom: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    // paddingHorizontal: 30,
-  },
-  image: {
-    width: ITEM_WIDTH,
-    height: 300,
-    borderRadius: 30,
-  },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: "white",
-    marginTop: -80,
-    marginLeft: 10,
-  },
-  header: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-    paddingLeft: 20,
-    paddingTop: 20,
-    marginTop: -17,
-    marginLeft: -10,
-  },
-  body: {
-    marginTop: 5,
-    color: "white",
-    fontSize: 12,
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginLeft: -10,
-  },
-  previousItemContainer: {
-    position: "absolute",
-    top: 0,
-    // left: 0,
-    left: -ITEM_WIDTH * 0.3, 
-    width: ITEM_WIDTH * 0.3,
-    // width: ITEM_WIDTH / 3,
-    // height: ITEM_WIDTH,
-    marginLeft: 20,
-    marginRight: 20,
-    height: '100%',
-    overflow: "hidden",
-    zIndex: -1,
-  },
-  nextItemContainer: {
-    position: "absolute",
-    top: 0,
-    // right: 0,
-    right: -ITEM_WIDTH * 0.3, 
-    // width: ITEM_WIDTH / 3,
-    width: ITEM_WIDTH * 0.3,
-    // height: ITEM_WIDTH,
-    height: '100%',
-    overflow: "hidden",
-    marginLeft: 20,
-    marginRight: 20,
-    zIndex: -1,
   },
 });
 
