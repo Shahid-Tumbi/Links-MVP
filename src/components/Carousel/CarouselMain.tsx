@@ -4,7 +4,7 @@ import CarouselCards from "./CarouselCards";
 
 export default function CarouselMain({ data }: any) {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <CarouselCards data={data} />
     </SafeAreaView>
   );
