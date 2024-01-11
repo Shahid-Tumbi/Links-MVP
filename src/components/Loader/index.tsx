@@ -26,7 +26,7 @@ const Loader = props => {
         <View style={styles.activityIndicatorWrapper}>
           <ActivityIndicator
             animating={loading} size={'large'} color={Colors.blue} />
-            <Text style={{alignSelf : 'center'}} >Loading...</Text>
+            <Text style={{alignSelf : 'center',color:'black'}} >Loading...</Text>
         </View>
       </View>
     </Modal>

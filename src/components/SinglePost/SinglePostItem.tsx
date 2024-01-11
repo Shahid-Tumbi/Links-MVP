@@ -27,7 +27,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import moment from "moment";
 import { useCommentPostMutation, useDislikePostMutation, useLikePostMutation, usePostDetailMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl, logToCrashlytics } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
@@ -57,6 +57,7 @@ const SinglePostItem = ({
     postId: data?._id,
   }
   const [visible, setVisible] = React.useState(false);
+  // console.log(data);
 
   const openMenu = () => setVisible(true);
 
@@ -233,7 +234,7 @@ const SinglePostItem = ({
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id })}>
+        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id, isFollowed:data?.isFollowed })}>
           <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>
