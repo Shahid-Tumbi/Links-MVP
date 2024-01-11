@@ -144,6 +144,7 @@ const SinglePostItem = ({
     if (result?.data?.statusCode === 200) {
       setRefreshing(false);
       setPostData(result?.data?.result)
+      setUserPostList((currentPosts) => currentPosts.filter((post) => post?._id !== postId));
       getUserWisePostList(1);
     } else {
       setRefreshing(false);
@@ -160,33 +161,33 @@ const SinglePostItem = ({
     }
   }
 
-  const getUserDetail =  async () => {
-    const result: any = await UserDetail({id: data?.userId,token});
-    if (result?.data?.statusCode === 200) {
-      setRefreshing(false);
-      logToCrashlytics("fetching requested user posts");
-      setUserDetail(result?.data?.result?.profile)
+  // const getUserDetail =  async () => {
+  //   const result: any = await UserDetail({id: data?.userId,token});
+  //   if (result?.data?.statusCode === 200) {
+  //     setRefreshing(false);
+  //     logToCrashlytics("fetching requested user posts");
+  //     setUserDetail(result?.data?.result?.profile)
 
-    } else {
-      setRefreshing(false);
-      if (result?.error?.data) {
-        Alert.alert(result?.error?.data.message);
-      }
-      if (result?.error?.error) {
-        logToCrashlytics(
-          "Error fetching user posts. Please try again, or try again later.",
-          result?.error?.error
-        );
-        Alert.alert("Something went wrong!!");
-      }
-      if (result.error && result.error.status === 401) {
-        onTokenExpired(dispatch);
-      }
-    }
-  }
-  useEffect(()=>{
-    getUserDetail()
-  },[])
+  //   } else {
+  //     setRefreshing(false);
+  //     if (result?.error?.data) {
+  //       Alert.alert(result?.error?.data.message);
+  //     }
+  //     if (result?.error?.error) {
+  //       logToCrashlytics(
+  //         "Error fetching user posts. Please try again, or try again later.",
+  //         result?.error?.error
+  //       );
+  //       Alert.alert("Something went wrong!!");
+  //     }
+  //     if (result.error && result.error.status === 401) {
+  //       onTokenExpired(dispatch);
+  //     }
+  //   }
+  // }
+  // useEffect(()=>{
+  //   getUserDetail()
+  // },[])
 
   const getUserWisePostListMethod = async (page: any) => {
     setPage(page);
@@ -258,7 +259,7 @@ const SinglePostItem = ({
                         }}
                         visible={visible}
                         onDismiss={closeMenu}
-                        statusBarHeight={20} //was -150
+                        statusBarHeight={-200} 
                         anchor={<TouchableOpacity><MenuIcon onPress={openMenu}/></TouchableOpacity>}>
                         
                         
