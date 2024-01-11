@@ -25,11 +25,9 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wtfnewsapp</string>
+				<string>app-1-698797245377-ios-9fb7808ab5727b585be540</string>
 			</array>
 		</dict>
 		<dict>
@@ -37,7 +35,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>app-1-698797245377-ios-9fb7808ab5727b585be540</string>
+				<string>wtfnewsapp</string>
 			</array>
 		</dict>
 	</array>

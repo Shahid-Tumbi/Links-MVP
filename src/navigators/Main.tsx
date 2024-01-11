@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,8 +15,11 @@ import Notifications from '@/screens/Notifications/Notifications';
 import DiscoverCuratorPost from '@/screens/DiscoverCurator/DiscoverCuratorPost';
 import CommentScreen from '@/screens/CommentScreen/CommentScreen';
 import ChangePassword from '@/screens/ChangePassword/ChangePassword';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { setSheetOpen } from '@/store/User';
+import { debounce } from 'lodash';
+import { Loader } from '@/components';
 
 
 const Stack = createStackNavigator();
@@ -33,12 +36,28 @@ const PostScreenComponent = () => {
 }
 const TabNavigator = () => {
   const isCurator = useSelector((state:any) => state.auth.isCurator)
+  const isSheetOpen = useSelector((state:any) => state.auth.sheetOpen)  
   const color = Colors.lightGray
   const blueColor = Colors.blue
   const size = 25
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["90%"], []);
+  const [isLoading,setIsLoading]=useState(false)
+  const dispatch= useDispatch()
+
+  useEffect(()=>{
+    if(isSheetOpen){
+      setIsLoading(true)
+      const opensheet = debounce(()=>{
+        setIsLoading(false)
+        sheetRef.current?.snapToIndex(0)
+      },500)
+      opensheet()
+     
+    }
+  },[isSheetOpen])
   return <KeyboardAvoidingView style={{flex:1}}>
+    {isLoading && <Loader /> }
     <Tab.Navigator screenOptions={{
     tabBarStyle:{backgroundColor:Colors.primary,borderTopColor:Colors.primary}}}>
       <Tab.Screen name="HomeScreen" component={HomeFeed} options={{headerShown: false, tabBarShowLabel:false,
@@ -76,6 +95,7 @@ const TabNavigator = () => {
     keyboardBlurBehavior='restore'
     keyboardBehavior='interactive'
     onClose={() => {
+      dispatch(setSheetOpen(false))
       Keyboard.dismiss();
     }}
   >

@@ -77,7 +77,6 @@ export const firebaseOtpSent = (countryCode: string,phoneNumber: string ): Promi
     auth()
       .signInWithPhoneNumber(phoneWithCount)
       .then((res: any) => {
-        console.log('Res', res);
         resolve(res);
       })
       .catch((error: any) => {

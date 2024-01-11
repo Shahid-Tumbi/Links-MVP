@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { widthPercentageToDP } from "react-native-responsive-screen";
 import { ApplicationScreenProps } from "types/navigation";
 import { useTheme } from "@/hooks";
@@ -25,9 +25,10 @@ import { logToCrashlytics, onTokenExpired } from "@/theme/Common";
 import { Colors } from "@/theme/Variables";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { useUploadFileMutation } from "@/services/modules/users";
+import { setSharedLink } from "@/store/User";
 
 const cheerio = require('cheerio');
-const ShareLink = ({sheetRef}:any) => {
+const ShareLink = ({sheetRef}:any) => {  
   const {
     Layout,
     Fonts,
@@ -45,10 +46,17 @@ const ShareLink = ({sheetRef}:any) => {
   const dispatch = useDispatch()
   const authData = useSelector((state:any)=>state.auth.authData) 
   const token = useSelector((state:any)=>state.auth.token) 
+  const Url = useSelector((state:any)=>state.auth.sharedLink) 
   const [addPost, { isLoading }] = useAddPostMutation();
   const [uploadFile] = useUploadFileMutation()
   const [getVideoInfo] = useGetVideoDetailMutation()
   
+  useEffect(()=>{
+    if(Url) {
+      setLink(Url);
+      fetchOGImage(Url);
+    }
+  },[link,Url])
   const fetchOGImage = async (targetUrl: string) => {
     try {
       if(targetUrl.includes('youtube.com') || targetUrl.includes('youtu.be')){
@@ -87,6 +95,7 @@ const ShareLink = ({sheetRef}:any) => {
         const image = $("meta[property='og:image']").attr("content");
         if (!title || !description || !image) {
           Alert.alert('No OG title, description, or image found in the HTML');
+          setLoader(false)
         } else {
           setLoader(false)
           setImage(image);
@@ -179,6 +188,7 @@ const ShareLink = ({sheetRef}:any) => {
          setPinComment('')
          setImage('')
          setError('')
+         dispatch(setSharedLink(''))
          sheetRef.current?.close()
         }}>Cancel</Text>
       <Text style={styles.banner}>{Constants.shareLink}</Text>

@@ -85,9 +85,16 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                     dispatch(setToken(result?.data?.result?.token))
                     dispatch(setAuthData(result?.data?.result?.profile))
                     if (result?.data?.result?.profile.isPhoneVerified === false) {
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'OtpScreen' }]})
+                        if(isCurator && !result?.data?.result?.profile?.referrer ){ 
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'ReferralScreen' }]})
+                        
+                        } else {
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'OtpScreen' }]})
+                        }
                     } else {
                         dispatch(verifiedUser(true))
                     }
