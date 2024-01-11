@@ -73,10 +73,17 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [refreshing, setRefreshing] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const { postFollowData } = route?.params;
+  const { postFollowData } = route?.params?.isFollowed;
   const followUserId = postFollowData?.userId;
   const [recentComments, setRecentComments] = useState([]);
   const myUserId = useSelector((state: any) => state.auth.authData._id);
+  const [isFollowed, setIsFollowed] = useState(false);
+
+  useEffect(() => {
+    console.log(postData);
+    console.log(postFollowData);
+    setIsFollowed(postFollowData);
+  }, [postFollowData])
   const FollowBody = {
     followerId: followUserId,
     followingId: myUserId,
@@ -101,7 +108,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     logToCrashlytics("get post detail api call");
     const result: any = await getDetail({ id: postId, token });
     if (result?.data?.statusCode === 200) {
-      setPostData(result?.data?.result);
+      setPostData(result?.data?.result)
     } else {
       if (result?.error?.data) {
         Alert.alert(result?.error?.data?.message);
@@ -159,18 +166,22 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
       style={[Layout.fill, { backgroundColor: Colors.primary }]}
     >
       {isLoading ? <Loader state={isLoading} /> : null}
-      <View
-        style={[
-          globalStyles.header,
-          Gutters.regularRMargin,
-          Gutters.regularTMargin,
-        ]}
-      >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons
-            name={"chevron-left"}
-            color={Colors.white}
-            size={28}
+        <View style={[globalStyles.header, Gutters.regularRMargin, Gutters.regularTMargin]}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons
+              name={"chevron-left"}
+              color={Colors.white}
+              size={28}
+            />
+          </TouchableOpacity>
+          <UserCard
+            userAvatar={postData?.user_info?.profileImage ? `${profileAssetUrl}${postData?.user_info?.profileImage}` : userAvatar}
+            userName={capitalize(postData?.user_info?.name || userName)}
+            score={postData?.user_info?.score || score}
+            menu={true}
+            id={postData?.userId}
+            isFollowed={postData?.isFollowed}
+            setIsFollowed={setIsFollowed}
           />
         </TouchableOpacity>
         <UserCard

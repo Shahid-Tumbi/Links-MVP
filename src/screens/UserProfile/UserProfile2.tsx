@@ -38,47 +38,42 @@ import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
 
 const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const { Layout, Fonts, Gutters, darkMode: isDark } = useTheme();
-  const [Follow, setFollow] = useState(route?.params?.isFollowed || false);
   const [getUserWisePostList, { isLoading }] = useGetUserWisePostListMutation();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const authData = useSelector((state: any) => state.auth.authData);
-  const userName = useSelector((state: any) => state.auth.authData.name);
   const token = useSelector((state: any) => state.auth.token);
-  const userId = useSelector((state: any) => state.auth.authData._id);
   const [refreshing, setRefreshing] = useState(false);
   const [userPostList, setUserPostList] = useState([]);
   const dispatch = useDispatch();
-  const [getFollowerList, { isLoadingFollowers }] =
-  useGetFollowerListMutation();
-  const [userFollowerList, setUserFollowerList] = useState([]);
-  const [userFollowerCount, setUserFollowerCount] = useState(0);
   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [UserDetail, { isUserLoading }] = useUserDetailMutation();
   const [isFollowing, setIsFollowing] = useState(false);
-  const [bottomsheetData,setBottomsheetData]= useState()
+  const [loader, setLoader] = useState(false);
   const [userDetail, setUserDetail] : any= useState();
+  const [Follow, setFollow] = useState(false);
+
   const { id } = route?.params;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
   const FollowBody = {
     followerId: myUserId,
     followingId: id,
   };
-
- 
- 
   const onSubmit = () => {
     setFollow(!Follow);
   };
   const getUserDetail =  async () => {
+    setLoader(true)
     const result: any = await UserDetail({id,token});
     if (result?.data?.statusCode === 200) {
       setRefreshing(false);
+      setLoader(false)
       logToCrashlytics("fetching requested user posts");
       setUserDetail(result?.data?.result?.profile)
 
     } else {
+      setLoader(false)
       setRefreshing(false);
       if (result?.error?.data) {
         Alert.alert(result?.error?.data.message);
@@ -149,8 +144,6 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const refreshFunction = () => {
     setRefreshing(true);
     setUserPostList([]);
-    setUserFollowerList([]);
-    setUserFollowerCount(0);
     getUserWisePostListMethod(1);
     setIsFollowing(false);
   };
@@ -160,12 +153,14 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   /* Follow user */
 
   const follow = async () => {
+    setLoader(true)
     const result: any = await followSomeone({ body: FollowBody, token });
     if (result?.data?.statusCode === 200) {
       setIsFollowing(true);
       setRefreshing(false);
       getUserDetail()
     } else {
+      setLoader(false)
       setRefreshing(false);
       setIsFollowing(false);
       if (result?.error?.data) {
@@ -184,12 +179,14 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   /* unfollow a user */
 
   const unfollow = async () => {
+    setLoader(true)
     const result: any = await unfollowSomeone({ body: FollowBody, token });
     if (result?.data?.statusCode === 200) {
       setIsFollowing(false);
       setRefreshing(false);
       getUserDetail()
     } else {
+      setLoader(false)
       setRefreshing(false);
       setIsFollowing(false);
       if (result?.error?.data) {
@@ -226,7 +223,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
     <KeyboardAvoidingView behavior={'height'} style={[globalStyles.container]}>
       <ScrollView>
         <View style={[globalStyles.screenMargin]}>
-      {isUserLoading ? <Loader state={isUserLoading} /> : null}
+      {loader ? <Loader state={isUserLoading} /> : null}
           <View style={[globalStyles.header]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <BackButton
@@ -235,7 +232,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             </TouchableOpacity>
             {authData?._id !== id ?
             <TouchableOpacity onPress={() => onSubmit()}>
-              {Follow ? (
+              { userDetail?.isFollowed ? (
                 <FollowedIcon onPress={() => unfollow()} />
                 ) : (
                 <FollowIcon onPress={() => follow()} />

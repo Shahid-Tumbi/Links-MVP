@@ -53,7 +53,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
         if (result?.data?.statusCode === 200) {
             logToCrashlytics('On update profile api success')
             dispatch(setAuthData(result?.data?.result))
-            Alert.alert('Updated Successfully')
+            Alert.alert('Updated your profile picture successfully!')
         } else {
             if (result?.error?.data) {
                 Alert.alert(result?.error?.data?.message)
@@ -145,7 +145,7 @@ const EditProfile = ({ navigation }: ApplicationScreenProps) => {
 						setFilePath(response.assets[0]);
 						// console.log("filePath",filePath)
 					} else if (response.didCancel) {
-						Alert.alert('User cancelled camera picker');
+						// Alert.alert('User cancelled camera picker');
 						return;
 					} else if (response.errorCode == 'camera_unavailable') {
 						Alert.alert('Camera not available on device');
