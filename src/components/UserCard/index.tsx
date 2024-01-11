@@ -19,8 +19,9 @@ const UserCard = ({
     score,
     menu,
     id,
-    isFollowed
-}:any, ) => {
+    isFollowed,
+    setIsFollowed
+}:any, {route}: ApplicationScreenProps ) => {
   
     const {
         Fonts,
@@ -32,7 +33,7 @@ const UserCard = ({
     const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
     const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
     const [refreshing, setRefreshing] = useState(false);
-    const [following, setFollowing] = useState(false)
+    const [following, setFollowing] = useState(isFollowed)
     const dispatch = useDispatch();
     const token = useSelector((state:any) => state.auth.token)
     const myUserId = useSelector((state:any) => state.auth.authData._id);
@@ -50,6 +51,7 @@ const UserCard = ({
         if(result?.data?.statusCode === 200){
           setRefreshing(false);
           setFollowing(true)
+          setIsFollowed(true);
         } else {
           setRefreshing(false);
           if(result?.error?.data){
@@ -73,6 +75,7 @@ const UserCard = ({
         if(result?.data?.statusCode === 200){
           setRefreshing(false);
           setFollowing(false)
+          setIsFollowed(false);
         } else {
           setRefreshing(false);
           if(result?.error?.data){
@@ -90,7 +93,7 @@ const UserCard = ({
 
   const onPress = () => {
     
-    navigation.navigate('UserProfile2', {id: id,isFollowed:following})
+    navigation.navigate('UserProfile2', {id: id,isFollowed:route?.params?.isFollowed}) 
   }
     return (
         <View style={styles.userContainer}>

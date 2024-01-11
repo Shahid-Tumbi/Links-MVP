@@ -56,6 +56,7 @@ const SinglePostItem = ({
     postId: data?._id,
   }
   const [visible, setVisible] = React.useState(false);
+  // console.log(data);
 
   const openMenu = () => setVisible(true);
 
@@ -75,10 +76,12 @@ const SinglePostItem = ({
     return SheetManager.show("NewsSheet",{payload:{linkUrl:data.link,summary:data?.gpt_summary}});
   }, 300);
   const onUpvote = async () => {
+    // setUpvote((prevUpVote) => !prevUpVote);
     if(!upVote) {
     const result: any = await likePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
       setUpvote(true)
+      // setDislikes((prev) => (downVote ? prev - 1 : prev));
       setDownvote(false)
       setLikes((prev) => prev + 1 )
       if(downVote){
@@ -97,13 +100,18 @@ const SinglePostItem = ({
       
     }
     
+  } else {
+    setUpvote(false)
+    setLikes((prev) => prev - 1)
   }
 }
   const onDownvote = async () => {
+    // setDownvote((prevDownVote) => !prevDownVote); 
     if(!downVote) {
     const result: any = await dislikePost({ body: postData, token })
     if (result?.data?.statusCode === 200) {
       setUpvote(false)
+      // setUpvote((prev) => (upVote ? prev - 1 : prev));
       setDownvote(true)
       setDislikes((prev) => prev + 1)
       if(upVote){
@@ -121,6 +129,9 @@ const SinglePostItem = ({
       }
       
     }
+  } else {
+    setDownvote(false)
+    setDislikes((prev) => prev - 1)
   }
 }
   const onShare = async () => {
@@ -196,7 +207,7 @@ const SinglePostItem = ({
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id })}>
+        <TouchableOpacity onPress={() => navigation.navigate('PostDetailScreen', { id: data?._id, isFollowed:data?.isFollowed })}>
           <View style={styles.detailsContainer}>
             {!carouselView && <View style={[Layout.flex02]}>
             <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>

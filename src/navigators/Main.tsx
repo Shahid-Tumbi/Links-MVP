@@ -21,9 +21,6 @@ import { setSheetOpen } from '@/store/User';
 import { debounce } from 'lodash';
 import { Loader } from '@/components';
 
-// import HomeFeed from '@/screens/HomeFeed/HomeFeed';
-// import ShareLink from '@/screens/ShareLink/ShareLink';
-// import PostDetails from '@/screens/PostDetails/PostDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

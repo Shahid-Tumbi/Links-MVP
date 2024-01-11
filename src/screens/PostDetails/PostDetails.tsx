@@ -44,9 +44,16 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const [unfollowSomeone, { isLoadingUnfollow }] = useUnfollowSomeoneMutation();
   const [refreshing, setRefreshing] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const { postFollowData } = route?.params;
+  const { postFollowData } = route?.params?.isFollowed;
   const followUserId = postFollowData?.userId;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
+  const [isFollowed, setIsFollowed] = useState(false);
+
+  useEffect(() => {
+    console.log(postData);
+    console.log(postFollowData);
+    setIsFollowed(postFollowData);
+  }, [postFollowData])
   const FollowBody = {
     followerId: followUserId,
     followingId: myUserId
@@ -68,6 +75,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     const result: any = await getDetail({ id: postId, token });
     if (result?.data?.statusCode === 200) {
       setPostData(result?.data?.result)
+    
     } else {
 
       if (result?.error?.data) {
@@ -103,6 +111,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
             menu={true}
             id={postData?.userId}
             isFollowed={postData?.isFollowed}
+            setIsFollowed={setIsFollowed}
           />
         </View>
         <ScrollView showsVerticalScrollIndicator={false} style={[globalStyles.screenMargin]}>

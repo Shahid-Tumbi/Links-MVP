@@ -209,12 +209,12 @@ const Login = ({ navigation }: ApplicationScreenProps) => {
                         <Text style={styles.text}>or</Text>
                         <View style={styles.line} />
                     </View>
-                    <View style={[Layout.row, Layout.justifyContentCenter, Gutters.tinyTMargin]}>
+                    {/* <View style={[Layout.row, Layout.justifyContentCenter, Gutters.tinyTMargin]}>
                         <Facebook />
                         <Google />
                         <Twitter />
                         <Apple />
-                    </View>
+                    </View> */}
                     <Text style={[Fonts.textRegular, Fonts.textCenter, Gutters.regularTMargin]}>{Constants.dontHaveAcc}
                         <Text style={[Fonts.textLarge]} onPress={() => navigation.navigate('Signup',{curator:isCurator})}>Sign up</Text>
                     </Text>
