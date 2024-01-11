@@ -174,16 +174,6 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
               size={28}
             />
           </TouchableOpacity>
-          <UserCard
-            userAvatar={postData?.user_info?.profileImage ? `${profileAssetUrl}${postData?.user_info?.profileImage}` : userAvatar}
-            userName={capitalize(postData?.user_info?.name || userName)}
-            score={postData?.user_info?.score || score}
-            menu={true}
-            id={postData?.userId}
-            isFollowed={postData?.isFollowed}
-            setIsFollowed={setIsFollowed}
-          />
-        </TouchableOpacity>
         <UserCard
           userAvatar={
             postData?.user_info?.profileImage

@@ -231,14 +231,18 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
             />
             </TouchableOpacity>
             {authData?._id !== id ?
-            <TouchableOpacity onPress={() => onSubmit()}>
+            <>
               { userDetail?.isFollowed ? (
-                <FollowedIcon onPress={() => unfollow()} />
+                <TouchableOpacity onPress={() => unfollow()}>
+                  <FollowedIcon  />
+                </TouchableOpacity>
                 ) : (
-                <FollowIcon onPress={() => follow()} />
+                <TouchableOpacity onPress={() => follow()}>
+                    <FollowIcon />
+                </TouchableOpacity>
               )}
               {/*isFollowing ? <FollowIcon> : <FollowedIcon /> */}
-            </TouchableOpacity> : null }
+             </>: null }
           </View>
           <View style={styles.body}>
             <View>
