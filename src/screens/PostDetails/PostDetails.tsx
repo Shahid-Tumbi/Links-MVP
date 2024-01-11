@@ -151,7 +151,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     }
   }
   useEffect(() => {
-    getCommentList(1, postFollowData?._id)
+    getCommentList(1, route?.params?.id)
   },[]);
   return (
     <KeyboardAvoidingView
