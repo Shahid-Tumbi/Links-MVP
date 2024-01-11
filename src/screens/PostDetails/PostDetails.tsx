@@ -35,7 +35,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import CommentBottomSheet from "@/components/ModalBottomSheet/BottomSheet";
 import { Constants } from "@/theme/Constants";
-import { usePostDetailMutation } from "@/services/modules/post";
+import { useCommentListMutation, usePostDetailMutation } from "@/services/modules/post";
 import {
   defaultAvatar,
   profileAssetUrl,
@@ -63,6 +63,10 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   const postTitle = "";
   const postLink = " ";
   const [commentCount, setCommentCount] = useState(0);
+  const [page,setPage]= useState(1)
+  const [limit,setLimit]= useState(10)
+  const [commentList, { isCommentLoading }] = useCommentListMutation()
+  const [userCommentList, setUserCommentList] = useState([])
 
   const commentBottomSheetRef = useRef(null);
   const [followSomeone, { isLoadingFollow }] = useFollowSomeoneMutation();
@@ -77,6 +81,8 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
     followerId: followUserId,
     followingId: myUserId,
   };
+
+  console.log(userCommentList);
   const incrementCommentCount = (postId) => {
     getpostDetail(postId);
   };
@@ -112,6 +118,41 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
   useEffect(() => {
     getpostDetail(route?.params?.id);
   }, []);
+
+  const getCommentList = async (page:any, id:any) => { 
+    setPage(page)   
+    const result:any = await commentList({page,limit,token, id})
+    if (result?.data?.statusCode === 200) {
+      setRefreshing(false)
+      logToCrashlytics('On comment list API call')
+      let allComments = result.data?.result?.rows;
+      let recentCommentsFromAPI = allComments.slice(0,2);
+      setRecentComments(recentCommentsFromAPI)
+      if(page === 1){
+        setUserCommentList(result?.data?.result?.rows);
+      } else {
+        setUserCommentList((prevState) => [
+          ...prevState,
+          ...result?.data?.result?.rows,
+        ]);
+      }
+    } else {
+      setRefreshing(false)
+      if (result?.error?.data) {
+        Alert.alert(result?.error?.data?.message)
+      }
+      if (result?.error?.error) {
+        logToCrashlytics('On comment list API error', result?.error?.error)
+        Alert.alert('Something went wrong !!')
+      }
+      if (result.error && result.error.status === 401) {
+        onTokenExpired(dispatch)
+      }
+    }
+  }
+  useEffect(() => {
+    getCommentList(1, postFollowData?._id)
+  },[]);
   return (
     <KeyboardAvoidingView
       behavior={"height"}
