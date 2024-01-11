@@ -23,6 +23,7 @@ const ApplicationNavigator = () => {
   const { Layout, darkMode, NavigationTheme } = useTheme();
   const { colors } = NavigationTheme;
   const isVerified = useSelector((state:any) => state.auth.isVerified)
+  const isCurator = useSelector((state:any) => state.auth.isCurator)
   const dispatch = useDispatch()
   const navigationRef = useNavigationContainerRef();
   const colorScheme = useColorScheme();
@@ -58,7 +59,7 @@ const ApplicationNavigator = () => {
   useEffect(()=>{
     ReceiveSharingIntent.getReceivedFiles((files: any[]) => {
       let weblinks = files.map(obj => obj.weblink);
-      if(weblinks[0]){
+      if(weblinks[0] && isCurator && isVerified){
         dispatch(setSharedLink(weblinks[0]))
         dispatch(setSheetOpen(true))
       }
