@@ -27,7 +27,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import moment from "moment";
 import { useCommentPostMutation, useDislikePostMutation, useLikePostMutation, usePostDetailMutation, useSharePostMutation } from "@/services/modules/post";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl } from "@/theme/Common";
+import { defaultAvatar, profileAssetUrl, onTokenExpired, postImageAssetUrl, logToCrashlytics } from "@/theme/Common";
 import { FocusedInputContext } from "@/screens/HomeFeed/HomeFeed";
 import { Button, Divider, Menu, PaperProvider } from "react-native-paper";
 import { FocusedInputContextUserProfile } from "@/screens/UserProfile/UserProfile2";
