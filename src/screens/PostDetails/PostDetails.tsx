@@ -283,7 +283,7 @@ const PostDetailScreen = ({ navigation, route }: ApplicationScreenProps) => {
       <CommentBottomSheet
         ref={commentBottomSheetRef}
         onCommentSubmit={incrementCommentCount}
-        onNewComment={setRecentComments}
+        // onNewComment={setRecentComments}
       />
     </KeyboardAvoidingView>
   );
