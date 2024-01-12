@@ -37,7 +37,8 @@ const SinglePostItem = ({
   data,
   number,
   carouselView,
-  getPostList
+  onDeletePostSuccess,
+  onDeletePostSuccessForProfile,
 }: any) => {
   const navigation = useNavigation()
   const { Fonts, Layout, Gutters, darkMode } = useTheme();
@@ -145,7 +146,13 @@ const SinglePostItem = ({
       setRefreshing(false);
       setPostData(result?.data?.result)
       setUserPostList((currentPosts) => currentPosts.filter((post) => post?._id !== postId));
-      getUserWisePostList(1);
+      if(onDeletePostSuccess){
+        onDeletePostSuccess();
+      }
+      if(onDeletePostSuccessForProfile){
+        onDeletePostSuccessForProfile();
+      }
+   
     } else {
       setRefreshing(false);
       if (result?.error?.data) {
@@ -161,75 +168,6 @@ const SinglePostItem = ({
     }
   }
 
-  // const getUserDetail =  async () => {
-  //   const result: any = await UserDetail({id: data?.userId,token});
-  //   if (result?.data?.statusCode === 200) {
-  //     setRefreshing(false);
-  //     logToCrashlytics("fetching requested user posts");
-  //     setUserDetail(result?.data?.result?.profile)
-
-  //   } else {
-  //     setRefreshing(false);
-  //     if (result?.error?.data) {
-  //       Alert.alert(result?.error?.data.message);
-  //     }
-  //     if (result?.error?.error) {
-  //       logToCrashlytics(
-  //         "Error fetching user posts. Please try again, or try again later.",
-  //         result?.error?.error
-  //       );
-  //       Alert.alert("Something went wrong!!");
-  //     }
-  //     if (result.error && result.error.status === 401) {
-  //       onTokenExpired(dispatch);
-  //     }
-  //   }
-  // }
-  // useEffect(()=>{
-  //   getUserDetail()
-  // },[])
-
-  const getUserWisePostListMethod = async (page: any) => {
-    setPage(page);
-    const result: any = await getUserWisePostList({
-      page,
-      limit,
-      token,
-      userId:data?.userId,
-    });
-    if (result?.data?.statusCode === 200) {
-      setRefreshing(false);
-      logToCrashlytics("fetching requested user posts");
-      if (page === 1) {
-        setUserPostList(result?.data?.result?.rows);
-      } else {
-        setUserPostList((prevState) => [
-          ...prevState,
-          ...result?.data?.result?.rows,
-        ]);
-      }
-    } else {
-      setRefreshing(false);
-      if (result?.error?.data) {
-        Alert.alert(result?.error?.data.message);
-      }
-      if (result?.error?.error) {
-        logToCrashlytics(
-          "Error fetching user posts. Please try again, or try again later.",
-          result?.error?.error
-        );
-        Alert.alert("Something went wrong!!");
-      }
-      if (result.error && result.error.status === 401) {
-        onTokenExpired(dispatch);
-      }
-    }
-  };
-
-  useEffect(() => {
-    getUserWisePostListMethod(1);
-
-  }, []);
   return (
     <PaperProvider><View style={styles.container}>
       <View style={[carouselView && { margin: 6, height: 258 }]}>

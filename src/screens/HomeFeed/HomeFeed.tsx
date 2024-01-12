@@ -98,7 +98,7 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   const ItemSeparator = () => <View style={styles.separator} />;
   const renderProfile = ({ item,index }:any) => {return (
   <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
-    <ProfileView data={item} number={index+1} navigation={navigation} getPostList={getPostList}/>
+    <ProfileView data={item} number={index+1} navigation={navigation} getPostList={getPostList} onDeletePostSuccess={onDeletePostSuccess}/>
   </FocusedInputContext.Provider>)}
 
   const onPress =() => {
@@ -118,6 +118,10 @@ const HomeFeed = ({ navigation,route }: ApplicationScreenProps) => {
   }
   const incrementCommentCount = () => {
     getPostList(1);
+  }
+
+  const onDeletePostSuccess = () => {
+    refereshFun();
   }
   const ListHeaderComponent = () => {
     return (

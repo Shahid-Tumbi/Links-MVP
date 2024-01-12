@@ -59,8 +59,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [bottomsheetData,setBottomsheetData]= useState()
   const [userDetail, setUserDetail] : any= useState();
-  const [ deletePostData, { isDeleting}] = useDeletePostMutation();
-  const [ postData, setPostData] = useState();
+
   const { id } = route?.params;
   const myUserId = useSelector((state: any) => state.auth.authData._id);
   const FollowBody = {
@@ -69,30 +68,13 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   };
 
  
- 
   const onSubmit = () => {
     setFollow(!Follow);
   };
 
-
-  const deletePost = async(postId) => {
-    const result: any = await deletePostData({id: postId, token})
-    if (result?.data?.statusCode === 200) {
-      setPostData(result?.data?.result)
-    } else {
-
-      if (result?.error?.data) {
-        Alert.alert(result?.error?.data?.message)
-      }
-      if (result?.error?.error) {
-        logToCrashlytics('get post detail api error', result?.error?.error)
-        Alert.alert('Something went wrong !!')
-      }
-      if (result.error && result.error.status === 401) {
-        onTokenExpired(dispatch)
-      }
-    }
-  }
+  const onDeletePostSuccessForProfile = () => {
+    refreshFunction();
+  } 
   const getUserDetail =  async () => {
     const result: any = await UserDetail({id,token});
     if (result?.data?.statusCode === 200) {
@@ -240,7 +222,7 @@ const ProfileDetail = ({ navigation, route }: ApplicationScreenProps) => {
   const renderProfileDynamic = ({ item, index }: any) => {
     return (
       <FocusedInputContext.Provider value={focusTextInputInCommentBottomSheet}> 
-      <ProfileView data={item} number={index + 1} navigation={navigation} />
+      <ProfileView data={item} number={index + 1} navigation={navigation} onDeletePostSuccessForProfile={onDeletePostSuccessForProfile}/>
       </FocusedInputContext.Provider>
     );
   };
