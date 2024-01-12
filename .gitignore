@@ -11,6 +11,10 @@ __generated__
 ## User settings
 xcuserdata/
 
+#ios stuff
+ios/GoogleService-Info.plist
+ios/Podfile.lock
+
 ## Xcode 8 and earlier
 *.xcscmblueprint
 *.xccheckout
