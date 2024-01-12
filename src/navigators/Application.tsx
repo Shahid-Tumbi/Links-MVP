@@ -31,7 +31,7 @@ const ApplicationNavigator = () => {
   const linking = {
     prefixes: [
       'wtfnewsapp://',
-      'https://dev-api.wtfnewsapp.com/v1/users/'
+      'https://dev-api.wtfnewsapp.com/'
     ],
     config: {
       screens: {
