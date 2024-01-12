@@ -159,6 +159,14 @@ const SinglePostItem = ({
       Alert.alert(error.message);
     }
   }
+  
+  const capitalizeSecondName = (fullName) => {
+    const names = fullName.split(' ');
+    if(names.length > 1){
+      names[1] = names[1].charAt(0).toUpperCase() + names[1].slice(1);
+    }
+    return names.join(' ');
+  }
 
   return (
     <PaperProvider><View style={[styles.container,{backgroundColor:!carouselView ? Colors.primary : ''}]}>
@@ -222,7 +230,7 @@ const SinglePostItem = ({
               <TouchableOpacity onPress={() => navigation.navigate('UserProfile2', {id: data?.userId,isFollowed:data?.isFollowed})}>
               <View style={[Layout.row, Layout.justifyContentBetween]}>
                 <View style={[carouselView && Layout.row]}>
-                  <Text style={styles.username}>{capitalize(data?.user_info?.name) || ''}</Text>
+                  <Text style={styles.username}>{capitalizeSecondName(data?.user_info?.name) || ''}</Text>
                   {/* <Text style={[Fonts.textTiny, carouselView ? Gutters.tinyLMargin : Gutters.smallLMargin, carouselView && Layout.alignSelfEnd]}>{data?.score || '0000'}</Text> */}
                 </View>
                 <View style={[Gutters.tinyRMargin, carouselView && Layout.alignSelfEnd]}>
