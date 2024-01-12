@@ -47,9 +47,9 @@ const CommentBottomSheet = React.forwardRef((props: any, ref) => {
     if (result?.data?.statusCode === 200) {
       setRefreshing(false)
       logToCrashlytics('on comment list api call')
-      let allComments = result.data?.result?.rows;
-      let recentComments = allComments.slice(0,2);
-      onNewComment(recentComments)
+      // let allComments = result.data?.result?.rows;
+      // let recentComments = allComments.slice(0,2);
+      // onNewComment(recentComments)
       if (page == 1) {
         setList(result?.data?.result?.rows)
       } else {
